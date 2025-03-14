@@ -13,7 +13,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "staticpages")
+@Table(name = "static_pages")
 public class StaticPage extends BaseEntity {
 
     @Column(nullable = false, unique = true, columnDefinition = "NVARCHAR(255)")

@@ -13,8 +13,8 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "shoping_carts")
-public class ShopingCart extends BaseEntity {
+@Table(name = "shopping_carts")
+public class ShoppingCart extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "product_variant_id")

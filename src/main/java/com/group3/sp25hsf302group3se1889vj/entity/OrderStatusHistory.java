@@ -14,7 +14,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "orderstatushistorys")
+@Table(name = "order_status_histories")
 public class OrderStatusHistory extends BaseEntity {
 
     @ManyToOne

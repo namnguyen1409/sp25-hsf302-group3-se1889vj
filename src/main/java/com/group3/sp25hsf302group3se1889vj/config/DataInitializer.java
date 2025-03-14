@@ -46,6 +46,9 @@ public class DataInitializer {
     @Value("${owner.birthday}")
     private String ownerBirthday;
 
+    @Value("${owner.avatar}")
+    private String ownerAvatar;
+
 
     private final UserService userService;
 
@@ -64,6 +67,8 @@ public class DataInitializer {
             owner.setAddress(ownerAddress);
             owner.setBirthday(LocalDate.parse(ownerBirthday));
             owner.setRole(RoleType.OWNER);
+            owner.setAvatar(ownerAvatar);
+            owner.setActive(true);
             userRepository.save(owner);
             log.info("Owner {} created", ownerUsername);
         } else {

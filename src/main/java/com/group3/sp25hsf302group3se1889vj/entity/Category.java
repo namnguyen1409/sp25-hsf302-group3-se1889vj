@@ -9,7 +9,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.util.Set;
 
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Entity
 @Data
 @SuperBuilder(toBuilder = true)
@@ -18,17 +18,19 @@ import java.util.Set;
 @Table(name = "categories")
 public class Category extends BaseEntity {
 
+    @EqualsAndHashCode.Include
     @Column(nullable = false, unique = true, columnDefinition = "NVARCHAR(50)")
     private String name;
 
+    @EqualsAndHashCode.Include
     @Column(columnDefinition = "NVARCHAR(1000)")
     private String description;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "parent_id")
     private Category parent;
 
     @OneToMany(mappedBy = "parent")
-    private Set<Category> children;
+    private Set<Category> subCategories;
 
 }

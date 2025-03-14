@@ -39,6 +39,4 @@ public class Product extends BaseEntity {
 
     private BigDecimal priceSale;
 
-    private double avgRating;
-
 }

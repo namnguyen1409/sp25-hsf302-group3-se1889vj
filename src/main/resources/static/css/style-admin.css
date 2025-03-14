@@ -193,3 +193,10 @@ footer {
     max-height: 100vh;
     overflow: hidden;
 }
+
+@media (max-width: 767px) { /* Kích thước tối đa của màn hình nhỏ (dưới 768px) */
+    form.p-md-4 {
+        border: none !important; /* Loại bỏ viền */
+        box-shadow: none !important; /* Loại bỏ bóng đổ */
+    }
+}

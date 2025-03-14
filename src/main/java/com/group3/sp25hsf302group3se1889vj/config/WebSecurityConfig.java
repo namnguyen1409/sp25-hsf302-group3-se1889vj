@@ -43,7 +43,7 @@ public class WebSecurityConfig {
                         .anyRequest().permitAll()
         ).formLogin(AbstractHttpConfigurer::disable
         ).addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class
-        );
+        ).exceptionHandling(e -> e.authenticationEntryPoint(new CustomAuthenticationEntryPoint()));
         return http.build();
     }
 

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<th:block th:fragment="list-body(item, fields, fieldTitles, fieldClasses)">
+    <td th:each="field : ${fields}">
+        <th:block th:switch="${fieldClasses[__${field}__]}">
+            <th:block th:case="'image'">
+                <img th:src="@{'/' + ${item[field]}}" class="img-thumbnail tableImg" width="50" height="50" style="aspect-ratio: 1/1; object-fit: cover; cursor: pointer" alt="">
+            </th:block>
+            <th:block th:case="'html'">
+                <span th:classappend="${fieldClasses[__${field}__]}" th:utext="${item[field]}"></span>
+            </th:block>
+            <th:block th:case="'phone'">
+                <span  th:classappend="${fieldClasses[__${field}__]}" th:text="${item[field].substring(0, 3) + '****' + item[field].substring(7)}"></span>
+            </th:block>
+            <th:block th:case="*">
+                <span th:classappend="${fieldClasses[__${field}__]}" th:text="${item[field]}"></span>
+            </th:block>
+        </th:block>
+    </td>
+</th:block>
+</html>

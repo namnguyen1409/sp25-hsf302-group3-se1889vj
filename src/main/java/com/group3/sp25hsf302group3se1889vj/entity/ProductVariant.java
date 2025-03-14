@@ -31,9 +31,5 @@ public class ProductVariant extends BaseEntity {
     @Column(nullable = true, columnDefinition = "NVARCHAR(50)")
     private String image;
 
-    private BigDecimal priceOrigin;
-
-    private BigDecimal priceSale;
-
     private int stockQuantity;
 }

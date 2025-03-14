@@ -8,42 +8,71 @@
     th:id="${id}"
     th:class="${class}">
     <li class="mb-1">
-        <a class="btn d-inline-flex align-items-center rounded border-0 fw-bold" th:href="@{/product/list}">
+        <a class="btn d-inline-flex align-items-center rounded border-0 fw-bold" th:href="@{/admin/product/list}">
             <i class="bi bi-box-seam-fill me-2"></i> Quản lý sản phẩm
         </a>
     </li>
 
     <li class="mb-1">
-        <a class="btn d-inline-flex align-items-center rounded border-0 fw-bold" th:href="@{/category/list}">
+        <a class="btn d-inline-flex align-items-center rounded border-0 fw-bold" th:href="@{/admin/category/list}">
             <i class="bi bi-tags me-2"></i> Quản lý danh mục
         </a>
     </li>
 
     <li class="mb-1">
-        <a class="btn d-inline-flex align-items-center rounded border-0 fw-bold" th:href="@{/order/list}">
+        <a class="btn d-inline-flex align-items-center rounded border-0 fw-bold" th:href="@{/admin/order/list}">
             <i class="bi bi-cart-check me-2"></i> Quản lý đơn hàng
         </a>
     </li>
 
     <li class="mb-1">
-        <a class="btn d-inline-flex align-items-center rounded border-0 fw-bold" th:href="@{/customer/list}">
+        <a class="btn d-inline-flex align-items-center rounded border-0 fw-bold" th:href="@{/admin/customer/list}">
             <i class="bi bi-people me-2"></i> Quản lý khách hàng
         </a>
     </li>
 
     <li class="mb-1">
-        <a class="btn d-inline-flex align-items-center rounded border-0 fw-bold" th:href="@{/user/list}">
+        <a class="btn d-inline-flex align-items-center rounded border-0 fw-bold" th:href="@{/admin/user/list}">
             <i class="bi bi-person-gear me-2"></i> Quản lý nhân viên
         </a>
     </li>
 
     <li class="mb-1">
-        <a class="btn d-inline-flex align-items-center rounded border-0 fw-bold" th:href="@{/settings}">
+        <a class="btn d-inline-flex align-items-center rounded border-0 fw-bold" th:href="@{/admin/settings}">
             <i class="bi bi-gear me-2"></i> Cài đặt hệ thống
         </a>
     </li>
 
     <li class="border-top my-3"></li>
+    <li class="mb-1">
+        <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
+                data-bs-toggle="collapse" data-bs-target="#account-collapse" aria-expanded="false">
+            <!--/*@thymesVar id="currentUser" type="com.group3.sp25hsf302group3se1889vj.entity.User"*/-->
+            <img th:src="@{__${'/' + currentUser.avatar}__}"
+                 alt="" width="32" height="32" class="rounded-circle me-2 border border-2"
+                 style="aspect-ratio: 1/1; object-fit: cover;"
+            >
+            <span class="link-body-emphasis d-inline-flex text-decoration-none rounded">
+                <span th:text="${currentUser.firstName + ' ' + currentUser.lastName}"></span>
+            </span>
+        </button>
+        <div class="collapse" id="account-collapse">
+            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                <li><a th:href="@{/admin/profile}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
+                    <i class="bi bi-person me-2"></i>
+                    Hồ sơ cá nhân
+                </a></li>
+                <li><a th:href="@{/admin/change-password}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
+                    <i class="bi bi-lock me-2"></i>
+                    Đổi mật khẩu
+                </a></li>
+                <li><a th:href="@{/admin/logout}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">
+                    <i class="bi bi-box-arrow-right me-2"></i>
+                    Đăng xuất
+                </a></li>
+            </ul>
+        </div>
+    </li>
 </ul>
 </body>
 </html>

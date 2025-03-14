@@ -81,4 +81,4 @@ owner:
   gender: true
   birthday: 2004-09-14
   address: 123 Đường 123, Quận 1, TP.HCM
-  avatar: /images/male.png
+  avatar: images/male.png

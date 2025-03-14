@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      lang="en" layout:decorate="customer-template">
+<body>
+<section layout:fragment="content" class="section-home-slider">
+    <div class="layout-account">
+        <div class="container">
+            <div class="wrapbox-content-account">
+                <div id="customer-login" class="customers_accountForm customer_login">
+                    <div class="tab-form-account d-flex align-items-center justify-content-center">
+                        <h4 class="active">
+                            <a href="/account/login">Đăng nhập</a>
+                        </h4>
+                        <h4>
+                            <a href="/account/register">Đăng ký</a>
+                        </h4>
+                    </div>
+                    <div id="login">
+                        <div class="accounttype">
+                            <h2 class="title"></h2>
+                        </div>
+                        <form method="post" th:object="${loginDTO}" th:action="@{/login}" class="customer_login">
+
+                            <div class="input-group mb-3">
+                                <div th:replace="fragments/input :: customInput('username', 'text', 'bi-person', 'Tên đăng nhập', true)"></div>
+                            </div>
+                            <div class="input-group mb-3">
+                                <div th:replace="fragments/input :: customInput('password', 'password', 'bi-key', 'Mật khẩu', true)"></div>
+                            </div>
+                            <div class="form-check mb-4">
+                                <input th:field="*{remember}" class="form-check-input" type="checkbox" id="remember1">
+                                <label class="form-check-label" for="remember1">
+                                    Ghi nhớ đăng nhập
+                                </label>
+                            </div>
+                            <div th:replace="fragments/recapcha :: recapcha"></div>
+                            <span class="text-danger" th:if="${#fields.hasErrors('recaptchaResponse')}" th:errors="*{recaptchaResponse}"></span>
+                            <div class="clearfix custommer_account_action">
+                                <div class="action_bottom button">
+                                    <input class="button btn-signin" type="submit" value="Đăng nhập">
+                                </div>
+                                <div class="req_pass">
+                                    <p>Bạn chưa có tài khoản?<a th:href="@{/register}" title="Đăng ký"> Đăng ký</a></p>
+                                    <p>Bạn quên mật khẩu?<a th:href="@{/fogot-password}" title="Quên mật khẩu"> Quên mật khẩu?</a></p>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

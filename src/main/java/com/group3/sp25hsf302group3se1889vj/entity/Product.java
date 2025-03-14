@@ -1,0 +1,44 @@
+package com.group3.sp25hsf302group3se1889vj.entity;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+
+import java.math.BigDecimal;
+
+@EqualsAndHashCode(callSuper = true)
+@Entity
+@Data
+@SuperBuilder(toBuilder = true)
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "products")
+public class Product extends BaseEntity {
+
+    @Column(nullable = false, columnDefinition = "NVARCHAR(255)")
+    private String name;
+
+    @Column(nullable = false, columnDefinition = "NVARCHAR(MAX)")
+    private String description;
+
+    @Column(nullable = false, columnDefinition = "BIT")
+    private boolean isActive = true;
+
+    private String thumbnail;
+
+    @ManyToOne
+    private Brand brand;
+
+    @ManyToOne
+    private Category category;
+
+    private BigDecimal priceOrigin;
+
+    private BigDecimal priceSale;
+
+    private double avgRating;
+
+}

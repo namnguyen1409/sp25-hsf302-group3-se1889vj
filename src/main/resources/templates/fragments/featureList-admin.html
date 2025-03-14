@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="vi">
+<body>
+
+<ul th:fragment="featureList(class, id)"
+    th:id="${id}"
+    th:class="${class}">
+    <li class="mb-1">
+        <a class="btn d-inline-flex align-items-center rounded border-0 fw-bold" th:href="@{/product/list}">
+            <i class="bi bi-box-seam-fill me-2"></i> Quản lý sản phẩm
+        </a>
+    </li>
+
+    <li class="mb-1">
+        <a class="btn d-inline-flex align-items-center rounded border-0 fw-bold" th:href="@{/category/list}">
+            <i class="bi bi-tags me-2"></i> Quản lý danh mục
+        </a>
+    </li>
+
+    <li class="mb-1">
+        <a class="btn d-inline-flex align-items-center rounded border-0 fw-bold" th:href="@{/order/list}">
+            <i class="bi bi-cart-check me-2"></i> Quản lý đơn hàng
+        </a>
+    </li>
+
+    <li class="mb-1">
+        <a class="btn d-inline-flex align-items-center rounded border-0 fw-bold" th:href="@{/customer/list}">
+            <i class="bi bi-people me-2"></i> Quản lý khách hàng
+        </a>
+    </li>
+
+    <li class="mb-1">
+        <a class="btn d-inline-flex align-items-center rounded border-0 fw-bold" th:href="@{/user/list}">
+            <i class="bi bi-person-gear me-2"></i> Quản lý nhân viên
+        </a>
+    </li>
+
+    <li class="mb-1">
+        <a class="btn d-inline-flex align-items-center rounded border-0 fw-bold" th:href="@{/settings}">
+            <i class="bi bi-gear me-2"></i> Cài đặt hệ thống
+        </a>
+    </li>
+
+    <li class="border-top my-3"></li>
+</ul>
+</body>
+</html>

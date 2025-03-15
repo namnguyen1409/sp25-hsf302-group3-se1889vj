@@ -7,8 +7,10 @@ spring:
     name: sp25-hsf302-group3-se1889vj
   datasource:
     url: jdbc:sqlserver://localhost:1433;databaseName=hsf302;encrypt=true;trustServerCertificate=true
+
     username: manh
     password: 12345678
+
   jpa:
     database-platform: org.hibernate.dialect.SQLServerDialect
     hibernate:

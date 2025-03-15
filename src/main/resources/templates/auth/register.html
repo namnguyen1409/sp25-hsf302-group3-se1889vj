@@ -55,6 +55,11 @@
                                     <label th:for="*{gender}" class="form-label ">Giới tính</label>
                                 </div>
                             </div>
+
+                            <div class="input-group mb-3">
+                                <div th:replace="fragments/input :: customInput('birthday', 'date', 'bi-calendar', 'Ngày sinh', true)"></div>
+                            </div>
+
                             <div class="input-group mb-3">
                                 <div th:replace="fragments/input :: customInput('address', 'text', 'bi-geo-alt', 'Địa chỉ', true)"></div>
                             </div>

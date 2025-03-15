@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html
+        lang="en"
+        layout:decorate="customer-template" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<body>
+<section class="section-home-slider" layout:fragment="content">
+    <div class="home-slider swiper swiper-initialized swiper-horizontal swiper-pointer-events swiper-backface-hidden">
+
+        <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <a href="/collections/new-1" title="Mini Lookbook FW24">
+                        <picture>
+                            <source media="(max-width: 767px)" srcset="//theme.hstatic.net/200000690725/1001078549/14/slide_3_mb.jpg?v=666">
+                            <source media="(min-width: 768px)" srcset="//theme.hstatic.net/200000690725/1001078549/14/slide_3_img.jpg?v=666">
+                            <img src="//theme.hstatic.net/200000690725/1001078549/14/slide_3_img.jpg?v=666" class="d-block w-100" alt="Mini Lookbook FW24">
+                        </picture>
+                    </a>
+                </div>
+                <div class="carousel-item">
+                    <a href="/collections/do-thu-dong" title="Xmas Collection FW24">
+                        <picture>
+                            <source media="(max-width: 767px)" srcset="//theme.hstatic.net/200000690725/1001078549/14/slide_1_mb.jpg?v=666">
+                            <source media="(min-width: 768px)" srcset="//theme.hstatic.net/200000690725/1001078549/14/slide_1_img.jpg?v=666">
+                            <img src="//theme.hstatic.net/200000690725/1001078549/14/slide_1_img.jpg?v=666" class="d-block w-100" alt="Xmas Collection FW24">
+                        </picture>
+                    </a>
+                </div>
+                <div class="carousel-item">
+                    <a href="/collections/do-thu-dong" title="New Collection FW24">
+                        <picture>
+                            <source media="(max-width: 767px)" srcset="//theme.hstatic.net/200000690725/1001078549/14/slide_2_mb.jpg?v=666">
+                            <source media="(min-width: 768px)" srcset="//theme.hstatic.net/200000690725/1001078549/14/slide_2_img.jpg?v=666">
+                            <img src="//theme.hstatic.net/200000690725/1001078549/14/slide_2_img.jpg?v=666" class="d-block w-100" alt="New Collection FW24">
+                        </picture>
+                    </a>
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+
+    </div>
+
+</section>
+</body>
+</html>

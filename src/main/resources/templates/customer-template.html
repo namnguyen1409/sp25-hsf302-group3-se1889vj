@@ -88,5 +88,19 @@
 
 </script>
 
+<th:block th:if="${flashMessage}">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+
+    <script>
+        Swal.fire({
+            icon: '[[${flashMessageType}]]',
+            title: '[[${flashMessage}]]',
+            showConfirmButton: false,
+            timer: 150000,
+        })
+    </script>
+
+</th:block>
+
 </body>
 </html>

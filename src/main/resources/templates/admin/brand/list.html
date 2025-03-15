@@ -52,7 +52,7 @@
     }
   </style>
 
-  <form th:object="${filterDTO}" th:action="@{/admin/category/list}" method="post" class="d-none" id="filterForm">
+  <form th:object="${filterDTO}" th:action="@{/admin/brand/list}" method="post" class="d-none" id="filterForm">
     <input type="hidden" th:field="*{page}" class="hidden-field">
     <input type="hidden" th:field="*{orderBy}" class="hidden-field">
     <input type="hidden" th:field="*{direction}" class="hidden-field">
@@ -84,7 +84,7 @@
 
     </div>
 
-    <a th:href="@{/admin/category/add}" class="btn btn-primary">
+    <a th:href="@{/admin/brand/add}" class="btn btn-primary">
       <i class="bi bi-plus-circle"></i> Thêm mới
     </a>
   </div>
@@ -114,6 +114,8 @@
           <td>
             <input type="text" class="form-control form-control-sm" th:value="*{description}" id="descriptionField" placeholder="Mô tả">
           </td>
+            <td>
+            </td>
           <td>
             <div class="d-flex gap-2" style="max-width: 200px">
               <input type="datetime-local" class="form-control form-control-sm" th:value="*{createdAtFrom}" id="createdAtFromField" style="max-width: 100px">
@@ -140,6 +142,42 @@
               <i class="bi bi-arrow-counterclockwise"></i>
             </button>
           </td>
+        </tr>
+
+<!--        show list-->
+        <tr th:each="brandList : ${pages}">
+          <td class="text-dark text-sm ps-4" th:text="${brandList.name}">name</td>
+<!--          <td>-->
+<!--            <input type="text" class="form-control form-control-sm" th:value="*{description}" id="descriptionField" placeholder="Mô tả">-->
+<!--          </td>-->
+<!--          <td>-->
+<!--          </td>-->
+<!--          <td>-->
+<!--            <div class="d-flex gap-2" style="max-width: 200px">-->
+<!--              <input type="datetime-local" class="form-control form-control-sm" th:value="*{createdAtFrom}" id="createdAtFromField" style="max-width: 100px">-->
+<!--              <input type="datetime-local" class="form-control form-control-sm" th:value="*{createdAtTo}" id="createdAtToField" style="max-width: 100px">-->
+<!--            </div>-->
+<!--          </td>-->
+<!--          <td>-->
+<!--            <input type="text" class="form-control form-control-sm" th:value="*{createdBy}" id="createdByField" placeholder="Người tạo">-->
+<!--          </td>-->
+<!--          <td>-->
+<!--            <div class="d-flex gap-2" style="max-width: 200px">-->
+<!--              <input type="datetime-local" class="form-control form-control-sm" th:value="*{updatedAtFrom}" id="updatedAtFromField" style="max-width: 100px">-->
+<!--              <input type="datetime-local" class="form-control form-control-sm" th:value="*{updatedAtTo}" id="updatedAtToField" style="max-width: 100px">-->
+<!--            </div>-->
+<!--          </td>-->
+<!--          <td>-->
+<!--            <input type="text" class="form-control form-control-sm" th:value="*{updatedBy}" id="updatedByField" placeholder="Người cập nhật">-->
+<!--          </td>-->
+<!--          <td class="text-center sticky-column">-->
+<!--            <button type="submit" class="btn btn-primary btn-sm" id="btnSubmit">-->
+<!--              <i class="bi bi-search"></i>-->
+<!--            </button>-->
+<!--            <button type="button" class="btn btn-secondary btn-sm" onclick="resetField()">-->
+<!--              <i class="bi bi-arrow-counterclockwise"></i>-->
+<!--            </button>-->
+<!--          </td>-->
         </tr>
 
         <tr th:if="${pages.totalPages > 0}" th:each="item : ${pages}">
@@ -202,6 +240,7 @@
       let form = document.getElementById('filterForm');
       form.elements['name'].value = '';
       form.elements['description'].value = '';
+      form.elements['parentName'].value = '';
       form.elements['createdAtFrom'].value = '';
       form.elements['createdAtTo'].value = '';
       form.elements['createdBy'].value = '';
@@ -219,6 +258,7 @@
       let form = document.getElementById('filterForm');
       form.elements['name'].value = document.getElementById('nameField').value;
       form.elements['description'].value = document.getElementById('descriptionField').value;
+      form.elements['parentName'].value = document.getElementById('parentNameField').value;
       form.elements['createdAtFrom'].value = document.getElementById('createdAtFromField').value;
       form.elements['createdAtTo'].value = document.getElementById('createdAtToField').value;
       form.elements['createdBy'].value = document.getElementById('createdByField').value;

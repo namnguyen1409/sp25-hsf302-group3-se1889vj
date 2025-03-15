@@ -12,6 +12,27 @@ public class CustomerAddressSpecification {
     public static Specification<CustomerAddress> filterCustomerAddress(CustomerAddressFilterDTO filterDTO) {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
+            // customer predicates
+            if(filterDTO.getFirstname() != null) {
+                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("firstname")), "%" + filterDTO.getFirstname().toLowerCase() + "%"));
+            }
+            if(filterDTO.getLastname() != null) {
+                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("lastname")), "%" + filterDTO.getLastname().toLowerCase() + "%"));
+            }
+            if(filterDTO.getPhone() != null) {
+                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("phone")), "%" + filterDTO.getPhone().toLowerCase() + "%"));
+            }
+
+            // address predicates
+            if(filterDTO.getDistrict() != null) {
+                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("district")), "%" + filterDTO.getDistrict().toLowerCase() + "%"));
+            }
+            if(filterDTO.getWard() != null) {
+                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("ward")), "%" + filterDTO.getWard().toLowerCase() + "%"));
+            }
+            if(filterDTO.getAddress() != null) {
+                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("address")), "%" + filterDTO.getAddress().toLowerCase() + "%"));
+            }
 
             // base predicates
             if(filterDTO.getCreatedAtFrom() != null) {

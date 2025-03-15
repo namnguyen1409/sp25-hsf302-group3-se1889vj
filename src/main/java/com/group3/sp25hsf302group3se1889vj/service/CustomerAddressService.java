@@ -1,5 +1,10 @@
 package com.group3.sp25hsf302group3se1889vj.service;
 
-public interface CustomerAddressService {
+import com.group3.sp25hsf302group3se1889vj.dto.CustomerAddressDTO;
+import com.group3.sp25hsf302group3se1889vj.dto.filter.CustomerAddressFilterDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
+public interface CustomerAddressService {
+    Page<CustomerAddressDTO> searchCustomerAddresses(CustomerAddressFilterDTO filter, Pageable pageable);
 }

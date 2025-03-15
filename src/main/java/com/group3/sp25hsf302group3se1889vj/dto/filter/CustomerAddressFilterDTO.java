@@ -8,7 +8,10 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CustomerAddressFilterDTO extends BaseFilterDTO {
-    // TODO: Add fields here
-    private String name;
-
+    private String firstname;
+    private String lastname;
+    private String district;
+    private String ward;
+    private String address;
+    private String phone;
 }

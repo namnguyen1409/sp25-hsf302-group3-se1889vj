@@ -39,13 +39,13 @@ public class StaticPageServiceImpl implements StaticPageService {
     public StaticPageDTO findById(Long id) {
         return staticPageRepository.findById(id)
                 .map(staticPageMapper::toDTO)
-                .orElseThrow(() -> new RuntimeException("Banner not found"));
+                .orElseThrow(() -> new RuntimeException("Static page not found"));
     }
 
     @Override
     public void update(StaticPageDTO staticPageDTO) {
         StaticPage entity = staticPageRepository.findById(staticPageDTO.getId())
-                .orElseThrow(() -> new RuntimeException("Banner not found"));
+                .orElseThrow(() -> new RuntimeException("Static page not found"));
         entity.setTitle(staticPageDTO.getTitle());
         entity.setSlug(staticPageDTO.getSlug());
         entity.setContent(staticPageDTO.getContent());
@@ -55,5 +55,15 @@ public class StaticPageServiceImpl implements StaticPageService {
     @Override
     public void delete(Long id) {
         staticPageRepository.deleteById(id);
+    }
+
+    @Override
+    public boolean existsBySlug(String slug) {
+        return staticPageRepository.existsBySlug(slug);
+    }
+
+    @Override
+    public boolean existsByTitle(String title) {
+        return staticPageRepository.existsByTitle(title);
     }
 }

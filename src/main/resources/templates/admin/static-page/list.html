@@ -153,8 +153,9 @@
                class="btn btn-sm btn-warning">
               <i class="bi bi-pencil-square"></i>
             </a>
-            <a th:href="@{'/admin/static-page/delete/' + ${item.id}}"
-               class="btn btn-sm btn-danger">
+            <a class="btn btn-sm btn-danger"
+               th:attr="data-id=${item.id}, data-title=${item.title}"
+               onclick="confirmDelete(this)">
               <i class="bi bi-trash"></i>
             </a>
           </td>
@@ -246,7 +247,28 @@
 
 
   </script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+  <script>
+    function confirmDelete(button) {
+      let id = button.getAttribute('data-id');
+      let title = button.getAttribute('data-title');
+      Swal.fire({
+        title: 'Xác nhận xóa',
+        text: `Bạn có chắc chắn muốn xóa trang tĩnh "${title}" không?`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Xóa',
+        cancelButtonText: 'Hủy'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.location.href = `/admin/static-page/delete/${id}`;
+        }
+      });
+    }
+  </script>
 
 </section>
 </body>

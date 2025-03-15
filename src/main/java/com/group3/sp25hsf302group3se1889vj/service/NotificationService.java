@@ -11,7 +11,7 @@ public interface NotificationService {
 
     void save(NotificationDTO notificationDTO);
 
-    BannerDTO findById(Long id);
+    NotificationDTO findById(Long id);
 
     void update(NotificationDTO notificationDTO);
 

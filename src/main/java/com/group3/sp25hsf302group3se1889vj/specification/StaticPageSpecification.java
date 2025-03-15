@@ -13,6 +13,7 @@ public class StaticPageSpecification {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
+
             // base predicates
             if(filterDTO.getCreatedAtFrom() != null) {
                 predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("createdAt"), filterDTO.getCreatedAtFrom()));
@@ -31,6 +32,16 @@ public class StaticPageSpecification {
             }
             if(filterDTO.getUpdatedBy() != null && !filterDTO.getUpdatedBy().isEmpty()) {
                 predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("updatedBy")), "%" + filterDTO.getUpdatedBy().toLowerCase() + "%"));
+            }
+            // custom predicates
+            if(filterDTO.getTitle() != null && !filterDTO.getTitle().isEmpty()) {
+                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("title")), "%" + filterDTO.getTitle().toLowerCase() + "%"));
+            }
+            if(filterDTO.getSlug() != null && !filterDTO.getSlug().isEmpty()) {
+                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("slug")), "%" + filterDTO.getSlug().toLowerCase() + "%"));
+            }
+            if (filterDTO.getContent() != null && !filterDTO.getContent().isEmpty()) {
+                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("content")), "%" + filterDTO.getContent().toLowerCase() + "%"));
             }
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));

@@ -1,6 +1,7 @@
 package com.group3.sp25hsf302group3se1889vj.controller.common;
 
 import com.group3.sp25hsf302group3se1889vj.dto.LoginDTO;
+import com.group3.sp25hsf302group3se1889vj.dto.RegisterCustomerDTO;
 import com.group3.sp25hsf302group3se1889vj.entity.Token;
 import com.group3.sp25hsf302group3se1889vj.entity.User;
 import com.group3.sp25hsf302group3se1889vj.enums.TokenType;
@@ -109,6 +110,23 @@ public class AuthController {
         return "redirect:admin/home";
     }
 
+    @GetMapping("/logout")
+    public String logout() {
+        var refreshToken = cookieUtil.getCookie("refreshToken");
+        if (refreshToken != null) {
+            tokenService.deleteTokenByToken(refreshToken);
+        }
+        cookieUtil.deleteCookie("jwtToken", "/", true, false);
+        cookieUtil.deleteCookie("refreshToken", "/", true, false);
+        return "redirect:/login";
+    }
+
+    @GetMapping("/register")
+    public String register(Model model) {
+        model.addAttribute("title", "Register");
+        model.addAttribute("registerDTO", new RegisterCustomerDTO());
+        return "auth/register";
+    }
 
 
 }

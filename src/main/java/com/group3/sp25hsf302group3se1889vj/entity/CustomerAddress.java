@@ -19,19 +19,7 @@ public class CustomerAddress extends BaseEntity {
     private boolean isDefault = false;
 
     @Column(nullable = false, columnDefinition = "NVARCHAR(50)")
-    private String firstName;
-
-    @Column(nullable = false, columnDefinition = "NVARCHAR(50)")
-    private String lastName;
-
-    @Column(nullable = false, columnDefinition = "NVARCHAR(50)")
-    private String province;
-
-    @Column(nullable = false, columnDefinition = "NVARCHAR(50)")
-    private String district;
-
-    @Column(nullable = false, columnDefinition = "NVARCHAR(50)")
-    private String ward;
+    private String fullName;
 
     @Column(nullable = false, columnDefinition = "NVARCHAR(255)")
     private String address;

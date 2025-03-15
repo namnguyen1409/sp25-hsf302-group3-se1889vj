@@ -7,6 +7,8 @@ import jakarta.validation.constraints.Size;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 public interface BrandService {
 
     Page<BrandDTO> findAll(BrandFilterDTO filterDTO, Pageable pageable);
@@ -20,4 +22,6 @@ public interface BrandService {
     boolean existsByName(String name);
 
     boolean existsByNameAndIdNot(String name, Long id);
+
+    List<BrandDTO> getBrands();
 }

@@ -5,6 +5,7 @@ import com.group3.sp25hsf302group3se1889vj.dto.filter.UserFilterDTO;
 import com.group3.sp25hsf302group3se1889vj.enums.RoleType;
 import com.group3.sp25hsf302group3se1889vj.service.UserService;
 import com.group3.sp25hsf302group3se1889vj.util.MetadataExtractor;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,7 +20,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/admin/customer")
-
+@AllArgsConstructor
 public class CustomerController {
     private UserService userService;
     private MetadataExtractor metadataExtractor;

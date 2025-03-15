@@ -52,7 +52,7 @@
         }
     </style>
 
-    <form th:object="${filterDTO}" th:action="@{/admin/staff/list}" method="post" class="d-none" id="filterForm">
+    <form th:object="${filterDTO}" th:action="@{/admin/customer/list}" method="post" class="d-none" id="filterForm">
         <input type="hidden" th:field="*{page}" class="hidden-field">
         <input type="hidden" th:field="*{orderBy}" class="hidden-field">
         <input type="hidden" th:field="*{direction}" class="hidden-field">
@@ -68,7 +68,7 @@
 
 
     <div class="d-flex flex-wrap justify-content-between align-items-center mt-3 gap-2">
-        <h2 class="text-center flex-grow-1 text-md-start text-center">Danh sách nhân viên</h2>
+        <h2 class="text-center flex-grow-1 text-md-start text-center">Danh sách khách hàng</h2>
 
         <div class="d-flex align-items-center gap-2">
             <div class="input-group">
@@ -137,7 +137,7 @@
                 <tr th:if="${pages.totalPages > 0}" th:each="item : ${pages}">
                     <th:block th:replace="fragments/list-body :: list-body(${item}, ${fields}, ${fieldTitles}, ${fieldClasses})"></th:block>
                     <td class="text-center sticky-column">
-                        <a th:href="@{'/admin/staff/detail/' + ${item.id}}"
+                        <a th:href="@{'/admin/customer/detail/' + ${item.id}}"
                            class="btn btn-sm btn-warning">
                             <i class="bi bi-archive-fill"></i>
                         </a>

@@ -85,4 +85,21 @@ public class VNPayService {
     }
 
 
+    public boolean validateReturnUrl(Map<String, String[]> paramMap, String secureHash) {
+        Map<String, String> params = new HashMap<>();
+        for (Map.Entry<String, String[]> entry : paramMap.entrySet()) {
+            params.put(entry.getKey(), entry.getValue()[0]);
+        }
+        List<String> fieldNames = new ArrayList<>(params.keySet());
+        Collections.sort(fieldNames);
+        StringBuilder data = new StringBuilder();
+        for (String fieldName : fieldNames) {
+            if (!params.get(fieldName).isEmpty()) {
+                data.append(fieldName).append("=").append(URLEncoder.encode(params.get(fieldName), StandardCharsets.UTF_8)).append("&");
+            }
+        }
+        String rawData = data.substring(0, data.length() - 1);
+        String secureHashResponse = hmacSHA512(rawData, vnp_HashSecret);
+        return secureHash.equals(secureHashResponse);
+    }
 }

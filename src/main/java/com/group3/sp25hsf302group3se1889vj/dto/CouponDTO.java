@@ -8,4 +8,6 @@ import lombok.*;
 @NoArgsConstructor
 public class CouponDTO extends BaseDTO {
     // TODO: Add fields here
+    private String code;
+
 }

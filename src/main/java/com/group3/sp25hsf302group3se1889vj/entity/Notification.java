@@ -27,7 +27,7 @@ public class Notification extends BaseEntity {
     @Column(nullable = false, columnDefinition = "NVARCHAR(255)")
     private String title;
 
-    @Column(nullable = false, columnDefinition = "NVARCHAR(255)")
+    @Column(nullable = false, columnDefinition = "NVARCHAR(1000)")
     private String content;
 
     private boolean isRead = false;

@@ -8,4 +8,5 @@ import lombok.*;
 @NoArgsConstructor
 public class ShoppingCartDTO extends BaseDTO {
     // TODO: Add fields here
+    private Long UserId;
 }

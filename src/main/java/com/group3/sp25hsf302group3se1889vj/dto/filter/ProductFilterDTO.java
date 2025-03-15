@@ -9,5 +9,5 @@ import lombok.*;
 @NoArgsConstructor
 public class ProductFilterDTO extends BaseFilterDTO {
     // TODO: Add fields here
-
+    private String name;
 }

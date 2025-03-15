@@ -9,5 +9,5 @@ import lombok.*;
 @NoArgsConstructor
 public class UserCouponFilterDTO extends BaseFilterDTO {
     // TODO: Add fields here
-
+    private String name;
 }

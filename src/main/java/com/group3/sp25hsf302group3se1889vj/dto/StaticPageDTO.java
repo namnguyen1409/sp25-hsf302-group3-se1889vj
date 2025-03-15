@@ -8,4 +8,5 @@ import lombok.*;
 @NoArgsConstructor
 public class StaticPageDTO extends BaseDTO {
     // TODO: Add fields here
+    private String title;
 }

@@ -25,6 +25,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BrandController {
 
+
+    //
     private final BrandService brandService;
     private final MetadataExtractor metadataExtractor;
 

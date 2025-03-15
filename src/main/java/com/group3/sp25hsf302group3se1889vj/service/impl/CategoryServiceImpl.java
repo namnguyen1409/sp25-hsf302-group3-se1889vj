@@ -1,5 +1,6 @@
 package com.group3.sp25hsf302group3se1889vj.service.impl;
 
+import com.group3.sp25hsf302group3se1889vj.dto.BrandDTO;
 import com.group3.sp25hsf302group3se1889vj.dto.CategoryDTO;
 import com.group3.sp25hsf302group3se1889vj.dto.filter.CategoryFilterDTO;
 import com.group3.sp25hsf302group3se1889vj.entity.Category;
@@ -84,4 +85,5 @@ public class CategoryServiceImpl implements CategoryService {
         }
         categoryRepository.save(category);
     }
+
 }

@@ -16,6 +16,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import lombok.AllArgsConstructor;
 
+import java.util.List;
+
 @Slf4j
 @Service
 @AllArgsConstructor
@@ -61,5 +63,12 @@ public class BrandServiceImpl implements BrandService {
     @Override
     public boolean existsByNameAndIdNot(String name, Long id) {
         return brandRepository.existsByNameAndIdNot(name, id);
+    }
+
+    @Override
+    public List<BrandDTO> getBrands() {
+        return brandRepository.findAll().stream()
+                .map(brandMapper::toDTO)
+                .toList();
     }
 }

@@ -1,5 +1,5 @@
 server:
-  port: 8081
+  port: 8080
 
 
 spring:
@@ -8,7 +8,7 @@ spring:
   datasource:
     url: jdbc:sqlserver://localhost:1433;databaseName=hsf302;encrypt=true;trustServerCertificate=true
     username: sa
-    password: 123
+    password: 1409
   jpa:
     database-platform: org.hibernate.dialect.SQLServerDialect
     hibernate:

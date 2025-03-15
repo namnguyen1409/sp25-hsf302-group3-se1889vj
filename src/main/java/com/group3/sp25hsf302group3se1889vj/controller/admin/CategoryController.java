@@ -99,6 +99,9 @@ public class CategoryController {
             BindingResult bindingResult,
             RedirectAttributes redirectAttributes
     ) {
+        if(categoryDTO.getParentId() == categoryDTO.getId()) {
+            bindingResult.rejectValue("parentId", "error.categoryDTO", "Danh mục cha không thể là chính nó");
+        }
         if (categoryService.existsByNameAndParentIdAndIdNot(categoryDTO.getName(), categoryDTO.getParentId(), categoryDTO.getId())) {
             bindingResult.rejectValue("name", "error.categoryDTO", "Tên danh mục đã tồn tại");
         }

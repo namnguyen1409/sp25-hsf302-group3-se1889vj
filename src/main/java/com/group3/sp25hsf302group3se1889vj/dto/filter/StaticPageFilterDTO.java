@@ -8,6 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class StaticPageFilterDTO extends BaseFilterDTO {
-    // TODO: Add fields here
-    private String name;
+    private String title;
+    private String slug;
+    private String content;
 }

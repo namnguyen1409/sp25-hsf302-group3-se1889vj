@@ -2,6 +2,7 @@ package com.group3.sp25hsf302group3se1889vj.dto;
 
 import com.group3.sp25hsf302group3se1889vj.util.FieldMetadata;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
@@ -15,6 +16,7 @@ public class StaticPageDTO extends BaseDTO {
     @Size(min = 1, max = 255, message = "Tiêu đề phải từ 1 đến 255 ký tự")
     private String title;
 
+    @Pattern(regexp = "^[^!@#$%^&*()_+=\\[\\]{}|,;:'\"<>?/\\\\~`]*$", message = "Tên liên kết không được chứa ký tự đặc biệt")
     @FieldMetadata(title = "Liên kết", cssClass = "link")
     @NotBlank(message = "Liên kết không được để trống")
     @Size(min = 1, max = 255, message = "Liên kết phải từ 1 đến 255 ký tự")

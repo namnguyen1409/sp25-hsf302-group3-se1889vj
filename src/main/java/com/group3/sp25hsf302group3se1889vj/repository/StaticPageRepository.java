@@ -9,4 +9,7 @@ import java.util.Optional;
 
 @Repository
 public interface StaticPageRepository extends JpaRepository<StaticPage, Long>, JpaSpecificationExecutor<StaticPage> {
+    boolean existsBySlug(String slug);
+
+    boolean existsByTitle(String title);
 }

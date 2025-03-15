@@ -18,10 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Arrays;
@@ -34,7 +31,6 @@ import java.util.List;
 public class StaticPageController {
     private final StaticPageService staticPageService;
     private final MetadataExtractor metadataExtractor;
-    private final StorageService storageService;
 
     @GetMapping({"/list", "", "/"})
     public String list(Model model,
@@ -80,10 +76,51 @@ public class StaticPageController {
             BindingResult result,
             RedirectAttributes redirectAttributes
     ) {
+        if(staticPageService.existsBySlug(staticPageDTO.getSlug())){
+            result.rejectValue("slug", "slug.duplicate");
+        }
+        if(staticPageService.existsByTitle(staticPageDTO.getTitle())){
+            result.rejectValue("title", "title.duplicate");
+        }
         if(result.hasErrors()) {
             return "admin/static-page/add";
         }
         staticPageService.save(staticPageDTO);
+        return "redirect:/admin/static-page/";
+    }
+
+    @GetMapping("/edit/{id}")
+    public String edit(Model model,
+                       @PathVariable("id") Long id
+    ) {
+        StaticPageDTO staticPageDTO = staticPageService.findById(id);
+        model.addAttribute("entity", staticPageDTO);
+        return "admin/static-page/edit";
+    }
+
+    @PostMapping("/edit")
+    public String edit(
+            @ModelAttribute("entity") @Validated StaticPageDTO staticPageDTO,
+            BindingResult bindingResult,
+            RedirectAttributes redirectAttributes
+    ) {
+        if(staticPageService.existsBySlug(staticPageDTO.getSlug())){
+            bindingResult.rejectValue("slug", "slug.duplicate");
+        }
+        if(staticPageService.existsByTitle(staticPageDTO.getTitle())){
+            bindingResult.rejectValue("title", "title.duplicate");
+        }
+        if(bindingResult.hasErrors()) {
+            return "admin/static-page/edit";
+        }
+
+        staticPageService.update(staticPageDTO);
+        return "redirect:/admin/static-page/";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable("id") Long id) {
+        staticPageService.delete(id);
         return "redirect:/admin/static-page/";
     }
 }

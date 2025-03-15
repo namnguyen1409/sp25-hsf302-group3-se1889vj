@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      lang="vi" layout:decorate="admin-template">
+
+<body>
+<section layout:fragment="content" class="container mt-4">
+    <div class="row justify-content-center h-100">
+        <div class="col-lg-8 d-flex flex-column nowrap justify-content-center">
+            <form th:action="@{/admin/static-page/edit}" th:object="${entity}" method="post"
+                  class="p-md-4 border rounded shadow-sm">
+                <h4 class="text-center mb-5">Sửa thông tin trang tĩnh</h4>
+
+                <input type="hidden" th:field="*{id}">
+
+                <div class="mb-3">
+                    <div th:replace="fragments/input :: customInput ('title', 'text', 'bi-tag', 'Tên trang tĩnh', true)"></div>
+                </div>
+                <div class="mb-3">
+                    <div th:replace="fragments/input :: customInput ('slug', 'text', 'bi-tag', 'Tên liên kết', true)"></div>
+                </div>
+
+                <div class="mb-3">
+                    <div th:replace="fragments/textarea :: customTextarea('content', 'bi-justify', 'Nội dung')"></div>
+                </div>
+
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-save"></i> Lưu thay đổi
+                    </button>
+                    <a th:href="@{/admin/static-page}" class="btn btn-secondary">Quay lại</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+</body>
+</html>

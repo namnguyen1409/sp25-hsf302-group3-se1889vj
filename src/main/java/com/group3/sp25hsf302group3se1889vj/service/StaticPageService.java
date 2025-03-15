@@ -17,4 +17,7 @@ public interface StaticPageService {
 
     void delete(Long id);
 
+    boolean existsBySlug(String slug);
+
+    boolean existsByTitle(String title);
 }

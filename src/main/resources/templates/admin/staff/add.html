@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      lang="vi" layout:decorate="admin-template">
+
+<body>
+<section layout:fragment="content" class="container mt-4">
+    <div class="row justify-content-center h-100">
+        <div class="col-lg-8 d-flex flex-column nowrap justify-content-center">
+            <form th:action="@{/admin/staff/add}" method="post"
+                  class="p-md-4 border rounded shadow-sm">
+                <h4 class="text-center mb-5">Thêm mới nhân viên</h4>
+                <div class="mb-3">
+                    <div th:replace="fragments/input :: customInput ('email', 'text', 'bi-tag', 'Địa chỉ email', true)"></div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-person-plus-fill"></i>
+                    Thêm mới
+                </button>
+                <a th:href="@{/admin/staff}" class="btn btn-secondary">Quay lại</a>
+            </form>
+        </div>
+    </div>
+</section>
+</body>
+</html>

@@ -11,6 +11,10 @@ import com.group3.sp25hsf302group3se1889vj.exception.Http404;
 import com.group3.sp25hsf302group3se1889vj.exception.Http500;
 import com.group3.sp25hsf302group3se1889vj.repository.CustomerAddressRepository;
 import com.group3.sp25hsf302group3se1889vj.repository.TokenRepository;
+import com.group3.sp25hsf302group3se1889vj.dto.UserDTO;
+import com.group3.sp25hsf302group3se1889vj.dto.filter.UserFilterDTO;
+import com.group3.sp25hsf302group3se1889vj.entity.User;
+import com.group3.sp25hsf302group3se1889vj.mapper.UserMapper;
 import com.group3.sp25hsf302group3se1889vj.repository.UserRepository;
 import com.group3.sp25hsf302group3se1889vj.service.EmailService;
 import com.group3.sp25hsf302group3se1889vj.service.UserService;
@@ -18,6 +22,11 @@ import com.group3.sp25hsf302group3se1889vj.util.EncryptionUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import com.group3.sp25hsf302group3se1889vj.specification.UserSpecification;
+import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +39,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
+import java.util.Optional;
+
 @Service
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -42,6 +53,7 @@ public class UserServiceImpl implements UserService {
     private final CustomerAddressRepository customerAddressRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenRepository tokenRepository;
+    private final UserMapper userMapper;
 
     @Override
     public boolean existsByEmail(String value) {
@@ -175,5 +187,17 @@ public class UserServiceImpl implements UserService {
         tokenRepository.delete(verifyToken);
 
         log.info("Email verified successfully for user: {}", user.getEmail());
+
+    }
+
+    public Page<UserDTO> searchUsers(UserFilterDTO filter, Pageable pageable) {
+        Specification<User> specification = UserSpecification.filterUser(filter);
+        return userRepository.findAll(specification, pageable).map(userMapper::mapToUserDTO);
+    }
+
+    @Override
+    public UserDTO getUserById(Long id) {
+        Optional<User> user = userRepository.findById((long) id);
+        return userMapper.mapToUserDTO(user.get());
     }
 }

@@ -60,4 +60,12 @@ public class CouponServiceImpl implements CouponService {
     public boolean isExistCodeAndIdNot(String code, Long id) {
         return couponRepository.existsByCodeAndIdNot(code, id);
     }
+
+    @Override
+    public void restore(Long id) {
+        Coupon coupon = couponRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Coupon not found"));
+        coupon.restore();
+        couponRepository.save(coupon);
+    }
 }

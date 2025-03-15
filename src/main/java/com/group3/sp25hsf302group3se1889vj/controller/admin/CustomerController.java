@@ -10,7 +10,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -18,11 +17,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Arrays;
 import java.util.List;
-@PreAuthorize("hasRole('OWNER') or hasAnyAuthority('MANAGE_STAFF')")
+
 @Controller
-@RequestMapping("/admin/staff")
+@RequestMapping("/admin/customer")
 @AllArgsConstructor
-public class StaffController {
+public class CustomerController {
     private UserService userService;
     private MetadataExtractor metadataExtractor;
 
@@ -45,11 +44,11 @@ public class StaffController {
 
         Pageable pageable = PageRequest.of(filterDTO.getPage() - 1, filterDTO.getSize(), sortDirection);
 
-        filterDTO.setRole(RoleType.STAFF);
+        filterDTO.setRole(RoleType.CUSTOMER);
         Page<UserDTO> pages = userService.searchUsers(filterDTO, pageable);
         model.addAttribute("pages", pages);
         model.addAttribute("filterDTO", filterDTO);
-        return "admin/staff/list";
+        return "admin/user/customer/list";
     }
 
     @PostMapping({"/list", "", "/"})
@@ -58,19 +57,13 @@ public class StaffController {
             RedirectAttributes redirectAttributes
     ) {
         redirectAttributes.addFlashAttribute("filterDTO", filterDTO);
-        return "redirect:/admin/staff/list";
+        return "redirect:/admin/customer/list";
     }
 
     @GetMapping("/detail/{id}")
     public String detail(Model model, @PathVariable Long id) {
         UserDTO userDTO = userService.getUserById(id);
         model.addAttribute("userDTO", userDTO);
-        return "admin/staff/detail";
-    }
-
-    @GetMapping("/add")
-    public String add(Model model) {
-        model.addAttribute("userDTO", new UserDTO());
-        return "admin/staff/add";
+        return "admin/user/customer/detail";
     }
 }

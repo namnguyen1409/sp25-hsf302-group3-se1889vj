@@ -52,7 +52,7 @@
     }
   </style>
 
-  <form th:object="${filterDTO}" th:action="@{/admin/category/list}" method="post" class="d-none" id="filterForm">
+  <form th:object="${filterDTO}" th:action="@{/admin/brand/list}" method="post" class="d-none" id="filterForm">
     <input type="hidden" th:field="*{page}" class="hidden-field">
     <input type="hidden" th:field="*{orderBy}" class="hidden-field">
     <input type="hidden" th:field="*{direction}" class="hidden-field">
@@ -84,7 +84,7 @@
 
     </div>
 
-    <a th:href="@{/admin/category/add}" class="btn btn-primary">
+    <a th:href="@{/admin/brand/add}" class="btn btn-primary">
       <i class="bi bi-plus-circle"></i> Thêm mới
     </a>
   </div>
@@ -114,6 +114,8 @@
           <td>
             <input type="text" class="form-control form-control-sm" th:value="*{description}" id="descriptionField" placeholder="Mô tả">
           </td>
+            <td>
+            </td>
           <td>
             <div class="d-flex gap-2" style="max-width: 200px">
               <input type="datetime-local" class="form-control form-control-sm" th:value="*{createdAtFrom}" id="createdAtFromField" style="max-width: 100px">
@@ -142,16 +144,17 @@
           </td>
         </tr>
 
+    <!--        show list-->
         <tr th:if="${pages.totalPages > 0}" th:each="item : ${pages}">
           <th:block th:replace="fragments/list-body :: list-body(${item}, ${fields}, ${fieldTitles}, ${fieldClasses})"></th:block>
           <td class="text-center sticky-column">
-            <a th:href="@{'/admin/category/edit/' + ${item.id}}"
+            <a th:href="@{'/admin/brand/edit/' + ${item.id}}"
                class="btn btn-sm btn-warning">
               <i class="bi bi-pencil-square"></i>
             </a>
-            <a th:href="@{'/admin/category/delete/' + ${item.id}}"
-               class="btn btn-sm btn-danger">
-              <i class="bi bi-trash"></i>
+            <a th:href="@{'/admin/brand/detail/' + ${item.id}}"
+               class="btn btn-sm btn-success">
+              <i class="bi bi-eye-fill"></i>
             </a>
           </td>
         </tr>

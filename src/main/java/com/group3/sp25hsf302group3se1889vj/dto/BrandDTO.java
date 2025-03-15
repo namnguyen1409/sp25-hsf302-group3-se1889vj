@@ -16,7 +16,7 @@ public class BrandDTO extends BaseDTO {
     private String name;
 
     @Size(max = 255, message = "Logo không được vượt quá 255 ký tự")
-    @FieldMetadata(title = "Logo URL", cssClass = "logo")
+    @FieldMetadata(title = "Logo", cssClass = "image")
     private String logo;
 
     @Size(max = 1000, message = "Mô tả không được vượt quá 1000 ký tự")

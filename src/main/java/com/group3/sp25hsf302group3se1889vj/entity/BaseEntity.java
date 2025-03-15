@@ -59,4 +59,7 @@ public abstract class BaseEntity {
         this.isDeleted = true;
     }
 
+    public void restore() {
+        this.isDeleted = false;
+    }
 }

@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      lang="en" layout:decorate="admin-template"
+>
+<body>
+<section layout:fragment="content" class="container-fluid h-100">
+    <style>
+
+        .tbl-container {
+            max-width: 100%;
+            max-height: fit-content;
+        }
+
+        .tbl-fixed {
+            overflow-x: scroll;
+            overflow-y: hidden;
+            height: fit-content;
+            max-height: 70vh;
+
+            scrollbar-width: none;
+        }
+
+        .tbl-fixed::-webkit-scrollbar {
+            display: none;
+        }
+
+        table {
+            min-width: max-content;
+        }
+        table th {
+            position: sticky;
+            top: 0;
+            background-color: white;
+            z-index: 1;
+        }
+
+        .description {
+            display: inline-block;
+            max-width: 150px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .sticky-column {
+            border-left: 1px solid #dee2e6;
+            position: sticky;
+            right: 0;
+            background-color: white;
+            z-index: 1;
+        }
+    </style>
+
+    <form th:object="${filterDTO}" th:action="@{/admin/coupon/list}" method="post" class="d-none" id="filterForm">
+        <input type="hidden" th:field="*{page}" class="hidden-field">
+        <input type="hidden" th:field="*{orderBy}" class="hidden-field">
+        <input type="hidden" th:field="*{direction}" class="hidden-field">
+        <input type="hidden" th:field="*{size}" class="hidden-field">
+
+        <input type="hidden" th:field="*{code}" class="hidden-field">
+        <input type="hidden" th:field="*{description}" class="hidden-field">
+        <input type="hidden" th:field="*{type}" class="hidden-field">
+        <input type="hidden" th:field="*{valueFrom}" class="hidden-field">
+        <input type="hidden" th:field="*{valueTo}" class="hidden-field">
+        <input type="hidden" th:field="*{minOrderValueFrom}" class="hidden-field">
+        <input type="hidden" th:field="*{minOrderValueTo}" class="hidden-field">
+        <input type="hidden" th:field="*{maxDiscountFrom}" class="hidden-field">
+        <input type="hidden" th:field="*{maxDiscountTo}" class="hidden-field">
+        <input type="hidden" th:field="*{maxUsageFrom}" class="hidden-field">
+        <input type="hidden" th:field="*{maxUsageTo}" class="hidden-field">
+        <input type="hidden" th:field="*{usageCountFrom}" class="hidden-field">
+        <input type="hidden" th:field="*{usageCountTo}" class="hidden-field">
+        <input type="hidden" th:field="*{maxUsagePerUserFrom}" class="hidden-field">
+        <input type="hidden" th:field="*{maxUsagePerUserTo}" class="hidden-field">
+        <input type="hidden" th:field="*{startDateFrom}" class="hidden-field">
+        <input type="hidden" th:field="*{startDateTo}" class="hidden-field">
+        <input type="hidden" th:field="*{endDateFrom}" class="hidden-field">
+        <input type="hidden" th:field="*{endDateTo}" class="hidden-field">
+        <input type="hidden" th:field="*{isDeleted}" class="hidden-field">
+
+
+        <input type="hidden" th:field="*{createdAtFrom}" class="hidden-field">
+        <input type="hidden" th:field="*{createdAtTo}" class="hidden-field">
+        <input type="hidden" th:field="*{createdBy}" class="hidden-field">
+        <input type="hidden" th:field="*{updatedAtFrom}" class="hidden-field">
+        <input type="hidden" th:field="*{updatedAtTo}" class="hidden-field">
+        <input type="hidden" th:field="*{updatedBy}" class="hidden-field">
+    </form>
+
+
+    <div class="d-flex flex-wrap justify-content-between align-items-center mt-3 gap-2">
+        <h2 class="text-center flex-grow-1 text-md-start text-center">Danh sách mã giảm giá</h2>
+
+        <div class="d-flex align-items-center gap-2">
+            <div class="input-group">
+                <label class="input-group-text" for="sizeField">Hiển thị</label>
+                <select class="form-select" id="sizeField" th:value="${filterDTO.size}" onchange="updateFilter()">
+                    <option value="5" th:selected="${filterDTO.size == 5}">5 kết quả/trang</option>
+                    <option value="10" th:selected="${filterDTO.size == 10}">10 kết quả/trang</option>
+                    <option value="20" th:selected="${filterDTO.size == 20}">20 kết quả/trang</option>
+                    <option value="50" th:selected="${filterDTO.size == 50}">50 kết quả/trang</option>
+                </select>
+            </div>
+
+        </div>
+
+        <a th:href="@{/admin/coupon/add}" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Thêm mới
+        </a>
+    </div>
+
+    <div class="container mt-4 tbl-container">
+        <div class="row tbl-fixed">
+            <table id="mainTable" class="table table-striped table-bordered" style="width:100%">
+                <thead class="table-primary">
+                <tr>
+                    <th th:each="field: ${fields}"
+                        th:data="${field}"
+                        style="cursor: pointer; width: fit-content;"
+                    >
+                        <span th:text="${fieldTitles[__${field}__]}"></span>
+                        <i th:if="${filterDTO.orderBy} == ${field}"
+                           th:class="${filterDTO.direction == 'ASC' ?
+                           'bi bi-caret-up-fill' : 'bi bi-caret-down-fill'}"></i>
+                    </th>
+                    <th class="text-center sticky-column">Hành động</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:object="${filterDTO}">
+                    <td>
+                        <input type="text" class="form-control form-control-sm" th:value="*{code}" id="codeField" placeholder="Mã giảm giá">
+                    </td>
+                    <td>
+                        <input type="text" class="form-control form-control-sm" th:value="*{description}" id="descriptionField" placeholder="Mô tả">
+                    </td>
+                    <td>
+                        <select class="form-select form-select-sm" id="typeField" name="type">
+                            <option value="" th:selected="${filterDTO.type == ''}">Tất cả</option>
+                            <option value="PERCENTAGE" th:selected="${filterDTO.type == 'PERCENTAGE'}">
+                                Phần trăm
+                            </option>
+                            <option value="AMOUNT" th:selected="${filterDTO.type == 'AMOUNT'}">
+                                Số tiền
+                            </option>
+                        </select>
+                    </td>
+                    <td>
+                        <div class="d-flex gap-2" style="max-width: 200px">
+                            <input type="text" class="form-control form-control-sm" th:value="*{valueFrom}" id="valueFromField" style="max-width: 100px">
+                            <input type="text" class="form-control form-control-sm" th:value="*{valueTo}" id="valueToField" style="max-width: 100px">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="d-flex gap-2" style="max-width: 200px">
+                            <input type="text" class="form-control form-control-sm" th:value="*{minOrderValueFrom}" id="minOrderValueFromField" style="max-width: 100px">
+                            <input type="text" class="form-control form-control-sm" th:value="*{minOrderValueTo}" id="minOrderValueToField" style="max-width: 100px">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="d-flex gap-2" style="max-width: 200px">
+                            <input type="text" class="form-control form-control-sm" th:value="*{maxDiscountFrom}" id="maxDiscountFromField" style="max-width: 100px">
+                            <input type="text" class="form-control form-control-sm" th:value="*{maxDiscountTo}" id="maxDiscountToField" style="max-width: 100px">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="d-flex gap-2" style="max-width: 200px">
+                            <input type="text" class="form-control form-control-sm" th:value="*{maxUsageFrom}" id="maxUsageFromField" style="max-width: 100px">
+                            <input type="text" class="form-control form-control-sm" th:value="*{maxUsageTo}" id="maxUsageToField" style="max-width: 100px">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="d-flex gap-2" style="max-width: 200px">
+                            <input type="text" class="form-control form-control-sm" th:value="*{usageCountFrom}" id="usageCountFromField" style="max-width: 100px">
+                            <input type="text" class="form-control form-control-sm" th:value="*{usageCountTo}" id="usageCountToField" style="max-width: 100px">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="d-flex gap-2" style="max-width: 200px">
+                            <input type="text" class="form-control form-control-sm" th:value="*{maxUsagePerUserFrom}" id="maxUsagePerUserFromField" style="max-width: 100px">
+                            <input type="text" class="form-control form-control-sm" th:value="*{maxUsagePerUserTo}" id="maxUsagePerUserToField" style="max-width: 100px">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="d-flex gap-2" style="max-width: 200px">
+                            <input type="datetime-local" class="form-control form-control-sm" th:value="*{startDateFrom}" id="startDateFromField" style="max-width: 100px">
+                            <input type="datetime-local" class="form-control form-control-sm" th:value="*{startDateTo}" id="startDateToField" style="max-width: 100px">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="d-flex gap-2" style="max-width: 200px">
+                            <input type="datetime-local" class="form-control form-control-sm" th:value="*{endDateFrom}" id="endDateFromField" style="max-width: 100px">
+                            <input type="datetime-local" class="form-control form-control-sm" th:value="*{endDateTo}" id="endDateToField" style="max-width: 100px">
+                        </div>
+                    </td>
+                    <td>
+                        <select class="form-select form-select-sm" id="isDeletedField" name="isDeleted">
+                            <option value="" th:selected="${filterDTO.isDeleted == ''}">Tất cả</option>
+                            <option value="true" th:selected="${filterDTO.isDeleted == 'true'}">Đã xóa</option>
+                            <option value="false" th:selected="${filterDTO.isDeleted == 'false'}">Chưa xóa</option>
+                        </select>
+                    </td>
+                    <td class="text-center sticky-column">
+                        <button type="submit" class="btn btn-primary btn-sm" id="btnSubmit">
+                            <i class="bi bi-search"></i>
+                        </button>
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="resetField()">
+                            <i class="bi bi-arrow-counterclockwise"></i>
+                        </button>
+                    </td>
+                </tr>
+                <tr th:if="${pages.totalPages > 0}" th:each="item : ${pages}">
+                    <th:block th:replace="fragments/list-body :: list-body(${item}, ${fields}, ${fieldTitles}, ${fieldClasses})"></th:block>
+                    <td class="text-center sticky-column">
+                        <a th:href="@{'/admin/coupon/edit/' + ${item.id}}"
+                           class="btn btn-sm btn-warning">
+                            <i class="bi bi-pencil-square"></i>
+                        </a>
+                        <th:block th:if="${item.isDeleted}">
+                            <a th:href="@{'/admin/coupon/restore/' + ${item.id}}"
+                               class="btn btn-sm btn-success">
+                                <i class="bi bi-arrow-counterclockwise"></i>
+                            </a>
+                        </th:block>
+                        <th:block th:unless="${item.isDeleted}">
+                            <a th:href="@{'/admin/coupon/delete/' + ${item.id}}"
+                               class="btn btn-sm btn-danger">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </th:block>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <th:block th:if="${pages.totalPages == 0}">
+            <div class="alert alert-warning text-center mt-5">
+                Không có bản ghi nào, thử <a href="javascript:void(0);" onclick="resetField()" class="alert-link"> đặt lại bộ lọc </a> hoặc thêm mới bản ghi
+            </div>
+        </th:block>
+        <th:block th:if="${pages.totalPages > 0}">
+            <div th:replace="fragments/pagination :: pagination(${pages})"></div>
+        </th:block>
+    </div>
+
+    <script>
+        function goToPage(page) {
+            document.getElementById('page').value = page;
+            document.getElementById('filterForm').submit();
+        }
+
+        document.querySelectorAll('th').forEach(th => {
+            if (!th.getAttribute('data')) return;
+            th.addEventListener('click', () => {
+                updateOrder(th.getAttribute('data'));
+            });
+        })
+
+        function updateOrder(field) {
+            let form = document.getElementById('filterForm');
+            let orderBy = form.elements['orderBy'].value;
+            let direction = form.elements['direction'].value;
+            if (orderBy === field) {
+                form.elements['direction'].value = direction === 'ASC' ? 'DESC' : 'ASC';
+            } else {
+                form.elements['orderBy'].value = field;
+                form.elements['direction'].value = 'ASC';
+            }
+            updateFilter();
+        }
+
+        document.getElementById('btnSubmit').addEventListener('click', () => {
+            updateFilter();
+        });
+
+        function resetField() {
+            let form = document.getElementById('filterForm');
+            form.elements['name'].value = '';
+            form.elements['description'].value = '';
+            form.elements['parentName'].value = '';
+            form.elements['createdAtFrom'].value = '';
+            form.elements['createdAtTo'].value = '';
+            form.elements['createdBy'].value = '';
+            form.elements['updatedAtFrom'].value = '';
+            form.elements['updatedAtTo'].value = '';
+            form.elements['updatedBy'].value = '';
+            form.elements['page'].value = 1;
+            form.elements['orderBy'].value = 'createdAt';
+            form.elements['direction'].value = 'ASC';
+            form.elements['size'].value = 5;
+            form.submit();
+        }
+
+        function updateFilter() {
+            let form = document.getElementById('filterForm');
+            form.elements['name'].value = document.getElementById('nameField').value;
+            form.elements['description'].value = document.getElementById('descriptionField').value;
+            form.elements['parentName'].value = document.getElementById('parentNameField').value;
+            form.elements['createdAtFrom'].value = document.getElementById('createdAtFromField').value;
+            form.elements['createdAtTo'].value = document.getElementById('createdAtToField').value;
+            form.elements['createdBy'].value = document.getElementById('createdByField').value;
+            form.elements['updatedAtFrom'].value = document.getElementById('updatedAtFromField').value;
+            form.elements['updatedAtTo'].value = document.getElementById('updatedAtToField').value;
+            form.elements['updatedBy'].value = document.getElementById('updatedByField').value;
+            form.elements['size'].value = document.getElementById('sizeField').value;
+            form.submit();
+        }
+
+
+        document.querySelectorAll('input[id$=Field]').forEach(input => {
+            input.addEventListener('keyup', function(event) {
+                if (event.key === 'Enter') {
+                    updateFilter();
+                }
+            });
+        });
+
+
+    </script>
+
+
+</section>
+</body>
+</html>

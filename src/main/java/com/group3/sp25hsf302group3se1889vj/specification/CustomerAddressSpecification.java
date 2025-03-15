@@ -12,6 +12,16 @@ public class CustomerAddressSpecification {
     public static Specification<CustomerAddress> filterCustomerAddress(CustomerAddressFilterDTO filterDTO) {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
+            // customer predicates
+            if(filterDTO.getFullName() != null && !filterDTO.getFullName().isEmpty()) {
+                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("fullName")), "%" + filterDTO.getFullName().toLowerCase() + "%"));
+            }
+            if(filterDTO.getAddress() != null && !filterDTO.getAddress().isEmpty()) {
+                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("address")), "%" + filterDTO.getAddress().toLowerCase() + "%"));
+            }
+            if(filterDTO.getPhone() != null && !filterDTO.getPhone().isEmpty()) {
+                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("phone")), "%" + filterDTO.getPhone().toLowerCase() + "%"));
+            }
 
             // base predicates
             if(filterDTO.getCreatedAtFrom() != null) {

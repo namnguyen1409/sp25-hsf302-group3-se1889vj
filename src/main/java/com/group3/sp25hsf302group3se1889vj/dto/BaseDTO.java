@@ -32,5 +32,7 @@ public abstract class BaseDTO {
     private LocalDateTime deletedAt;
     @FieldMetadata(title = "Người xóa")
     private String deletedBy;
+
+    @FieldMetadata(title = "Đã xóa", cssClass = "boolean")
     private boolean isDeleted;
 }

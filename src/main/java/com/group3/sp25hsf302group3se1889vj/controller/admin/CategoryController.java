@@ -34,14 +34,14 @@ public class CategoryController {
             Model model,
             @ModelAttribute(value = "filterDTO", binding = false) CategoryFilterDTO filterDTO
     ) {
-        if(filterDTO == null) {
+        if (filterDTO == null) {
             filterDTO = new CategoryFilterDTO();
         }
         Sort sortDirection = "asc".equalsIgnoreCase(filterDTO.getDirection())
                 ? Sort.by(filterDTO.getOrderBy()).ascending()
                 : Sort.by(filterDTO.getOrderBy()).descending();
 
-        List<String> fields = Arrays.asList("name", "description", "parentName", "createdAt", "createdBy","updatedAt", "updatedBy");
+        List<String> fields = Arrays.asList("name", "description", "parentName", "createdAt", "createdBy", "updatedAt", "updatedBy");
         model.addAttribute("fields", fields);
         model.addAttribute("fieldTitles", metadataExtractor.getFieldTitles(CategoryDTO.class, fields));
         model.addAttribute("fieldClasses", metadataExtractor.getFieldClasses(CategoryDTO.class, fields));
@@ -78,7 +78,7 @@ public class CategoryController {
         if (categoryService.existsByNameAndParentId(categoryDTO.getName(), categoryDTO.getParentId())) {
             bindingResult.rejectValue("name", "error.categoryDTO", "Tên danh mục đã tồn tại");
         }
-        if(bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors()) {
             return "admin/category/add";
         }
         categoryService.save(categoryDTO);
@@ -102,7 +102,7 @@ public class CategoryController {
         if (categoryService.existsByNameAndParentIdAndIdNot(categoryDTO.getName(), categoryDTO.getParentId(), categoryDTO.getId())) {
             bindingResult.rejectValue("name", "error.categoryDTO", "Tên danh mục đã tồn tại");
         }
-        if(bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors()) {
             return "admin/category/edit";
         }
         categoryService.update(categoryDTO);

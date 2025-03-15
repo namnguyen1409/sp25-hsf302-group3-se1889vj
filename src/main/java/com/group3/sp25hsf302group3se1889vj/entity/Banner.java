@@ -27,4 +27,7 @@ public class Banner extends BaseEntity {
     @Column(nullable = false, columnDefinition = "NVARCHAR(255)")
     private String image;
 
+    @Column(columnDefinition = "NVARCHAR(500)")
+    private String description;
+
 }

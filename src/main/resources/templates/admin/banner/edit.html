@@ -7,12 +7,21 @@
 <section layout:fragment="content" class="container mt-4">
     <div class="row justify-content-center h-100">
         <div class="col-lg-8 d-flex flex-column nowrap justify-content-center">
-            <form th:action="@{/admin/category/add}" th:object="${categoryDTO}" method="post"
+            <form th:action="@{/admin/banner/edit}" th:object="${entity}" method="post"
                   class="p-md-4 border rounded shadow-sm">
-                <h4 class="text-center mb-5">Thêm mới danh mục</h4>
+                <h4 class="text-center mb-5">Thêm mới banner</h4>
+                <input type="hidden" th:field="*{id}">
 
                 <div class="mb-3">
-                    <div th:replace="fragments/input :: customInput ('name', 'text', 'bi-tag', 'Tên danh mục', true)"></div>
+                    <div th:replace="fragments/input :: customInput ('title', 'text', 'bi-tag', 'Tiêu đề', true)"></div>
+                </div>
+
+                <div class="mb-3">
+                    <div th:replace="fragments/input :: customInput ('url', 'text', 'bi-link', 'Liên kết', true)"></div>
+                </div>
+
+                <div class="mb-3">
+                    <div th:replace="fragments/input-image :: customInputImage('image', 'bi-image', 'Hình ảnh')"></div>
                 </div>
 
                 <div class="mb-3">
@@ -23,23 +32,11 @@
                     </div>
                 </div>
 
-                <div class="mb-3">
-                    <label class="form-label">Danh mục cha</label>
-                    <select class="form-select" th:field="*{parentId}">
-                        <option value="">Không có</option>
-                        <option th:each="cat : ${categories}"
-                                th:if="${cat.parentId == null}"
-                                th:value="${cat.id}"
-                                th:text="${cat.name}">
-                        </option>
-                    </select>
-                </div>
-
                 <div class="text-center">
                     <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-save"></i> Lưu danh mục
+                        <i class="bi bi-save"></i> Cập nhật banner
                     </button>
-                    <a th:href="@{/admin/category}" class="btn btn-secondary">Quay lại</a>
+                    <a th:href="@{/admin/banner}" class="btn btn-secondary">Quay lại</a>
                 </div>
             </form>
         </div>

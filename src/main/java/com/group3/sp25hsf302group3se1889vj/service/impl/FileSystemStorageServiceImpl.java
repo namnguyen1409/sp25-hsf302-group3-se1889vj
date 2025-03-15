@@ -91,7 +91,7 @@ public class FileSystemStorageServiceImpl implements StorageService {
         filename = filename.substring(filename.lastIndexOf("/") + 1);
         // check file is exist in uploads
         if (Files.exists(rootLocation.resolve(filename))) {
-            return String.join("/", "upload/files", filename);
+            return String.join("/", "file/roots", filename);
         }
         try {
             Path sourceFile = tempLocation.resolve(filename).normalize().toAbsolutePath();
@@ -103,7 +103,7 @@ public class FileSystemStorageServiceImpl implements StorageService {
 
             Files.move(sourceFile, destinationFile, StandardCopyOption.REPLACE_EXISTING);
 
-            return String.join("/", "upload/files", filename);
+            return String.join("/", "file/roots", filename);
         } catch (IOException e) {
             throw new StorageException("Failed to move file to uploads.", e);
         }

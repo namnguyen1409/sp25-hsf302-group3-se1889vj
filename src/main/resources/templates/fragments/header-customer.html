@@ -55,111 +55,44 @@
                         <div class="header-action">
                             <div class="header-action-item header-action_search search-desktop activeSearchChecked d-none d-lg-block">
                                 <div class="header-action_text">
-                                    <button class="header-action__link" id="site-search-handle" aria-label="Tìm kiếm" title="Tìm kiếm">
+                                    <a class="header-action__link" id="site-search-handle" aria-label="Tìm kiếm" title="Tìm kiếm" th:href="@{/search}">
 										<span class="box-icon">
 											<i class="bi fs-5 fw-bold  bi-search"></i>
 										</span>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="header-action-item header-action_search search-mobile d-block d-lg-none">
-                                <div class="header-action_text">
-                                    <button class="header-action__link header-action_clicked" aria-label="Tìm kiếm" title="Tìm kiếm">
-										<span class="box-icon">
-											<i class="bi fs-5 fw-bold  bi-search"></i>
-											<span class="box-icon--close">
-											    <i class="bi fs-5 fw-bold  bi-x"></i>
-                                            </span>
-										</span>
-                                    </button>
-                                    <span class="box-triangle">
-                                        <i class="bi fs-5 fw-bold  bi-triangle-fill"></i>
-									</span>
-                                </div>
-                                <div class="header-action_dropdown">
-                                    <div class="header-dropdown_content">
-                                        <div class="sitenav-content sitenav-search">
-                                            <p class="boxtitle">Tìm kiếm</p>
-                                            <div class="search-box wpo-wrapper-search">
-                                                <form action="/search" class="searchform searchform-categoris ultimate-search">
-                                                    <div class="wpo-search-inner">
-                                                        <input type="hidden" name="type" value="product">
-                                                        <input required="" id="inputSearchAuto-mb" class="input-search" name="q" maxlength="40" autocomplete="off" type="text" size="20" placeholder="Tìm kiếm sản phẩm...">
-                                                    </div>
-                                                    <button type="submit" class="btn-search btn" id="search-header-btn" aria-label="button search">
-                                                        <i class="bi fs-5 fw-bold  bi-search"></i>
-                                                    </button>
-                                                </form>
-                                                <div id="ajaxSearchResults-mb" class="smart-search-wrapper ajaxSearchResults">
-                                                    <div class="resultsContent"></div>
-                                                    <div class="search-suggest">
-                                                        <ul>
-                                                            <li class="item item-suggest">Polo, Short Đũi, TShirt </li>
-
-                                                            <li class="item"><a href="/" title="Text 1">Text 1,</a></li>
-                                                            <li class="item"><a href="/" title="Text 2">Text 2,</a></li>
-                                                            <li class="item"><a href="/" title="Text 3">Text 3</a></li>
-
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    </a>
                                 </div>
                             </div>
                             <div class="header-action-item header-action_account">
                                 <div class="header-action_text">
-                                    <button class="header-action__link  header-action_clicked " id="site-account-handle" aria-label="Tài khoản" title="Tài khoản">
+                                    <a class="header-action__link  header-action_clicked " id="site-account-handle" aria-label="Tài khoản" title="Tài khoản" th:href="@{/account}">
 										<span class="box-icon">
                                             <i class="bi fs-5 fw-bold  bi-person"></i>
-											<span class="box-icon--close">
-											    <i class="bi fs-5 fw-bold  bi-x"></i>
-                                            </span>
 										</span>
-                                    </button>
-                                    <span class="box-triangle">
-                                        <i class="bi fs-5 fw-bold  bi-triangle-fill"></i>
-									</span>
+                                    </a>
                                 </div>
-
-                                <div class="header-action_dropdown header-action_widthAuto ">
-                                    <div class="header-dropdown_content">
-                                        <div class="site_account sitenav-account  sitenav-account_info " id="siteNav-account">
-                                            <div class="site_account_panel_list">
-                                                <div class="sitenav-content__title">
-                                                    <div class="site_account_header">
-                                                        <p class="txt-title">Thông tin tài khoản</p>
-                                                    </div>
-                                                </div>
-                                                <div class="sitenav-content__block">
-                                                    <ul>
-                                                        <li class="user-name"><span>Nguyễn Văn Nam </span></li>
-                                                        <li><a href="/account">Tài khoản của tôi</a></li>
-                                                        <li><a href="/account/addresses">Danh sách địa chỉ</a></li>
-                                                        <li><a href="/account/logout">Đăng xuất</a></li>
-                                                    </ul>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
                             </div>
-                            <div class="header-action-item header-action_cart js-sitenav-cart js-act-sitenav show-mb" data-id="#js-sitenav-cart">
+                            <div class="header-action-item header-action_cart js-sitenav-cart js-act-sitenav show-mb"  data-id="#js-sitenav-cart">
                                 <div class="header-action_text">
-                                    <button class="header-action__link" id="site-cart-handle" aria-label="Giỏ hàng" title="Giỏ hàng">
+                                    <a class="header-action__link" id="site-cart-handle" aria-label="Giỏ hàng" title="Giỏ hàng" th:href="@{/cart}">
 										<span class="box-icon">
                                             <i class="bi fs-5 fw-bold  bi-cart"></i>
-                                            <span class="box-icon--close">
-											    <i class="bi fs-5 fw-bold  bi-x"></i>
-                                            </span>
 											<span class="count-holder">
 												<span class="count">0</span>
 											</span>
 										</span>
-                                    </button>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="header-action-item header-action_notification">
+                                <div class="header-action_text">
+                                    <a class="header-action__link" id="site-notification-handle" aria-label="Thông báo" title="Thông báo" th:href="@{/notification}">
+                                        <span class="box-icon">
+                                            <i class="bi fs-5 fw-bold  bi-bell"></i>
+                                            <span class="count-holder">
+                                                <span class="count">0</span>
+                                            </span>
+                                        </span>
+                                    </a>
                                 </div>
                             </div>
                         </div>

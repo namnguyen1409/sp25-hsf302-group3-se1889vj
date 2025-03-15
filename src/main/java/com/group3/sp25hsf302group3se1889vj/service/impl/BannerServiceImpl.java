@@ -49,6 +49,7 @@ public class BannerServiceImpl implements BannerService {
         entity.setTitle(banner.getTitle());
         entity.setUrl(banner.getUrl());
         entity.setImage(banner.getImage());
+        entity.setDescription(banner.getDescription());
         bannerRepository.save(entity);
     }
 

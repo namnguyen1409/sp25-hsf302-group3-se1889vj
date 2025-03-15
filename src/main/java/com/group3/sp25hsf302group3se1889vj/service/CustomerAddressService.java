@@ -7,4 +7,8 @@ import org.springframework.data.domain.Pageable;
 
 public interface CustomerAddressService {
     Page<CustomerAddressDTO> searchCustomerAddresses(CustomerAddressFilterDTO filter, Pageable pageable);
+    void save(CustomerAddressDTO customerAddressDTO);
+    boolean existsCustomerAddressByPhone(String phone);
+    boolean existsCustomerAddressByPhoneAndIdNot(String phone, Long id);
+    CustomerAddressDTO findById(Long id);
 }

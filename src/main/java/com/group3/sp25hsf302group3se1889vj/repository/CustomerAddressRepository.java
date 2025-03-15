@@ -12,4 +12,7 @@ import java.util.Optional;
 @Repository
 public interface CustomerAddressRepository extends JpaRepository<CustomerAddress, Long>, JpaSpecificationExecutor<CustomerAddress> {
     Page<CustomerAddress> findAll(Pageable pageable);
+    boolean existsCustomerAddressByPhone(String phone);
+    boolean existsCustomerAddressByPhoneAndIdNot(String phone, Long id);
+    Optional<CustomerAddress> findById(Long id);
 }

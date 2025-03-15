@@ -3,7 +3,9 @@ package com.group3.sp25hsf302group3se1889vj.mapper;
 import com.group3.sp25hsf302group3se1889vj.dto.CustomerAddressDTO;
 import com.group3.sp25hsf302group3se1889vj.entity.CustomerAddress;
 import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Component;
 
+@Component
 public class CustomerAddressMapper {
     ModelMapper modelMapper = new ModelMapper();
 

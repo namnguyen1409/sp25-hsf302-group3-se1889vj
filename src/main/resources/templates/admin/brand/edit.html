@@ -7,9 +7,10 @@
 <section layout:fragment="content" class="container mt-4">
     <div class="row justify-content-center h-100">
         <div class="col-lg-8 d-flex flex-column nowrap justify-content-center">
-            <form th:action="@{/admin/brand/add}" th:object="${entity}" method="post"
+            <form th:action="@{/admin/brand/edit}" th:object="${entity}" method="post"
                   class="p-md-4 border rounded shadow-sm">
-                <h4 class="text-center mb-5">Thêm mới nhãn hàng</h4>
+                <h4 class="text-center mb-5">Cập nhật thương hiệu</h4>
+                <input type="hidden" th:field="*{id}">
 
                 <div class="mb-3">
                     <div th:replace="fragments/input :: customInput ('name', 'text', 'bi-tag', 'Tên thương hiệu', true)"></div>
@@ -29,7 +30,7 @@
 
                 <div class="text-center">
                     <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-save"></i> Lưu banner
+                        <i class="bi bi-save"></i> Cập nhật thương hiệu
                     </button>
                     <a th:href="@{/admin/brand}" class="btn btn-secondary">Quay lại</a>
                 </div>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      lang="en" layout:decorate="admin-template"
+>
+<body>
+<section layout:fragment="content" class="container-fluid h-100">
+  <style>
+    .tbl-container {
+      max-width: 100%;
+      max-height: fit-content;
+    }
+
+    .tbl-fixed {
+      overflow-x: scroll;
+      overflow-y: hidden;
+      height: fit-content;
+      max-height: 70vh;
+      scrollbar-width: none;
+    }
+
+    .tbl-fixed::-webkit-scrollbar {
+      display: none;
+    }
+
+    table {
+      min-width: max-content;
+    }
+
+    table th {
+      position: sticky;
+      top: 0;
+      background-color: white;
+      z-index: 1;
+    }
+
+    .description {
+      display: inline-block;
+      max-width: 150px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .sticky-column {
+      border-left: 1px solid #dee2e6;
+      position: sticky;
+      right: 0;
+      background-color: white;
+      z-index: 1;
+    }
+
+    .detail-label {
+      font-weight: 600;
+    }
+
+    .detail-value {
+      padding: 8px;
+    }
+
+    .detail-card {
+      border-radius: 5px;
+      box-shadow: 0px 0px 5px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+
+    .logo-container {
+      border: 1px dashed #dee2e6;
+      padding: 15px;
+      text-align: center;
+      min-height: 150px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo-placeholder {
+      color: #6c757d;
+    }
+  </style>
+
+  <div class="d-flex flex-wrap justify-content-between align-items-center mt-3 gap-2">
+    <h2 class="text-center flex-grow-1 text-md-start text-center">Chi tiết thương hiệu</h2>
+
+    <div class="d-flex align-items-center gap-2">
+      <a th:href="@{/admin/brand/list}" class="btn btn-secondary">
+        <i class="bi bi-arrow-left"></i> Quay lại
+      </a>
+    </div>
+  </div>
+
+  <div class="container mt-4 tbl-container">
+    <div class="row">
+      <!-- Brand Information -->
+      <div class="col-md-8">
+        <div class="card detail-card">
+          <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Thông tin thương hiệu</h5>
+          </div>
+          <div class="card-body">
+            <div class="row mb-3">
+              <div class="col-md-3 detail-label">Mã thương hiệu:</div>
+              <div class="col-md-9 detail-value" th:text="${entity.id}">-</div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-md-3 detail-label">Tên thương hiệu:</div>
+              <div class="col-md-9 detail-value" th:text="${entity.name}">-</div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-md-3 detail-label">Mô tả:</div>
+              <div class="col-md-9 detail-value" th:utext="${entity.description != null ? entity.description : '-'}">-</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card detail-card">
+          <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Thông tin quản lý</h5>
+          </div>
+          <div class="card-body">
+            <div class="row mb-3">
+              <div class="col-md-3 detail-label">Người tạo:</div>
+              <div class="col-md-9 detail-value" th:text="${entity.createdBy}">-</div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-md-3 detail-label">Ngày tạo:</div>
+              <div class="col-md-9 detail-value" th:text="${#temporals.format(entity.createdAt, 'dd-MM-yyyy HH:mm:ss')}">-</div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-md-3 detail-label">Ngày cập nhật:</div>
+              <div class="col-md-9 detail-value" th:text="${entity.updatedAt != null ? #temporals.format(entity.updatedAt, 'dd-MM-yyyy HH:mm:ss') : '-'}">-</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Brand Logo -->
+      <div class="col-md-4">
+        <div class="card detail-card">
+          <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Logo thương hiệu</h5>
+          </div>
+          <div class="card-body">
+            <div class="logo-container">
+              <div th:if="${entity.logo != null && entity.logo != ''}">
+                <img th:src="@{'/' + ${entity.logo}}" alt="Brand Logo" class="img-fluid" style="max-height: 150px;">
+              </div>
+              <div th:if="${entity.logo == null || entity.logo == ''}" class="logo-placeholder">
+                <i class="bi bi-image fs-1 d-block mb-2"></i>
+                <p>Chưa có logo</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+
+
+
+  </div>
+</section>
+</body>
+</html>

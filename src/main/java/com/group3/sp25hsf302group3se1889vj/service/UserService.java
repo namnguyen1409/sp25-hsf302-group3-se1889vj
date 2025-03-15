@@ -13,4 +13,6 @@ public interface UserService {
     boolean isUsernameExist(String username);
 
     Page<UserDTO> searchUsers(UserFilterDTO filter, Pageable pageable);
+
+    UserDTO getUserById(Long id);
 }

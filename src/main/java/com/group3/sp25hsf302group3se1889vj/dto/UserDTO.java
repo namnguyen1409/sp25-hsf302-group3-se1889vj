@@ -36,7 +36,7 @@ public class UserDTO extends BaseDTO {
     private LocalDate birthday;
     @FieldMetadata(title = "Địa chỉ")
     private String address;
-    @FieldMetadata(title = "Ảnh đại diện")
+    @FieldMetadata(title = "Ảnh đại diện" , cssClass = "image")
     private String avatar;
     @FieldMetadata(title = "Vai trò")
     private RoleType role;

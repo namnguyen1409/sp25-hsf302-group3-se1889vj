@@ -13,6 +13,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -39,5 +41,11 @@ public class UserServiceImpl implements UserService {
     public Page<UserDTO> searchUsers(UserFilterDTO filter, Pageable pageable) {
         Specification<User> specification = UserSpecification.filterUser(filter);
         return userRepository.findAll(specification, pageable).map(userMapper::mapToUserDTO);
+    }
+
+    @Override
+    public UserDTO getUserById(Long id) {
+        Optional<User> user = userRepository.findById((long) id);
+        return userMapper.mapToUserDTO(user.get());
     }
 }

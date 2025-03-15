@@ -52,7 +52,7 @@
         }
     </style>
 
-    <form th:object="${filterDTO}" th:action="@{/admin/user/list}" method="post" class="d-none" id="filterForm">
+    <form th:object="${filterDTO}" th:action="@{/admin/staff/list}" method="post" class="d-none" id="filterForm">
         <input type="hidden" th:field="*{page}" class="hidden-field">
         <input type="hidden" th:field="*{orderBy}" class="hidden-field">
         <input type="hidden" th:field="*{direction}" class="hidden-field">
@@ -62,14 +62,13 @@
         <input type="hidden" th:field="*{lastName}" class="hidden-field">
         <input type="hidden" th:field="*{email}" class="hidden-field">
         <input type="hidden" th:field="*{phone}" class="hidden-field">
-        <input type="hidden" th:field="*{birthday}" class="hidden-field">
         <input type="hidden" th:field="*{address}" class="hidden-field">
         <input type="hidden" th:field="*{role}" class="hidden-field">
     </form>
 
 
     <div class="d-flex flex-wrap justify-content-between align-items-center mt-3 gap-2">
-        <h2 class="text-center flex-grow-1 text-md-start text-center">Danh sách phân loại</h2>
+        <h2 class="text-center flex-grow-1 text-md-start text-center">Danh sách nhân viên</h2>
 
         <div class="d-flex align-items-center gap-2">
             <div class="input-group">
@@ -104,31 +103,26 @@
                 <tbody>
                 <tr th:object="${filterDTO}">
                     <td>
-                        <input type="text" class="form-control form-control-sm" th:value="*{username}" id="nameField" placeholder="Tên danh mục">
+                        <input type="text" class="form-control form-control-sm" th:value="*{username}" id="usernameField" placeholder="Tên đăng nhập">
                     </td>
                     <td>
-                        <input type="text" class="form-control form-control-sm" th:value="*{firstName}" id="descriptionField" placeholder="Mô tả">
+                        <input type="text" class="form-control form-control-sm" th:value="*{firstName}" id="firstNameField" placeholder="Tên">
                     </td>
                     <td>
-                        <input type="text" class="form-control form-control-sm" th:value="*{lastName}" id="parentNameField" placeholder="Danh mục cha">
+                        <input type="text" class="form-control form-control-sm" th:value="*{lastName}" id="lastNameField" placeholder="Họ">
                     </td>
                     <td>
-                        <div class="d-flex gap-2" style="max-width: 200px">
-                            <input type="datetime-local" class="form-control form-control-sm" th:value="*{createdAtFrom}" id="createdAtFromField" style="max-width: 100px">
-                            <input type="datetime-local" class="form-control form-control-sm" th:value="*{createdAtTo}" id="createdAtToField" style="max-width: 100px">
-                        </div>
+                        <input type="text" class="form-control form-control-sm" th:value="*{email}" id="emailField" placeholder="Email">
                     </td>
                     <td>
-                        <input type="text" class="form-control form-control-sm" th:value="*{createdBy}" id="createdByField" placeholder="Người tạo">
+                        <input type="text" class="form-control form-control-sm" th:value="*{phone}" id="phoneField" placeholder="Số điện thoại">
                     </td>
                     <td>
-                        <div class="d-flex gap-2" style="max-width: 200px">
-                            <input type="datetime-local" class="form-control form-control-sm" th:value="*{updatedAtFrom}" id="updatedAtFromField" style="max-width: 100px">
-                            <input type="datetime-local" class="form-control form-control-sm" th:value="*{updatedAtTo}" id="updatedAtToField" style="max-width: 100px">
-                        </div>
+                        <input type="text" class="form-control form-control-sm" th:value="*{address}" id="addressField" placeholder="Địa chỉ">
                     </td>
+                    <td></td>
                     <td>
-                        <input type="text" class="form-control form-control-sm" th:value="*{updatedBy}" id="updatedByField" placeholder="Người cập nhật">
+                        <input type="text" class="form-control form-control-sm" th:value="*{role}" id="roleField" placeholder="Vai trò">
                     </td>
                     <td class="text-center sticky-column">
                         <button type="submit" class="btn btn-primary btn-sm" id="btnSubmit">
@@ -143,13 +137,9 @@
                 <tr th:if="${pages.totalPages > 0}" th:each="item : ${pages}">
                     <th:block th:replace="fragments/list-body :: list-body(${item}, ${fields}, ${fieldTitles}, ${fieldClasses})"></th:block>
                     <td class="text-center sticky-column">
-                        <a th:href="@{'/admin/user/edit/' + ${item.id}}"
+                        <a th:href="@{'/admin/staff/detail/' + ${item.id}}"
                            class="btn btn-sm btn-warning">
-                            <i class="bi bi-pencil-square"></i>
-                        </a>
-                        <a th:href="@{'/admin/user/delete/' + ${item.id}}"
-                           class="btn btn-sm btn-danger">
-                            <i class="bi bi-trash"></i>
+                            <i class="bi bi-archive-fill"></i>
                         </a>
                     </td>
                 </tr>
@@ -198,15 +188,13 @@
 
         function resetField() {
             let form = document.getElementById('filterForm');
-            form.elements['name'].value = '';
-            form.elements['description'].value = '';
-            form.elements['parentName'].value = '';
-            form.elements['createdAtFrom'].value = '';
-            form.elements['createdAtTo'].value = '';
-            form.elements['createdBy'].value = '';
-            form.elements['updatedAtFrom'].value = '';
-            form.elements['updatedAtTo'].value = '';
-            form.elements['updatedBy'].value = '';
+            form.elements['username'].value = '';
+            form.elements['firstName'].value = '';
+            form.elements['lastName'].value = '';
+            form.elements['email'].value = '';
+            form.elements['phone'].value = '';
+            form.elements['address'].value = '';
+            form.elements['role'].value = '';
             form.elements['page'].value = 1;
             form.elements['orderBy'].value = 'createdAt';
             form.elements['direction'].value = 'ASC';
@@ -216,15 +204,13 @@
 
         function updateFilter() {
             let form = document.getElementById('filterForm');
-            form.elements['name'].value = document.getElementById('nameField').value;
-            form.elements['description'].value = document.getElementById('descriptionField').value;
-            form.elements['parentName'].value = document.getElementById('parentNameField').value;
-            form.elements['createdAtFrom'].value = document.getElementById('createdAtFromField').value;
-            form.elements['createdAtTo'].value = document.getElementById('createdAtToField').value;
-            form.elements['createdBy'].value = document.getElementById('createdByField').value;
-            form.elements['updatedAtFrom'].value = document.getElementById('updatedAtFromField').value;
-            form.elements['updatedAtTo'].value = document.getElementById('updatedAtToField').value;
-            form.elements['updatedBy'].value = document.getElementById('updatedByField').value;
+            form.elements['username'].value = document.getElementById('usernameField').value;
+            form.elements['firstName'].value = document.getElementById('firstNameField').value;
+            form.elements['lastName'].value = document.getElementById('lastNameField').value;
+            form.elements['email'].value = document.getElementById('emailField').value;
+            form.elements['phone'].value = document.getElementById('phoneField').value;
+            form.elements['address'].value = document.getElementById('addressField').value;
+            form.elements['role'].value = document.getElementById('roleField').value;
             form.elements['size'].value = document.getElementById('sizeField').value;
             form.submit();
         }

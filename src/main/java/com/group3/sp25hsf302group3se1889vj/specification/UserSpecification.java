@@ -28,7 +28,9 @@ public class UserSpecification {
             if(filterDTO.getPhone() != null && !filterDTO.getPhone().isEmpty()) {
                 predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("phone")), "%" + filterDTO.getPhone().toLowerCase() + "%"));
             }
-
+            if(filterDTO.getRole() != null) {
+                predicates.add(criteriaBuilder.equal(root.get("role"), filterDTO.getRole()));
+            }
             // base predicates
             if(filterDTO.getCreatedAtFrom() != null) {
                 predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("createdAt"), filterDTO.getCreatedAtFrom()));

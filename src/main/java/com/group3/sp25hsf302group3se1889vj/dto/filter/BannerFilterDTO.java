@@ -8,6 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BannerFilterDTO extends BaseFilterDTO {
-    // TODO: Add fields here
-
+    private String title;
+    private String url;
+    private String image;
 }

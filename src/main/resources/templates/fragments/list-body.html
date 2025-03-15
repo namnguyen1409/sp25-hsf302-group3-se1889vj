@@ -12,6 +12,9 @@
             <th:block th:case="'phone'">
                 <span  th:classappend="${fieldClasses[__${field}__]}" th:text="${item[field].substring(0, 3) + '****' + item[field].substring(7)}"></span>
             </th:block>
+            <th:block th:case="'boolean'">
+                <span th:classappend="${fieldClasses[__${field}__]}" th:text="${item[field] ? 'Có' : 'Không'}"></span>
+            </th:block>
             <th:block th:case="*">
                 <span th:classappend="${fieldClasses[__${field}__]}" th:text="${item[field]}"></span>
             </th:block>

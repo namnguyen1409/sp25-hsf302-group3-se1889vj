@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="vi"
+      layout:decorate="admin-template"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org">
+
+<body>
+<section class="container mt-4" layout:fragment="content">
+    <div class="row justify-content-center h-100">
+        <div class="col-lg-8 d-flex flex-column nowrap justify-content-center">
+            <form class="p-md-4 border rounded shadow-sm" method="post" th:action="@{/admin/coupon/add}"
+                  th:object="${entity}">
+                <h4 class="text-center mb-5">Thêm mới mã giảm giá</h4>
+
+                <div class="mb-3">
+                    <div th:replace="fragments/input :: customInput ('code', 'text', 'bi-tag', 'Mã giảm giá', true)"></div>
+                </div>
+
+                <div class="mb-3">
+                    <textarea class="form-control" placeholder="Mô tả" rows="3" th:field="*{description}"></textarea>
+                    <div class="invalid-feedback"
+                         th:if="${#fields.hasErrors('description')}"
+                         th:text="${#fields.errors('description')}">
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <div class="form-floating">
+                        <select class="form-select" th:field="*{type}">
+                            <option value="PERCENTAGE">
+                                Phần trăm
+                            </option>
+                            <option value="AMOUNT">
+                                Số tiền
+                            </option>
+                        </select>
+                        <label class="form-label" th:for="*{type}">
+                            Loại mã giảm giá
+                        </label>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <div th:replace="fragments/input :: customInput ('value', 'number', 'bi-cash-coin', 'Giá trị', true)"></div>
+                </div>
+
+                <div class="mb-3">
+                    <div th:replace="fragments/input :: customInput ('minOrderValue', 'number', 'bi-cash-coin', 'Giá trị đơn hàng tối thiểu', true)"></div>
+                </div>
+
+                <div class="mb-3">
+                    <div th:replace="fragments/input :: customInput ('maxDiscount', 'number', 'bi-cash-coin', 'Giảm tối đa', true)"></div>
+                </div>
+
+                <div class="mb-3">
+                    <div th:replace="fragments/input :: customInput ('maxUsage', 'number', 'bi-cash-coin', 'Số lượng mã', true)"></div>
+                </div>
+
+                <div class="mb-3">
+                    <div th:replace="fragments/input :: customInput ('maxUsagePerUser', 'number', 'bi-cash-coin', 'Số lượng mã/khách', true)"></div>
+                </div>
+
+                <div class="mb-3">
+                    <div th:replace="fragments/input :: customInput ('startDate', 'datetime-local', 'bi-calendar', 'Ngày bắt đầu', true)"></div>
+                </div>
+
+                <div class="mb-3">
+                    <div th:replace="fragments/input :: customInput ('endDate', 'datetime-local', 'bi-calendar', 'Ngày kết thúc', true)"></div>
+                </div>
+
+                <div class="text-center">
+                    <button class="btn btn-primary" type="submit">
+                        <i class="bi bi-save"></i> Lưu mã giảm giá
+                    </button>
+                    <a class="btn btn-secondary" th:href="@{/admin/coupon}">Quay lại</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function toggleMaxDiscountField() {
+            var couponType = document.getElementById("couponType").value;
+            var maxDiscountDiv = document.getElementById("maxDiscountDiv");
+
+            if (couponType === "AMOUNT") {
+                maxDiscountDiv.style.display = "none";
+            } else {
+                maxDiscountDiv.style.display = "block";
+            }
+        }
+
+        window.onload = function () {
+            toggleMaxDiscountField();
+        }
+    </script>
+
+</section>
+</body>
+</html>

@@ -19,6 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @PreAuthorize("hasRole('OWNER')")
 @Controller
@@ -34,22 +35,26 @@ public class ProductController {
             Model model,
             @ModelAttribute(value = "filterDTO", binding = false) ProductFilterDTO filterDTO
     ) {
-        if(filterDTO == null) {
+        if (filterDTO == null) {
             filterDTO = new ProductFilterDTO();
         }
         Sort sortDirection = "asc".equalsIgnoreCase(filterDTO.getDirection())
                 ? Sort.by(filterDTO.getOrderBy()).ascending()
                 : Sort.by(filterDTO.getOrderBy()).descending();
 
-        // TODO: Add more fields here
-        List<String> fields = Arrays.asList("id");
+
+        List<String> fields = Arrays.asList("name", "description", "priceOrigin", "priceSale","thumbnail","brandName",
+                                            "categoryName","createdAt","createdBy", "updatedAt", "updatedBy");
+
+
+        model.addAttribute("fields", fields);
         model.addAttribute("fieldTitles", metadataExtractor.getFieldTitles(ProductDTO.class, fields));
         model.addAttribute("fieldClasses", metadataExtractor.getFieldClasses(ProductDTO.class, fields));
 
         Pageable pageable = PageRequest.of(filterDTO.getPage() - 1, filterDTO.getSize(), sortDirection);
 
         Page<ProductDTO> page = productService.findAll(filterDTO, pageable);
-        model.addAttribute("page", page);
+        model.addAttribute("pages", page);
         model.addAttribute("filterDTO", filterDTO);
         return "admin/product/list";
     }
@@ -76,7 +81,7 @@ public class ProductController {
     ) {
         // TODO: Add more actions here
 
-        if(result.hasErrors()) {
+        if (result.hasErrors()) {
             return "admin/product/add";
         }
         productService.save(product);
@@ -85,7 +90,7 @@ public class ProductController {
 
     @GetMapping("/edit/{id}")
     public String edit(Model model,
-                        @PathVariable("id") Long id
+                       @PathVariable("id") Long id
     ) {
         ProductDTO product = productService.findById(id);
         model.addAttribute("entity", product);
@@ -100,7 +105,7 @@ public class ProductController {
     ) {
         // TODO: Add more actions here
 
-        if(bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors()) {
             return "admin/product/edit";
         }
 

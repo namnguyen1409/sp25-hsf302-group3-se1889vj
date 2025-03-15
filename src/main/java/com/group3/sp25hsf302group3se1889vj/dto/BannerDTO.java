@@ -24,4 +24,8 @@ public class BannerDTO extends BaseDTO {
     @FieldMetadata(title = "Hình ảnh", cssClass = "image")
     @NotBlank(message = "Hình ảnh không được để trống")
     private String image;
+
+    @FieldMetadata(title = "Mô tả")
+    @Size(max = 500, message = "Mô tả không được vượt quá 500 ký tự")
+    private String description;
 }

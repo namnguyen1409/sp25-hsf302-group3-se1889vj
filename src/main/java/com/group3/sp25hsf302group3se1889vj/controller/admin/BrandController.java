@@ -17,6 +17,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Arrays;
 import java.util.List;
 
 @PreAuthorize("hasRole('OWNER')")
@@ -43,14 +44,15 @@ public class BrandController {
                 : Sort.by(filterDTO.getOrderBy()).descending();
 
         // TODO: Add more fields here
-        List<String> fields = List.of("id");
+        List<String> fields = Arrays.asList("name", "description", "logo", "createdAt", "createdBy","updatedAt", "updatedBy");
+        model.addAttribute("fields", fields);
         model.addAttribute("fieldTitles", metadataExtractor.getFieldTitles(BrandDTO.class, fields));
         model.addAttribute("fieldClasses", metadataExtractor.getFieldClasses(BrandDTO.class, fields));
 
         Pageable pageable = PageRequest.of(filterDTO.getPage() - 1, filterDTO.getSize(), sortDirection);
 
         Page<BrandDTO> page = brandService.findAll(filterDTO, pageable);
-        model.addAttribute("page", page);
+        model.addAttribute("pages", page);
         model.addAttribute("filterDTO", filterDTO);
         return "admin/brand/list";
     }

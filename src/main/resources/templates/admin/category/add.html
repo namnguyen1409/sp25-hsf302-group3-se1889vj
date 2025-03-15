@@ -17,6 +17,10 @@
 
                 <div class="mb-3">
                     <textarea class="form-control" th:field="*{description}" rows="3" placeholder="Mô tả"></textarea>
+                    <div class="invalid-feedback"
+                         th:if="${#fields.hasErrors('description')}"
+                         th:text="${#fields.errors('description')}">
+                    </div>
                 </div>
 
                 <div class="mb-3">

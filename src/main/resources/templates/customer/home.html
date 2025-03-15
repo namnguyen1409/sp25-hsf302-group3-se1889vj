@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html
+        lang="en"
+        layout:decorate="customer-template" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<body>
+<section class="section-home-slider" layout:fragment="content">
+    <style>
+        .text-shadow {
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+        }
+
+    </style>
+    <div class="home-slider swiper swiper-initialized swiper-horizontal swiper-pointer-events swiper-backface-hidden">
+
+        <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
+            <ol class="carousel-indicators">
+                <th:block th:each="banner, iterStat : ${banners}">
+                    <li data-bs-target="#carouselExample"
+                        th:data-bs-slide-to="${iterStat.index}"
+                        th:classappend="${iterStat.first} ? 'active'">
+                    </li>
+                </th:block>
+            </ol>
+
+            <div class="carousel-inner">
+                <th:block th:each="banner, iterStat : ${banners}">
+                    <div class="carousel-item" th:classappend="${iterStat.first} ? 'active'">
+                        <a th:href="${banner.url}">
+                            <img th:src="@{'/' + ${banner.image}}" class="d-block w-100" th:alt="${banner.title}" style="aspect-ratio: 22/9; object-fit: cover;">
+                        </a>
+                        <div class="carousel-caption d-none d-md-block">
+                            <h3 th:text="${banner.title}" class="text-white p-2 rounded fw-bold text-shadow">
+                            </h3>
+                            <p th:text="${banner.description}" class="text-white p-2 rounded text-shadow">
+                            </p>
+                        </div>
+                    </div>
+                </th:block>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+
+    </div>
+
+</section>
+</body>
+</html>

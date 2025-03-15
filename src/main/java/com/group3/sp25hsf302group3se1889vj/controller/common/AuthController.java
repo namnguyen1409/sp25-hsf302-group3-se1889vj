@@ -5,6 +5,7 @@ import com.group3.sp25hsf302group3se1889vj.dto.RegisterCustomerDTO;
 import com.group3.sp25hsf302group3se1889vj.entity.Token;
 import com.group3.sp25hsf302group3se1889vj.entity.User;
 import com.group3.sp25hsf302group3se1889vj.enums.TokenType;
+import com.group3.sp25hsf302group3se1889vj.exception.Http500;
 import com.group3.sp25hsf302group3se1889vj.repository.TokenRepository;
 import com.group3.sp25hsf302group3se1889vj.repository.UserRepository;
 import com.group3.sp25hsf302group3se1889vj.security.service.RecaptchaService;
@@ -16,6 +17,7 @@ import com.group3.sp25hsf302group3se1889vj.service.TokenService;
 import com.group3.sp25hsf302group3se1889vj.service.UserService;
 import com.group3.sp25hsf302group3se1889vj.util.CookieUtil;
 import com.group3.sp25hsf302group3se1889vj.util.EncryptionUtil;
+import com.group3.sp25hsf302group3se1889vj.util.FlashMessageUtil;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,6 +31,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -78,7 +81,8 @@ public class AuthController {
     public String login(
             @ModelAttribute("loginDTO") @Validated LoginDTO loginDTO,
             BindingResult bindingResult,
-            @RequestParam("g-recaptcha-response") String recaptchaResponse
+            @RequestParam("g-recaptcha-response") String recaptchaResponse,
+            RedirectAttributes redirectAttributes
     ) {
         if (recaptchaService.notVerifyRecaptcha(recaptchaResponse)) {
             bindingResult.rejectValue("recaptchaResponse", "error.recaptcha", "Vui lòng xác minh bạn không phải là robot");
@@ -93,6 +97,12 @@ public class AuthController {
             return "auth/login";
         }
         var user = userOptional.get();
+        if (!user.isActive()) {
+            FlashMessageUtil.addFlashMessage(redirectAttributes, "Vui lòng kiểm tra email để kích hoạt tài khoản", "error");
+            return "redirect:/login";
+        }
+
+
         var jwt = jwtTokenProvider.generateToken(new CustomUserDetails(user));
         if (Boolean.TRUE.equals(loginDTO.getRemember())) {
             var refreshToken = refreshTokenProvider.generateRefreshToken(UUID.randomUUID().toString());
@@ -128,5 +138,41 @@ public class AuthController {
         return "auth/register";
     }
 
+    @PostMapping("/register")
+    public String register(
+            @ModelAttribute("registerDTO") @Validated RegisterCustomerDTO registerCustomerDTO,
+            BindingResult bindingResult,
+            @RequestParam("g-recaptcha-response") String recaptchaResponse,
+            RedirectAttributes redirectAttributes
+    ) {
+        if (recaptchaService.notVerifyRecaptcha(recaptchaResponse)) {
+            bindingResult.rejectValue("recaptchaResponse", "error.recaptcha", "Vui lòng xác minh bạn không phải là robot");
+            return "auth/register";
+        }
+        if (bindingResult.hasErrors()) {
+            return "auth/register";
+        }
+        try {
+            userService.registerCustomer(registerCustomerDTO);
+            FlashMessageUtil.addFlashMessage(redirectAttributes, "Đăng ký tài khoản thành công, vui lòng kiểm tra email để kích hoạt tài khoản", "success");
+        } catch (Exception e) {
+            throw new Http500("Đã có lỗi xảy ra");
+        }
+        return "redirect:/login";
+    }
+
+    @GetMapping("/verify-email")
+    public String verifyEmail(@RequestParam("token") String token,
+                              RedirectAttributes redirectAttributes
+    ) {
+        try {
+            userService.verifyEmail(token);
+        } catch (Exception e) {
+            FlashMessageUtil.addFlashMessage(redirectAttributes, "Đã có lỗi xảy ra", "error");
+            return "redirect:/login";
+        }
+        FlashMessageUtil.addFlashMessage(redirectAttributes, "Kích hoạt tài khoản thành công", "success");
+        return "redirect:/login";
+    }
 
 }

@@ -8,7 +8,8 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BrandFilterDTO extends BaseFilterDTO {
-    // TODO: Add fields here
     private String name;
+    private String description;
+    private String logo;
 
 }

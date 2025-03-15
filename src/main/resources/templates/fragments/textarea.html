@@ -13,7 +13,7 @@
     <div id="editor" class="form-control p-0" required
          th:classappend="${#fields.hasErrors('__${name}__')} ? 'is-invalid' : ''"
          style="min-height: 200px"
-         ></div>
+    ></div>
   </div>
   <div class="invalid-feedback"
        th:if="${#fields.hasErrors('__${name}__')}"
@@ -53,11 +53,11 @@
 
     let timeout;
     quill.on('text-change', function() {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => {
-            document.getElementById('[[${name}]]').value = quill.root.innerHTML;
-            console.log(document.getElementById('[[${name}]]').value);
-        }, 300);
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        document.getElementById('[[${name}]]').value = quill.root.innerHTML;
+        console.log(document.getElementById('[[${name}]]').value);
+      }, 300);
     });
 
     window.onload = function () {

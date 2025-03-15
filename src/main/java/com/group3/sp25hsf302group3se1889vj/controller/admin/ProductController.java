@@ -1,7 +1,12 @@
 package com.group3.sp25hsf302group3se1889vj.controller.admin;
 
+import com.group3.sp25hsf302group3se1889vj.dto.BrandDTO;
+import com.group3.sp25hsf302group3se1889vj.dto.CategoryDTO;
 import com.group3.sp25hsf302group3se1889vj.dto.ProductDTO;
+import com.group3.sp25hsf302group3se1889vj.dto.filter.BrandFilterDTO;
 import com.group3.sp25hsf302group3se1889vj.dto.filter.ProductFilterDTO;
+import com.group3.sp25hsf302group3se1889vj.service.BrandService;
+import com.group3.sp25hsf302group3se1889vj.service.CategoryService;
 import com.group3.sp25hsf302group3se1889vj.service.ProductService;
 import com.group3.sp25hsf302group3se1889vj.util.MetadataExtractor;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +22,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -26,8 +32,10 @@ import java.util.Map;
 @RequestMapping("/admin/product")
 @RequiredArgsConstructor
 public class ProductController {
-
     private final ProductService productService;
+    private final BrandService brandService;
+    private final CategoryService categoryService;
+
     private final MetadataExtractor metadataExtractor;
 
     @GetMapping({"/list", "", "/"})
@@ -71,19 +79,55 @@ public class ProductController {
     @GetMapping("/add")
     public String add(Model model) {
         model.addAttribute("entity", new ProductDTO());
+        
+        BrandFilterDTO brandFilterDTO = new BrandFilterDTO();
+        Pageable pageable = PageRequest.of(0, Integer.MAX_VALUE);
+        try {
+            Page<BrandDTO> brandPage = brandService.findAll(brandFilterDTO, pageable);
+            model.addAttribute("brands", brandPage != null ? brandPage.getContent() : new ArrayList<>());
+        } catch (Exception e) {
+            model.addAttribute("brands", new ArrayList<>());
+
+        }
+
+        try {
+            List<CategoryDTO> categories = categoryService.getParentCategories();
+            model.addAttribute("categories", categories != null ? categories : new ArrayList<>());
+        } catch (Exception e) {
+            model.addAttribute("categories", new ArrayList<>());
+
+        }
+
         return "admin/product/add";
     }
 
     @PostMapping("/add")
     public String add(
             @ModelAttribute("entity") @Validated ProductDTO product,
-            BindingResult result
+            BindingResult result,
+            Model model
     ) {
-        // TODO: Add more actions here
-
         if (result.hasErrors()) {
+            // Thêm lại danh sách brands và categories khi có lỗi validation
+            BrandFilterDTO brandFilterDTO = new BrandFilterDTO();
+            Pageable pageable = PageRequest.of(0, Integer.MAX_VALUE);
+            try {
+                Page<BrandDTO> brandPage = brandService.findAll(brandFilterDTO, pageable);
+                model.addAttribute("brands", brandPage != null ? brandPage.getContent() : new ArrayList<>());
+            } catch (Exception e) {
+                model.addAttribute("brands", new ArrayList<>());
+            }
+
+            try {
+                List<CategoryDTO> categories = categoryService.getParentCategories();
+                model.addAttribute("categories", categories != null ? categories : new ArrayList<>());
+            } catch (Exception e) {
+                model.addAttribute("categories", new ArrayList<>());
+            }
+
             return "admin/product/add";
         }
+
         productService.save(product);
         return "redirect:/admin/product/";
     }

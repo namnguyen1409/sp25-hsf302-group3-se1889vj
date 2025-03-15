@@ -13,6 +13,17 @@ public class BrandSpecification {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
+            if (filterDTO.getName() != null && !filterDTO.getName().isEmpty()) {
+                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + filterDTO.getName().toLowerCase() + "%"));
+            }
+            if (filterDTO.getDescription() != null && !filterDTO.getDescription().isEmpty()) {
+                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("description")), "%" + filterDTO.getDescription().toLowerCase() + "%"));
+            }
+            if (filterDTO.getLogo() != null && !filterDTO.getLogo().isEmpty()) {
+                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("logo")), "%" + filterDTO.getLogo().toLowerCase() + "%"));
+            }
+
+
             // base predicates
             if(filterDTO.getCreatedAtFrom() != null) {
                 predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("createdAt"), filterDTO.getCreatedAtFrom()));

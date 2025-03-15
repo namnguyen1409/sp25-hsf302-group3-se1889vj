@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      lang="vi" layout:decorate="admin-template">
+
+<body>
+<section layout:fragment="content" class="container mt-4">
+    <div class="row justify-content-center h-100">
+        <div class="col-lg-8 d-flex flex-column nowrap justify-content-center">
+            <form th:action="@{/admin/brand/add}" th:object="${entity}" method="post"
+                  class="p-md-4 border rounded shadow-sm">
+                <h4 class="text-center mb-5">Thêm mới nhãn hàng</h4>
+
+                <div class="mb-3">
+                    <div th:replace="fragments/input :: customInput ('name', 'text', 'bi-tag', 'Tên thương hiệu', true)"></div>
+                </div>
+
+                <div class="mb-3">
+                    <div th:replace="fragments/input-image :: customInputImage('logo', 'bi-image', 'Logo')"></div>
+                </div>
+
+                <div class="mb-3">
+                    <textarea class="form-control" th:field="*{description}" rows="3" placeholder="Mô tả"></textarea>
+                    <div class="invalid-feedback"
+                         th:if="${#fields.hasErrors('description')}"
+                         th:text="${#fields.errors('description')}">
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-save"></i> Lưu banner
+                    </button>
+                    <a th:href="@{/admin/brand}" class="btn btn-secondary">Quay lại</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+</body>
+</html>

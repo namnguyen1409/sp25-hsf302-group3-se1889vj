@@ -22,4 +22,6 @@ public interface CouponService {
     boolean isExistCode(String code);
 
     boolean isExistCodeAndIdNot(String code, Long id);
+
+    void restore(Long id);
 }

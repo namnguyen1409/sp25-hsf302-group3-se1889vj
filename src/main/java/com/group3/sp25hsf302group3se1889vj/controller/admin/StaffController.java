@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Arrays;
 import java.util.List;
-
+@PreAuthorize("hasRole('OWNER') or hasAnyAuthority('MANAGE_STAFF')")
 @Controller
 @RequestMapping("/admin/staff")
 @AllArgsConstructor
@@ -48,7 +49,7 @@ public class StaffController {
         Page<UserDTO> pages = userService.searchUsers(filterDTO, pageable);
         model.addAttribute("pages", pages);
         model.addAttribute("filterDTO", filterDTO);
-        return "admin/user/staff/list";
+        return "admin/staff/list";
     }
 
     @PostMapping({"/list", "", "/"})
@@ -64,6 +65,12 @@ public class StaffController {
     public String detail(Model model, @PathVariable Long id) {
         UserDTO userDTO = userService.getUserById(id);
         model.addAttribute("userDTO", userDTO);
-        return "admin/user/staff/detail";
+        return "admin/staff/detail";
+    }
+
+    @GetMapping("/add")
+    public String add(Model model) {
+        model.addAttribute("userDTO", new UserDTO());
+        return "admin/staff/add";
     }
 }

@@ -134,4 +134,16 @@ public class CouponController {
         couponService.update(coupon);
         return "redirect:/admin/coupon/";
     }
+
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable("id") Long id) {
+        couponService.delete(id);
+        return "redirect:/admin/coupon/";
+    }
+
+    @GetMapping("/restore/{id}")
+    public String restore(@PathVariable("id") Long id) {
+        couponService.restore(id);
+        return "redirect:/admin/coupon/";
+    }
 }

@@ -53,19 +53,19 @@
     </style>
 
     <form th:object="${filterDTO}" th:action="@{/admin/category/list}" method="post" class="d-none" id="filterForm">
-        <input type="hidden" th:field="*{page}">
-        <input type="hidden" th:field="*{orderBy}">
-        <input type="hidden" th:field="*{direction}">
-        <input type="hidden" th:field="*{size}">
-        <input type="hidden" th:field="*{name}">
-        <input type="hidden" th:field="*{description}">
-        <input type="hidden" th:field="*{parentName}">
-        <input type="hidden" th:field="*{createdAtFrom}">
-        <input type="hidden" th:field="*{createdAtTo}">
-        <input type="hidden" th:field="*{createdBy}">
-        <input type="hidden" th:field="*{updatedAtFrom}">
-        <input type="hidden" th:field="*{updatedAtTo}">
-        <input type="hidden" th:field="*{updatedBy}">
+        <input type="hidden" th:field="*{page}" class="hidden-field">
+        <input type="hidden" th:field="*{orderBy}" class="hidden-field">
+        <input type="hidden" th:field="*{direction}" class="hidden-field">
+        <input type="hidden" th:field="*{size}" class="hidden-field">
+        <input type="hidden" th:field="*{name}" class="hidden-field">
+        <input type="hidden" th:field="*{description}" class="hidden-field">
+        <input type="hidden" th:field="*{parentName}" class="hidden-field">
+        <input type="hidden" th:field="*{createdAtFrom}" class="hidden-field">
+        <input type="hidden" th:field="*{createdAtTo}" class="hidden-field">
+        <input type="hidden" th:field="*{createdBy}" class="hidden-field">
+        <input type="hidden" th:field="*{updatedAtFrom}" class="hidden-field">
+        <input type="hidden" th:field="*{updatedAtTo}" class="hidden-field">
+        <input type="hidden" th:field="*{updatedBy}" class="hidden-field">
     </form>
 
 
@@ -75,7 +75,7 @@
         <div class="d-flex align-items-center gap-2">
             <div class="input-group">
                 <label class="input-group-text" for="sizeField">Hiển thị</label>
-                <select class="form-select" id="sizeField" th:value="${filterDTO.size}">
+                <select class="form-select" id="sizeField" th:value="${filterDTO.size}" onchange="updateFilter()">
                     <option value="5" th:selected="${filterDTO.size == 5}">5 kết quả/trang</option>
                     <option value="10" th:selected="${filterDTO.size == 10}">10 kết quả/trang</option>
                     <option value="20" th:selected="${filterDTO.size == 20}">20 kết quả/trang</option>
@@ -204,10 +204,20 @@
 
         function resetField() {
             let form = document.getElementById('filterForm');
-            Array.from(form.elements).forEach(el => {
-                el.value = '';
-            });
-            updateFilter();
+            form.elements['name'].value = '';
+            form.elements['description'].value = '';
+            form.elements['parentName'].value = '';
+            form.elements['createdAtFrom'].value = '';
+            form.elements['createdAtTo'].value = '';
+            form.elements['createdBy'].value = '';
+            form.elements['updatedAtFrom'].value = '';
+            form.elements['updatedAtTo'].value = '';
+            form.elements['updatedBy'].value = '';
+            form.elements['page'].value = 1;
+            form.elements['orderBy'].value = 'createdAt';
+            form.elements['direction'].value = 'ASC';
+            form.elements['size'].value = 5;
+            form.submit();
         }
 
         function updateFilter() {
@@ -221,8 +231,18 @@
             form.elements['updatedAtFrom'].value = document.getElementById('updatedAtFromField').value;
             form.elements['updatedAtTo'].value = document.getElementById('updatedAtToField').value;
             form.elements['updatedBy'].value = document.getElementById('updatedByField').value;
+            form.elements['size'].value = document.getElementById('sizeField').value;
             form.submit();
         }
+
+
+        document.querySelectorAll('input[id$=Field]').forEach(input => {
+            input.addEventListener('keyup', function(event) {
+                if (event.key === 'Enter') {
+                    updateFilter();
+                }
+            });
+        });
 
 
     </script>

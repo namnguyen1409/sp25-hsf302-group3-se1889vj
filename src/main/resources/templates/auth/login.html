@@ -10,16 +10,13 @@
                 <div id="customer-login" class="customers_accountForm customer_login">
                     <div class="tab-form-account d-flex align-items-center justify-content-center">
                         <h4 class="active">
-                            <a href="/account/login">Đăng nhập</a>
+                            <a th:href="@{/login}">Đăng nhập</a>
                         </h4>
-                        <h4>
-                            <a href="/account/register">Đăng ký</a>
+                        <h4 >
+                            <a th:href="@{/register}">Đăng ký</a>
                         </h4>
                     </div>
                     <div id="login">
-                        <div class="accounttype">
-                            <h2 class="title"></h2>
-                        </div>
                         <form method="post" th:object="${loginDTO}" th:action="@{/login}" class="customer_login">
 
                             <div class="input-group mb-3">

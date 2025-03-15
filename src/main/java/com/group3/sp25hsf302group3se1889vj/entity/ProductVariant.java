@@ -28,8 +28,6 @@ public class ProductVariant extends BaseEntity {
     @Column(nullable = true, columnDefinition = "NVARCHAR(50)")
     private String color;
 
-    @Column(nullable = true, columnDefinition = "NVARCHAR(50)")
-    private String image;
 
     private int stockQuantity;
 }

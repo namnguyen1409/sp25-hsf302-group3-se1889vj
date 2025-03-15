@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      lang="vi" layout:decorate="admin-template">
+
+<body>
+<section layout:fragment="content" class="container mt-4">
+    <div class="row justify-content-center h-100">
+        <div class="col-lg-8 d-flex flex-column nowrap justify-content-center">
+            <form th:action="@{/admin/product/add}" th:object="${entity}" method="post"
+                  class="p-md-4 border rounded shadow-sm">
+                <h4 class="text-center mb-5">Thêm mới Sản Phẩm</h4>
+
+                <div class="mb-3">
+                    <div th:replace="fragments/input :: customInput ('name', 'text', 'bi-tag', 'Tên Sản Phẩm', true)"></div>
+                </div>
+                <div class="mb-3">
+                    <div th:replace="fragments/input :: customInput ('name', 'number', 'bi-tag', 'Giá Gốc', true)"></div>
+                </div>
+                <div class="mb-3">
+                    <div th:replace="fragments/input :: customInput ('name', 'number', 'bi-tag', 'Giá Bán', true)"></div>
+                </div>
+                <div class="mb-3">
+                    <div th:replace="fragments/input :: customInput ('name', 'text', 'bi-tag', 'Thương Hiệu', true)"></div>
+                </div>
+                <div class="mb-3">
+                    <div th:replace="fragments/input :: customInput ('name', 'text', 'bi-tag', 'Danh Mục', true)"></div>
+                </div>
+
+                <div class="mb-3">
+                    <textarea class="form-control" th:field="*{description}" rows="3" placeholder="Mô tả"></textarea>
+                </div>
+
+<!--                <div class="mb-3">-->
+<!--                    <label class="form-label">Danh mục cha</label>-->
+<!--                    <select class="form-select" th:field="*{}">-->
+<!--                        <option value="">Không có</option>-->
+<!--                        <option th:each="cat : ${categories}"-->
+<!--                                th:if="${cat.parentId == null}"-->
+<!--                                th:value="${cat.id}"-->
+<!--                                th:text="${cat.name}">-->
+<!--                        </option>-->
+<!--                    </select>-->
+<!--                </div>-->
+
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-save"></i> Luu Sản Phẩm
+                    </button>
+                    <a th:href="@{/admin/product}" class="btn btn-secondary">Quay lại</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+</body>
+</html>

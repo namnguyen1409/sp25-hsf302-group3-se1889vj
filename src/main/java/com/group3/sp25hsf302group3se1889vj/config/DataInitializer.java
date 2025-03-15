@@ -1,7 +1,10 @@
 package com.group3.sp25hsf302group3se1889vj.config;
 
+import com.group3.sp25hsf302group3se1889vj.entity.Permission;
 import com.group3.sp25hsf302group3se1889vj.entity.User;
+import com.group3.sp25hsf302group3se1889vj.enums.PermissionType;
 import com.group3.sp25hsf302group3se1889vj.enums.RoleType;
+import com.group3.sp25hsf302group3se1889vj.repository.PermissionRepository;
 import com.group3.sp25hsf302group3se1889vj.repository.UserRepository;
 import com.group3.sp25hsf302group3se1889vj.service.UserService;
 import jakarta.annotation.PostConstruct;
@@ -19,6 +22,7 @@ import java.time.LocalDate;
 public class DataInitializer {
 
     private final UserRepository userRepository;
+    private final PermissionRepository permissionRepository;
     @Value("${owner.username}")
     private String ownerUsername;
 
@@ -73,6 +77,11 @@ public class DataInitializer {
             log.info("Owner {} created", ownerUsername);
         } else {
             log.info("Username {} already exist", ownerUsername);
+        }
+
+        for (PermissionType type : PermissionType.values()) {
+            permissionRepository.findByName(type)
+                    .orElseGet(() -> permissionRepository.save(Permission.builder().name(type).build()));
         }
     }
 

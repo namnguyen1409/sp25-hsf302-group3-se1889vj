@@ -3,6 +3,8 @@ package com.group3.sp25hsf302group3se1889vj.controller.admin;
 import com.group3.sp25hsf302group3se1889vj.dto.BannerDTO;
 import com.group3.sp25hsf302group3se1889vj.dto.filter.BannerFilterDTO;
 import com.group3.sp25hsf302group3se1889vj.service.BannerService;
+import com.group3.sp25hsf302group3se1889vj.service.StorageService;
+import com.group3.sp25hsf302group3se1889vj.util.FlashMessageUtil;
 import com.group3.sp25hsf302group3se1889vj.util.MetadataExtractor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -28,6 +30,7 @@ public class BannerController {
 
     private final BannerService bannerService;
     private final MetadataExtractor metadataExtractor;
+    private final StorageService storageService;
 
     @GetMapping({"/list", "", "/"})
     public String list(
@@ -42,14 +45,15 @@ public class BannerController {
                 : Sort.by(filterDTO.getOrderBy()).descending();
 
         // TODO: Add more fields here
-        List<String> fields = Arrays.asList("id");
+        List<String> fields = Arrays.asList("title", "url", "image", "description", "createdAt", "createdBy","updatedAt", "updatedBy");
+        model.addAttribute("fields", fields);
         model.addAttribute("fieldTitles", metadataExtractor.getFieldTitles(BannerDTO.class, fields));
         model.addAttribute("fieldClasses", metadataExtractor.getFieldClasses(BannerDTO.class, fields));
 
         Pageable pageable = PageRequest.of(filterDTO.getPage() - 1, filterDTO.getSize(), sortDirection);
 
-        Page<BannerDTO> page = bannerService.findAll(filterDTO, pageable);
-        model.addAttribute("page", page);
+        Page<BannerDTO> pages = bannerService.findAll(filterDTO, pageable);
+        model.addAttribute("pages", pages);
         model.addAttribute("filterDTO", filterDTO);
         return "admin/banner/list";
     }
@@ -72,13 +76,18 @@ public class BannerController {
     @PostMapping("/add")
     public String add(
             @ModelAttribute("entity") @Validated BannerDTO banner,
-            BindingResult result
+            BindingResult result,
+            RedirectAttributes redirectAttributes
     ) {
-        // TODO: Add more actions here
-
         if(result.hasErrors()) {
             return "admin/banner/add";
         }
+        var img = storageService.moveToUploads(banner.getImage());
+        if (img == null) {
+            FlashMessageUtil.addFlashMessage(redirectAttributes, "Lỗi upload ảnh", "error");
+            return "redirect:/admin/banner/add";
+        }
+        banner.setImage(img);
         bannerService.save(banner);
         return "redirect:/admin/banner/";
     }
@@ -95,13 +104,18 @@ public class BannerController {
     @PostMapping("/edit")
     public String edit(
             @ModelAttribute("entity") @Validated BannerDTO banner,
-            BindingResult bindingResult
-
+            BindingResult bindingResult,
+            RedirectAttributes redirectAttributes
     ) {
         if(bindingResult.hasErrors()) {
             return "admin/banner/edit";
         }
-
+        var img = storageService.moveToUploads(banner.getImage());
+        if (img == null) {
+            FlashMessageUtil.addFlashMessage(redirectAttributes, "Lỗi upload ảnh", "error");
+            return "redirect:/admin/banner/edit/" + banner.getId();
+        }
+        banner.setImage(img);
         bannerService.update(banner);
         return "redirect:/admin/banner/";
     }

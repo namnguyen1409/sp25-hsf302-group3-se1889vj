@@ -11,4 +11,5 @@ public class BannerFilterDTO extends BaseFilterDTO {
     private String title;
     private String url;
     private String image;
+    private String description;
 }

@@ -2,6 +2,7 @@ package com.group3.sp25hsf302group3se1889vj.controller.admin;
 
 import com.group3.sp25hsf302group3se1889vj.dto.CouponDTO;
 import com.group3.sp25hsf302group3se1889vj.dto.filter.CouponFilterDTO;
+import com.group3.sp25hsf302group3se1889vj.enums.CouponType;
 import com.group3.sp25hsf302group3se1889vj.service.CouponService;
 import com.group3.sp25hsf302group3se1889vj.util.MetadataExtractor;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
@@ -41,15 +43,15 @@ public class CouponController {
                 ? Sort.by(filterDTO.getOrderBy()).ascending()
                 : Sort.by(filterDTO.getOrderBy()).descending();
 
-        // TODO: Add more fields here
-        List<String> fields = Arrays.asList("id");
+        List<String> fields = Arrays.asList("code", "description", "type", "value", "minOrderValue", "maxDiscount", "maxUsage", "usageCount", "maxUsagePerUser", "startDate", "endDate", "isDeleted");
+        model.addAttribute("fields", fields);
         model.addAttribute("fieldTitles", metadataExtractor.getFieldTitles(CouponDTO.class, fields));
         model.addAttribute("fieldClasses", metadataExtractor.getFieldClasses(CouponDTO.class, fields));
 
         Pageable pageable = PageRequest.of(filterDTO.getPage() - 1, filterDTO.getSize(), sortDirection);
 
-        Page<CouponDTO> page = couponService.findAll(filterDTO, pageable);
-        model.addAttribute("page", page);
+        Page<CouponDTO> pages = couponService.findAll(filterDTO, pageable);
+        model.addAttribute("pages", pages);
         model.addAttribute("filterDTO", filterDTO);
         return "admin/coupon/list";
     }
@@ -74,11 +76,25 @@ public class CouponController {
             @ModelAttribute("entity") @Validated CouponDTO coupon,
             BindingResult result
     ) {
-        // TODO: Add more actions here
+
+        if (coupon.getStartDate() != null && coupon.getEndDate() != null && coupon.getStartDate().isAfter(coupon.getEndDate())) {
+            result.rejectValue("startDate", "error.startDate", "Ngày bắt đầu phải trước ngày kết thúc");
+        }
+
+        if (coupon.getType() == CouponType.PERCENTAGE && coupon.getValue().compareTo(BigDecimal.valueOf(100)) > 0) {
+            result.rejectValue("value", "error.value", "Giảm giá theo phần trăm không được lớn hơn 100");
+        }
+
+        if (couponService.isExistCode(coupon.getCode())) {
+            result.rejectValue("code", "error.code", "Mã giảm giá đã tồn tại");
+        }
 
         if(result.hasErrors()) {
             return "admin/coupon/add";
         }
+
+        coupon.setUsageCount(0);
+
         couponService.save(coupon);
         return "redirect:/admin/coupon/";
     }
@@ -98,7 +114,18 @@ public class CouponController {
             BindingResult bindingResult
 
     ) {
-        // TODO: Add more actions here
+
+        if (coupon.getStartDate() != null && coupon.getEndDate() != null && coupon.getStartDate().isAfter(coupon.getEndDate())) {
+            bindingResult.rejectValue("startDate", "error.startDate", "Ngày bắt đầu phải trước ngày kết thúc");
+        }
+
+        if (coupon.getType() == CouponType.PERCENTAGE && coupon.getValue().compareTo(BigDecimal.valueOf(100)) > 0) {
+            bindingResult.rejectValue("value", "error.value", "Giảm giá theo phần trăm không được lớn hơn 100");
+        }
+
+        if (couponService.isExistCodeAndIdNot(coupon.getCode(), coupon.getId())) {
+            bindingResult.rejectValue("code", "error.code", "Mã giảm giá đã tồn tại");
+        }
 
         if(bindingResult.hasErrors()) {
             return "admin/coupon/edit";

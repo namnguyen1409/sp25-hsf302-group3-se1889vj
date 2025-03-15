@@ -50,7 +50,7 @@ public class FileController {
             return ResponseEntity.badRequest().body(putResponse("error", "File is not an image"));
         }
         else {
-            String url = storageService.store(file);
+            String url = storageService.saveToTemp(file);
             return ResponseEntity.ok(putResponse("success", "File uploaded successfully", url));
         }
     }

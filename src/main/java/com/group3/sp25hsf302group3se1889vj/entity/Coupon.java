@@ -34,7 +34,7 @@ public class Coupon extends BaseEntity {
     private BigDecimal minOrderValue;
     private Integer maxDiscount;
     private Integer maxUsage;
-    private Integer usageCount;
+    private Integer usageCount = 0;
     private Integer maxUsagePerUser;
 
     private LocalDateTime startDate;

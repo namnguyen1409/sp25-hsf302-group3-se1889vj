@@ -3,6 +3,7 @@ package com.group3.sp25hsf302group3se1889vj.handler;
 import com.group3.sp25hsf302group3se1889vj.exception.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.ui.Model;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
+@Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -111,6 +113,7 @@ public class GlobalExceptionHandler {
                 new Error("500",
                         "Lỗi hệ thống",
                         "Đã xảy ra một lỗi không mong muốn. Vui lòng thử lại sau."));
+        log.error("Exception: ", exception);
         return "common/error";
     }
 

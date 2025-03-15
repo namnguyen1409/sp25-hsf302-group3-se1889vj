@@ -22,7 +22,7 @@ import java.util.List;
 
 
 @Controller
-@RequestMapping("/templates/admin/customer-address")
+@RequestMapping("/admin/customer-address")
 @AllArgsConstructor
 public class CustomerAddressController {
     private final CustomerAddressService customerAddressService;
@@ -59,64 +59,12 @@ public class CustomerAddressController {
             RedirectAttributes redirectAttributes
     ) {
         redirectAttributes.addFlashAttribute("filterDTO", filterDTO);
-        return "redirect:/templates/admin/customer-address/list";
+        return "redirect:/admin/customer-address/list";
     }
 
-    @GetMapping("/add")
-    public String add(Model model) {
-        model.addAttribute("customerAddressDTO", new CustomerAddressDTO());
-        return "admin/customer-address/add";
-    }
-
-    @PostMapping("/add")
-    public String add(
-            @ModelAttribute("customerAddressDTO") @Validated CustomerAddressDTO customerAddressDTO,
-            BindingResult bindingResult,
-            RedirectAttributes redirectAttributes
-    ) {
-        if(customerAddressService.existsCustomerAddressByPhone(customerAddressDTO.getPhone())) {
-            bindingResult.rejectValue("phone", "customerAddressDTO.phone.exists", "Số điện thoại đã tồn tại");
-        }
-        if(bindingResult.hasErrors()) {
-            return "admin/customer-address/add";
-        }
-        customerAddressService.save(customerAddressDTO);
-        return "redirect:/templates/admin/customer-address/list";
-    }
-
-    @GetMapping("/edit/{id}")
-    public String edit(Model model,
-                       @PathVariable("id") Long id) {
-        CustomerAddressDTO customerAddressDTO = customerAddressService.findById(id);
-        model.addAttribute("customerAddressDTO", customerAddressDTO);
-        return "admin/customer-address/edit";
-    }
-
-    @PostMapping("/edit")
-    public String edit(
-            @ModelAttribute("customerAddressDTO") @Validated CustomerAddressDTO customerAddressDTO,
-            BindingResult bindingResult,
-            RedirectAttributes redirectAttributes
-    ) {
-        if(customerAddressService.existsCustomerAddressByPhoneAndIdNot(customerAddressDTO.getPhone(), customerAddressDTO.getId())) {
-            bindingResult.rejectValue("phone", "customerAddressDTO.phone.exists", "Số điện thoại đã tồn tại");
-        }
-        if(bindingResult.hasErrors()) {
-            return "admin/customer-address/edit";
-        }
-        CustomerAddressDTO customerAddress = customerAddressService.findById(customerAddressDTO.getId());
-        customerAddress.setFullName(customerAddressDTO.getFullName());
-        customerAddress.setAddress(customerAddressDTO.getAddress());
-        customerAddress.setPhone(customerAddressDTO.getPhone());
-        customerAddressService.save(customerAddress);
-        return "redirect:/templates/admin/customer-address/list";
-    }
-
-    @GetMapping("/delete/{id}")
-    public String delete(@PathVariable("id") Long id) {
-        CustomerAddressDTO customerAddressDTO = customerAddressService.findById(id);
-        customerAddressDTO.setDeleted(true);
-        customerAddressService.save(customerAddressDTO);
-        return "redirect:/templates/admin/customer-address/list";
+    @GetMapping("/detail/{id}")
+    public String add(Model model , @PathVariable Long id) {
+        model.addAttribute("customerAddressDTO", customerAddressService.findById(id));
+        return "admin/customer-address/detail";
     }
 }

@@ -52,7 +52,7 @@
         }
     </style>
 
-    <form th:object="${filterDTO}" th:action="@{/templates/admin/customer-address/list}" method="post" class="d-none" id="filterForm">
+    <form th:object="${filterDTO}" th:action="@{/admin/customer-address/list}" method="post" class="d-none" id="filterForm">
         <input type="hidden" th:field="*{page}">
         <input type="hidden" th:field="*{orderBy}">
         <input type="hidden" th:field="*{direction}">
@@ -83,10 +83,6 @@
                 </select>
             </div>
         </div>
-
-        <a th:href="@{/templates/admin/customer-address/add}" class="btn btn-primary">
-            <i class="bi bi-plus-circle"></i> Thêm mới
-        </a>
     </div>
 
     <div class="container mt-4 tbl-container">
@@ -109,13 +105,13 @@
                 <tbody>
                 <tr th:object="${filterDTO}">
                     <td>
-                        <input type="text" class="form-control form-control-sm" th:value="*{fullName}" id="fullName" placeholder="Họ và tên">
+                        <input type="text" class="form-control form-control-sm" th:value="*{fullName}" id="fullNameField" placeholder="Họ và tên">
                     </td>
                     <td>
-                        <input type="text" class="form-control form-control-sm" th:value="*{address}" id="address" placeholder="Địa chỉ">
+                        <input type="text" class="form-control form-control-sm" th:value="*{address}" id="addressField" placeholder="Địa chỉ">
                     </td>
                     <td>
-                        <input type="text" class="form-control form-control-sm" th:value="*{phone}" id="phone" placeholder="Số điện thoại">
+                        <input type="text" class="form-control form-control-sm" th:value="*{phone}" id="phoneField" placeholder="Số điện thoại">
                     </td>
                     <td>
                         <div class="d-flex gap-2" style="max-width: 200px">
@@ -148,13 +144,9 @@
                 <tr th:if="${pages.totalPages > 0}" th:each="item : ${pages}">
                     <th:block th:replace="fragments/list-body :: list-body(${item}, ${fields}, ${fieldTitles}, ${fieldClasses})"></th:block>
                     <td class="text-center sticky-column">
-                        <a th:href="@{'/templates/admin/customer-address/edit/' + ${item.id}}"
+                        <a th:href="@{'/admin/customer-address/detail/' + ${item.id}}"
                            class="btn btn-sm btn-warning">
-                            <i class="bi bi-pencil-square"></i>
-                        </a>
-                        <a th:href="@{'/templates/admin/customer-address/delete/' + ${item.id}}"
-                           class="btn btn-sm btn-danger">
-                            <i class="bi bi-trash"></i>
+                            <i class="bi bi-archive-fill"></i>
                         </a>
                     </td>
                 </tr>
@@ -211,9 +203,9 @@
 
         function updateFilter() {
             let form = document.getElementById('filterForm');
-            form.elements['fullName'].value = document.getElementById('fullName').value;
-            form.elements['address'].value = document.getElementById('address').value;
-            form.elements['phone'].value = document.getElementById('phone').value;
+            form.elements['fullName'].value = document.getElementById('fullNameField').value;
+            form.elements['address'].value = document.getElementById('addressField').value;
+            form.elements['phone'].value = document.getElementById('phoneField').value;
             form.elements['createdAtFrom'].value = document.getElementById('createdAtFromField').value;
             form.elements['createdAtTo'].value = document.getElementById('createdAtToField').value;
             form.elements['createdBy'].value = document.getElementById('createdByField').value;

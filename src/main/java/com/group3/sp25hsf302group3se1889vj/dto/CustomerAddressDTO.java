@@ -8,4 +8,5 @@ import lombok.*;
 @NoArgsConstructor
 public class CustomerAddressDTO extends BaseDTO {
     // TODO: Add fields here
+    private String fullName;
 }

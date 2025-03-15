@@ -8,4 +8,5 @@ import lombok.*;
 @NoArgsConstructor
 public class NotificationDTO extends BaseDTO {
     // TODO: Add fields here
+    private String title;
 }

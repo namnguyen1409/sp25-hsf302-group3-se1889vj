@@ -8,4 +8,5 @@ import lombok.*;
 @NoArgsConstructor
 public class OrderStatusHistoryDTO extends BaseDTO {
     // TODO: Add fields here
+    private Long orderId;
 }

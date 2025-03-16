@@ -8,6 +8,7 @@ import com.group3.sp25hsf302group3se1889vj.entity.User;
 import com.group3.sp25hsf302group3se1889vj.security.userdetails.CustomUserDetails;
 import com.group3.sp25hsf302group3se1889vj.service.BrandService;
 import com.group3.sp25hsf302group3se1889vj.service.CategoryService;
+import com.group3.sp25hsf302group3se1889vj.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -23,6 +24,7 @@ import java.util.List;
 public class GlobalAttributes {
     private final CategoryService categoryService;
     private final BrandService brandService;
+    private final NotificationService notificationService;
 
     @Value("${recaptcha.key.site}")
     private String recaptchaSiteKey;
@@ -52,5 +54,13 @@ public class GlobalAttributes {
         return brandService.getBrands();
     }
 
+    @ModelAttribute("unreadNotificationsCount")
+    public int getUnreadNotificationsCount() {
+        try{
+            return notificationService.countUnreadNotificationsByUserId(getCurrentUser().getId());
+        } catch (Exception e) {
+            return 0;
+        }
+    }
 
 }

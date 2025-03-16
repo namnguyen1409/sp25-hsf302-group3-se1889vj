@@ -219,7 +219,21 @@
 
                 <tr th:if="${pages.totalPages > 0}" th:each="item : ${pages}">
                     <th:block th:replace="fragments/list-body :: list-body(${item}, ${fields}, ${fieldTitles}, ${fieldClasses})"></th:block>
+
+
+
+
                     <td class="text-center sticky-column">
+
+
+                        <a th:href="@{'/admin/product/' + ${item.id} + '/images'}"
+                           class="btn btn-sm btn-success">
+                            <i class="bi bi-image"></i>
+                        </a>
+                        <a th:href="@{'/admin/product/' + ${item.id} + '/variants'}"
+                           class="btn btn-sm btn-info">
+                            <i class="bi bi-box-seam"></i>
+                        </a>
                         <a th:href="@{'/admin/product/edit/' + ${item.id}}"
                            class="btn btn-sm btn-warning">
                             <i class="bi bi-pencil-square"></i>

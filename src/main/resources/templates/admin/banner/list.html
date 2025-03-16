@@ -71,7 +71,7 @@
 
 
     <div class="d-flex flex-wrap justify-content-between align-items-center mt-3 gap-2">
-        <h2 class="text-center flex-grow-1 text-md-start text-center">Danh sách phân loại</h2>
+        <h2 class="text-center flex-grow-1 text-md-start text-center">Danh sách banner</h2>
 
         <div class="d-flex align-items-center gap-2">
             <div class="input-group">
@@ -152,6 +152,11 @@
                 <tr th:if="${pages.totalPages > 0}" th:each="item : ${pages}">
                     <th:block th:replace="fragments/list-body :: list-body(${item}, ${fields}, ${fieldTitles}, ${fieldClasses})"></th:block>
                     <td class="text-center sticky-column">
+                        <a th:href="@{'/admin/banner/view/' + ${item.id}}"
+                           class="btn btn-sm btn-info">
+                            <i class="bi bi-info-circle"></i>
+                        </a>
+
                         <a th:href="@{'/admin/banner/edit/' + ${item.id}}"
                            class="btn btn-sm btn-warning">
                             <i class="bi bi-pencil-square"></i>
@@ -161,7 +166,6 @@
                            onclick="confirmDelete(this)">
                             <i class="bi bi-trash"></i>
                         </a>
-
                     </td>
                 </tr>
                 </tbody>

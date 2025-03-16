@@ -1,17 +1,12 @@
 server:
   port: 8080
-
-
 spring:
   application:
     name: sp25-hsf302-group3-se1889vj
   datasource:
     url: jdbc:sqlserver://localhost:1433;databaseName=hsf302;encrypt=true;trustServerCertificate=true
-
     username: sa
-    password: manhhuy2104sql
-
-
+    password: 1409
   jpa:
     database-platform: org.hibernate.dialect.SQLServerDialect
     hibernate:

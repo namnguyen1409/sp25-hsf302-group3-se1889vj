@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      lang="vi" layout:decorate="admin-template">
+<head>
+    <title>Chi tiết Mã Giảm Giá</title>
+</head>
+<body>
+<section layout:fragment="content" class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-success text-white">
+            <h4 class="mb-0">Chi tiết Mã Giảm Giá</h4>
+        </div>
+        <div class="card-body" th:object="${entity}">
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Mã giảm giá:</strong> <span th:text="*{code}"></span></p>
+                    <p><strong>Mô tả:</strong> <span th:text="*{description}"></span></p>
+                    <p><strong>Loại:</strong> <span th:text="*{type}" id="type"></span></p>
+                    <p><strong>Giá trị:</strong> <span th:text="*{value}"></span></p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Đơn hàng tối thiểu:</strong> <span th:text="*{minOrderValue}"></span></p>
+                    <p><strong>Giảm tối đa:</strong> <span th:text="*{maxDiscount}"></span></p>
+                    <p><strong>Số lượng mã:</strong> <span th:text="*{maxUsage}"></span></p>
+                    <p><strong>Số lần đã sử dụng:</strong> <span th:text="*{usageCount}"></span></p>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Ngày bắt đầu:</strong> <span th:text="*{startDate}" class="dateTime"></span></p>
+                    <p><strong>Ngày kết thúc:</strong> <span th:text="*{endDate}" class="dateTime"></span></p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Ngày tạo:</strong> <span th:text="*{createdAt}" class="dateTime"></span></p>
+                    <p><strong>Người tạo:</strong> <span th:text="*{createdBy}"></span></p>
+                </div>
+            </div>
+            <hr>
+            <div class="text-end">
+                <a th:href="@{/admin/coupon}" class="btn btn-secondary">Quay lại</a>
+                <a th:href="@{/admin/coupon/edit/{id}(id=*{id})}" class="btn btn-warning">Chỉnh sửa</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const type = document.getElementById('type');
+        if (type.innerText === 'PERCENT') {
+            type.innerText = 'Giảm phần trăm';
+        } else {
+            type.innerText = 'Giảm tiền';
+        }
+    </script>
+
+</section>
+</body>
+</html>

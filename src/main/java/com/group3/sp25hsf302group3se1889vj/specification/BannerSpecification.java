@@ -13,6 +13,18 @@ public class BannerSpecification {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
+            if(filterDTO.getTitle() != null && !filterDTO.getTitle().isEmpty()) {
+                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("title")), "%" + filterDTO.getTitle().toLowerCase() + "%"));
+            }
+
+            if(filterDTO.getUrl() != null && !filterDTO.getUrl().isEmpty()) {
+                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("url")), "%" + filterDTO.getUrl().toLowerCase() + "%"));
+            }
+
+            if(filterDTO.getImage() != null && !filterDTO.getImage().isEmpty()) {
+                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("image")), "%" + filterDTO.getImage().toLowerCase() + "%"));
+            }
+
             // base predicates
             if(filterDTO.getCreatedAtFrom() != null) {
                 predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("createdAt"), filterDTO.getCreatedAtFrom()));

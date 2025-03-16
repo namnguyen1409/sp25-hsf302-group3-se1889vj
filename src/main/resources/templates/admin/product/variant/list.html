@@ -50,16 +50,39 @@
             background-color: white;
             z-index: 1;
         }
+        .price-range-input {
+            width: 100px;
+        }
+
+        /* Điều chỉnh size của input number */
+        input[type="number"] {
+            padding-right: 0;
+        }
+
+        /* Ẩn mũi tên tăng giảm của input number trên một số trình duyệt */
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+
     </style>
 
-    <form th:object="${filterDTO}" th:action="@{/admin/customer-address/list}" method="post" class="d-none" id="filterForm">
+    <form th:object="${filterDTO}" th:action="@{/admin/product/{productId}/variant/list(productId=${product.id})}" method="post" class="d-none" id="filterForm">
         <input type="hidden" th:field="*{page}">
         <input type="hidden" th:field="*{orderBy}">
         <input type="hidden" th:field="*{direction}">
         <input type="hidden" th:field="*{size}">
-        <input type="hidden" th:field="*{fullName}">
-        <input type="hidden" th:field="*{address}">
-        <input type="hidden" th:field="*{phone}">
+
+        <input type="hidden" th:field="*{productSize}">
+        <input type="hidden" th:field="*{productColor}">
+        <input type="hidden" th:field="*{quantityFrom}">
+        <input type="hidden" th:field="*{quantityTo}">
+
         <input type="hidden" th:field="*{createdAtFrom}">
         <input type="hidden" th:field="*{createdAtTo}">
         <input type="hidden" th:field="*{createdBy}">
@@ -68,9 +91,8 @@
         <input type="hidden" th:field="*{updatedBy}">
     </form>
 
-
     <div class="d-flex flex-wrap justify-content-between align-items-center mt-3 gap-2">
-        <h2 class="text-center flex-grow-1 text-md-start text-center">Danh sách địa chỉ khách hàng</h2>
+        <h2 class="text-center flex-grow-1 text-md-start text-center">Danh sách biến thể</h2>
 
         <div class="d-flex align-items-center gap-2">
             <div class="input-group">
@@ -82,7 +104,11 @@
                     <option value="50" th:selected="${filterDTO.size == 50}">50 kết quả/trang</option>
                 </select>
             </div>
+
         </div>
+        <a th:href="@{variants/add}" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Thêm mới
+        </a>
     </div>
 
     <div class="container mt-4 tbl-container">
@@ -105,14 +131,18 @@
                 <tbody>
                 <tr th:object="${filterDTO}">
                     <td>
-                        <input type="text" class="form-control form-control-sm" th:value="*{fullName}" id="fullNameField" placeholder="Họ và tên">
+                        <input type="text" class="form-control form-control-sm" th:value="*{productSize}" id="productSizeField" placeholder="Tên sản phẩm">
                     </td>
                     <td>
-                        <input type="text" class="form-control form-control-sm" th:value="*{address}" id="addressField" placeholder="Địa chỉ">
+                        <input type="text" class="form-control form-control-sm" th:value="*{productColor}" id="productColorField" placeholder="Mô tả">
                     </td>
                     <td>
-                        <input type="text" class="form-control form-control-sm" th:value="*{phone}" id="phoneField" placeholder="Số điện thoại">
+                        <div class="d-flex gap-2" style="max-width: 200px">
+                            <input type="number" class="form-control form-control-sm price-range-input" th:value="*{quantityFrom}" id="quantityFromField" placeholder="Từ">
+                            <input type="number" class="form-control form-control-sm price-range-input" th:value="*{quantityTo}" id="quantityToField" placeholder="Đến">
+                        </div>
                     </td>
+
                     <td>
                         <div class="d-flex gap-2" style="max-width: 200px">
                             <input type="datetime-local" class="form-control form-control-sm" th:value="*{createdAtFrom}" id="createdAtFromField" style="max-width: 100px">
@@ -122,6 +152,7 @@
                     <td>
                         <input type="text" class="form-control form-control-sm" th:value="*{createdBy}" id="createdByField" placeholder="Người tạo">
                     </td>
+
                     <td>
                         <div class="d-flex gap-2" style="max-width: 200px">
                             <input type="datetime-local" class="form-control form-control-sm" th:value="*{updatedAtFrom}" id="updatedAtFromField" style="max-width: 100px">
@@ -139,14 +170,17 @@
                             <i class="bi bi-arrow-counterclockwise"></i>
                         </button>
                     </td>
+
                 </tr>
 
                 <tr th:if="${pages.totalPages > 0}" th:each="item : ${pages}">
                     <th:block th:replace="fragments/list-body :: list-body(${item}, ${fields}, ${fieldTitles}, ${fieldClasses})"></th:block>
                     <td class="text-center sticky-column">
-                        <a th:href="@{'/admin/customer-address/detail/' + ${item.id}}"
-                           class="btn btn-sm btn-warning">
-                            <i class="bi bi-archive-fill"></i>
+                        <a th:href="@{/admin/product/{productId}/variants/edit/{id}(productId=${product.id}, id=${item.id})}" class="btn btn-warning btn-sm">
+                            <i class="bi bi-pencil-square"></i>
+                        </a>
+                        <a th:href="@{/admin/product/{productId}/variants/delete/{id}(productId=${product.id}, id=${item.id})}" class="btn btn-danger btn-sm">
+                            <i class="bi bi-trash"></i>
                         </a>
                     </td>
                 </tr>
@@ -164,6 +198,23 @@
     </div>
 
     <script>
+
+
+        function resetForm() {
+            document.getElementById('formTitle').innerText = 'Thêm mới biến thể';
+            document.getElementById('variantForm').reset();
+        }
+
+        function editVariant(id, size, color, quantity) {
+            document.getElementById('formTitle').innerText = 'Chỉnh sửa biến thể';
+            document.getElementById('productSize').value = size;
+            document.getElementById('productColor').value = color;
+            document.getElementById('quantity').value = quantity;
+            document.getElementById('id').value = id;
+        }
+
+
+
         function goToPage(page) {
             document.getElementById('page').value = page;
             document.getElementById('filterForm').submit();
@@ -195,17 +246,34 @@
 
         function resetField() {
             let form = document.getElementById('filterForm');
-            Array.from(form.elements).forEach(el => {
-                el.value = '';
-            });
+            form.elements['productSize'].value = '';
+            form.elements['productColor'].value = '';
+            form.elements['quantityFrom'].value = '';
+            form.elements['quantityTo'].value = '';
+            form.elements['priceSaleFrom'].value = '';
+            form.elements['priceSaleTo'].value = '';
+
+            form.elements['createdAtFrom'].value = '';
+            form.elements['createdAtTo'].value = '';
+            form.elements['createdBy'].value = '';
+            form.elements['updatedAtFrom'].value = '';
+            form.elements['updatedAtTo'].value = '';
+            form.elements['updatedBy'].value = '';
+            form.elements['page'].value = 1;
+            form.elements['orderBy'].value = 'createdAt';
+            form.elements['direction'].value = 'ASC';
             updateFilter();
         }
 
         function updateFilter() {
             let form = document.getElementById('filterForm');
-            form.elements['fullName'].value = document.getElementById('fullNameField').value;
-            form.elements['address'].value = document.getElementById('addressField').value;
-            form.elements['phone'].value = document.getElementById('phoneField').value;
+
+            form.elements['productSize'].value = document.getElementById('productSizeField').value;
+            form.elements['productColor'].value = document.getElementById('productColorField').value;
+            form.elements['quantityFrom'].value = document.getElementById('quantityFromField').value;
+            form.elements['quantityTo'].value = document.getElementById('quantityToField').value;
+
+            // Cập nhật giá trị cho khoảng giá bán
             form.elements['createdAtFrom'].value = document.getElementById('createdAtFromField').value;
             form.elements['createdAtTo'].value = document.getElementById('createdAtToField').value;
             form.elements['createdBy'].value = document.getElementById('createdByField').value;
@@ -217,8 +285,6 @@
 
 
     </script>
-
-
 </section>
 </body>
 </html>

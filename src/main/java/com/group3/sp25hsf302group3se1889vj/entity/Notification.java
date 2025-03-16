@@ -17,6 +17,7 @@ import lombok.experimental.SuperBuilder;
 @Table(name = "notifications")
 public class Notification extends BaseEntity {
 
+    // id của người nhận thông báo
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

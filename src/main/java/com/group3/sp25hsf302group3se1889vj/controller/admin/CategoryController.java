@@ -3,8 +3,11 @@ package com.group3.sp25hsf302group3se1889vj.controller.admin;
 import com.group3.sp25hsf302group3se1889vj.dto.CategoryDTO;
 import com.group3.sp25hsf302group3se1889vj.dto.filter.CategoryFilterDTO;
 import com.group3.sp25hsf302group3se1889vj.service.CategoryService;
+import com.group3.sp25hsf302group3se1889vj.service.ProductService;
+import com.group3.sp25hsf302group3se1889vj.util.FlashMessageUtil;
 import com.group3.sp25hsf302group3se1889vj.util.MetadataExtractor;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,15 +22,18 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 @PreAuthorize("hasRole('OWNER') or hasAnyAuthority('MANAGE_CATEGORY')")
 @Controller
 @RequestMapping("/admin/category")
 @RequiredArgsConstructor
+@Slf4j
 public class CategoryController {
 
     private final CategoryService categoryService;
     private final MetadataExtractor metadataExtractor;
+    private final ProductService productService;
 
     @GetMapping({"/list", "", "/"})
     public String list(
@@ -89,6 +95,7 @@ public class CategoryController {
     public String edit(Model model,
                        @PathVariable("id") Long id) {
         CategoryDTO categoryDTO = categoryService.findById(id);
+        log.info("CategoryDTO: " + categoryDTO);
         model.addAttribute("categoryDTO", categoryDTO);
         return "admin/category/edit";
     }
@@ -99,7 +106,7 @@ public class CategoryController {
             BindingResult bindingResult,
             RedirectAttributes redirectAttributes
     ) {
-        if(categoryDTO.getParentId() == categoryDTO.getId()) {
+        if(Objects.equals(categoryDTO.getParentId(), categoryDTO.getId())) {
             bindingResult.rejectValue("parentId", "error.categoryDTO", "Danh mục cha không thể là chính nó");
         }
         if (categoryService.existsByNameAndParentIdAndIdNot(categoryDTO.getName(), categoryDTO.getParentId(), categoryDTO.getId())) {
@@ -109,6 +116,17 @@ public class CategoryController {
             return "admin/category/edit";
         }
         categoryService.update(categoryDTO);
+        return "redirect:/admin/category/list";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable("id") Long id,
+                         RedirectAttributes redirectAttributes) {
+        if (productService.existsByCategoryId(id)) {
+            FlashMessageUtil.addFlashMessage(redirectAttributes, "Danh mục này đang chứa sản phẩm, không thể xóa", "error");
+            return "redirect:/admin/category/list";
+        }
+        categoryService.delete(id);
         return "redirect:/admin/category/list";
     }
 

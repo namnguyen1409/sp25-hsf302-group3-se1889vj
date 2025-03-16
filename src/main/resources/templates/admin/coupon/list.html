@@ -136,7 +136,7 @@
                         <input type="text" class="form-control form-control-sm" th:value="*{description}" id="descriptionField" placeholder="Mô tả">
                     </td>
                     <td>
-                        <select class="form-select form-select-sm" id="typeField" name="type">
+                        <select class="form-select form-select-sm" id="typeField" onchange="updateFilter()">
                             <option value="" th:selected="${filterDTO.type == ''}">Tất cả</option>
                             <option value="PERCENTAGE" th:selected="${filterDTO.type == 'PERCENTAGE'}">
                                 Phần trăm
@@ -148,57 +148,57 @@
                     </td>
                     <td>
                         <div class="d-flex gap-2" style="max-width: 200px">
-                            <input type="text" class="form-control form-control-sm" th:value="*{valueFrom}" id="valueFromField" style="max-width: 100px">
-                            <input type="text" class="form-control form-control-sm" th:value="*{valueTo}" id="valueToField" style="max-width: 100px">
+                            <input type="text" class="form-control form-control-sm" th:value="*{valueFrom}" id="valueFromField" style="max-width: 100px" placeholder="Từ">
+                            <input type="text" class="form-control form-control-sm" th:value="*{valueTo}" id="valueToField" style="max-width: 100px" placeholder="Đến">
                         </div>
                     </td>
                     <td>
                         <div class="d-flex gap-2" style="max-width: 200px">
-                            <input type="text" class="form-control form-control-sm" th:value="*{minOrderValueFrom}" id="minOrderValueFromField" style="max-width: 100px">
-                            <input type="text" class="form-control form-control-sm" th:value="*{minOrderValueTo}" id="minOrderValueToField" style="max-width: 100px">
+                            <input type="text" class="form-control form-control-sm" th:value="*{minOrderValueFrom}" id="minOrderValueFromField" style="max-width: 100px" placeholder="Từ">
+                            <input type="text" class="form-control form-control-sm" th:value="*{minOrderValueTo}" id="minOrderValueToField" style="max-width: 100px" placeholder="Đến">
                         </div>
                     </td>
                     <td>
                         <div class="d-flex gap-2" style="max-width: 200px">
-                            <input type="text" class="form-control form-control-sm" th:value="*{maxDiscountFrom}" id="maxDiscountFromField" style="max-width: 100px">
-                            <input type="text" class="form-control form-control-sm" th:value="*{maxDiscountTo}" id="maxDiscountToField" style="max-width: 100px">
+                            <input type="text" class="form-control form-control-sm" th:value="*{maxDiscountFrom}" id="maxDiscountFromField" style="max-width: 100px" placeholder="Từ">
+                            <input type="text" class="form-control form-control-sm" th:value="*{maxDiscountTo}" id="maxDiscountToField" style="max-width: 100px" placeholder="Đến">
                         </div>
                     </td>
                     <td>
                         <div class="d-flex gap-2" style="max-width: 200px">
-                            <input type="text" class="form-control form-control-sm" th:value="*{maxUsageFrom}" id="maxUsageFromField" style="max-width: 100px">
-                            <input type="text" class="form-control form-control-sm" th:value="*{maxUsageTo}" id="maxUsageToField" style="max-width: 100px">
+                            <input type="text" class="form-control form-control-sm" th:value="*{maxUsageFrom}" id="maxUsageFromField" style="max-width: 100px" placeholder="Từ">
+                            <input type="text" class="form-control form-control-sm" th:value="*{maxUsageTo}" id="maxUsageToField" style="max-width: 100px" placeholder="Đến">
                         </div>
                     </td>
                     <td>
                         <div class="d-flex gap-2" style="max-width: 200px">
-                            <input type="text" class="form-control form-control-sm" th:value="*{usageCountFrom}" id="usageCountFromField" style="max-width: 100px">
-                            <input type="text" class="form-control form-control-sm" th:value="*{usageCountTo}" id="usageCountToField" style="max-width: 100px">
+                            <input type="text" class="form-control form-control-sm" th:value="*{usageCountFrom}" id="usageCountFromField" style="max-width: 100px" placeholder="Từ">
+                            <input type="text" class="form-control form-control-sm" th:value="*{usageCountTo}" id="usageCountToField" style="max-width: 100px" placeholder="Đến">
                         </div>
                     </td>
                     <td>
                         <div class="d-flex gap-2" style="max-width: 200px">
-                            <input type="text" class="form-control form-control-sm" th:value="*{maxUsagePerUserFrom}" id="maxUsagePerUserFromField" style="max-width: 100px">
-                            <input type="text" class="form-control form-control-sm" th:value="*{maxUsagePerUserTo}" id="maxUsagePerUserToField" style="max-width: 100px">
+                            <input type="text" class="form-control form-control-sm" th:value="*{maxUsagePerUserFrom}" id="maxUsagePerUserFromField" style="max-width: 100px" placeholder="Từ">
+                            <input type="text" class="form-control form-control-sm" th:value="*{maxUsagePerUserTo}" id="maxUsagePerUserToField" style="max-width: 100px" placeholder="Đến">
                         </div>
                     </td>
                     <td>
                         <div class="d-flex gap-2" style="max-width: 200px">
-                            <input type="datetime-local" class="form-control form-control-sm" th:value="*{startDateFrom}" id="startDateFromField" style="max-width: 100px">
-                            <input type="datetime-local" class="form-control form-control-sm" th:value="*{startDateTo}" id="startDateToField" style="max-width: 100px">
+                            <input type="datetime-local" class="form-control form-control-sm" th:value="*{startDateFrom}" id="startDateFromField" style="max-width: 100px" placeholder="Từ">
+                            <input type="datetime-local" class="form-control form-control-sm" th:value="*{startDateTo}" id="startDateToField" style="max-width: 100px" placeholder="Đến">
                         </div>
                     </td>
                     <td>
                         <div class="d-flex gap-2" style="max-width: 200px">
-                            <input type="datetime-local" class="form-control form-control-sm" th:value="*{endDateFrom}" id="endDateFromField" style="max-width: 100px">
-                            <input type="datetime-local" class="form-control form-control-sm" th:value="*{endDateTo}" id="endDateToField" style="max-width: 100px">
+                            <input type="datetime-local" class="form-control form-control-sm" th:value="*{endDateFrom}" id="endDateFromField" style="max-width: 100px" placeholder="Từ">
+                            <input type="datetime-local" class="form-control form-control-sm" th:value="*{endDateTo}" id="endDateToField" style="max-width: 100px" placeholder="Đến">
                         </div>
                     </td>
                     <td>
-                        <select class="form-select form-select-sm" id="isDeletedField" name="isDeleted">
+                        <select class="form-select form-select-sm" id="isDeletedField" onchange="updateFilter()">
                             <option value="" th:selected="${filterDTO.isDeleted == ''}">Tất cả</option>
-                            <option value="true" th:selected="${filterDTO.isDeleted == 'true'}">Đã xóa</option>
-                            <option value="false" th:selected="${filterDTO.isDeleted == 'false'}">Chưa xóa</option>
+                            <option value="true" th:selected="${filterDTO.isDeleted == true}">Đã xóa</option>
+                            <option value="false" th:selected="${filterDTO.isDeleted == false}">Chưa xóa</option>
                         </select>
                     </td>
                     <td class="text-center sticky-column">
@@ -213,6 +213,12 @@
                 <tr th:if="${pages.totalPages > 0}" th:each="item : ${pages}">
                     <th:block th:replace="fragments/list-body :: list-body(${item}, ${fields}, ${fieldTitles}, ${fieldClasses})"></th:block>
                     <td class="text-center sticky-column">
+
+                        <a th:href="@{'/admin/coupon/view/' + ${item.id}}"
+                           class="btn btn-sm btn-info">
+                            <i class="bi bi-info-circle"></i>
+                        </a>
+
                         <a th:href="@{'/admin/coupon/edit/' + ${item.id}}"
                            class="btn btn-sm btn-warning">
                             <i class="bi bi-pencil-square"></i>
@@ -224,7 +230,8 @@
                             </a>
                         </th:block>
                         <th:block th:unless="${item.isDeleted}">
-                            <a th:href="@{'/admin/coupon/delete/' + ${item.id}}"
+                            <a th:attr="data-id=${item.id}, data-title=${item.code}"
+                               onclick="confirmDelete(this)"
                                class="btn btn-sm btn-danger">
                                 <i class="bi bi-trash"></i>
                             </a>
@@ -276,9 +283,27 @@
 
         function resetField() {
             let form = document.getElementById('filterForm');
-            form.elements['name'].value = '';
+            form.elements['code'].value = '';
             form.elements['description'].value = '';
-            form.elements['parentName'].value = '';
+            form.elements['type'].value = '';
+            form.elements['valueFrom'].value = '';
+            form.elements['valueTo'].value = '';
+            form.elements['minOrderValueFrom'].value = '';
+            form.elements['minOrderValueTo'].value = '';
+            form.elements['maxDiscountFrom'].value = '';
+            form.elements['maxDiscountTo'].value = '';
+            form.elements['maxUsageFrom'].value = '';
+            form.elements['maxUsageTo'].value = '';
+            form.elements['usageCountFrom'].value = '';
+            form.elements['usageCountTo'].value = '';
+            form.elements['maxUsagePerUserFrom'].value = '';
+            form.elements['maxUsagePerUserTo'].value = '';
+            form.elements['startDateFrom'].value = '';
+            form.elements['startDateTo'].value = '';
+            form.elements['endDateFrom'].value = '';
+            form.elements['endDateTo'].value = '';
+            form.elements['isDeleted'].value = '';
+
             form.elements['createdAtFrom'].value = '';
             form.elements['createdAtTo'].value = '';
             form.elements['createdBy'].value = '';
@@ -294,15 +319,28 @@
 
         function updateFilter() {
             let form = document.getElementById('filterForm');
-            form.elements['name'].value = document.getElementById('nameField').value;
+
+            form.elements['code'].value = document.getElementById('codeField').value;
             form.elements['description'].value = document.getElementById('descriptionField').value;
-            form.elements['parentName'].value = document.getElementById('parentNameField').value;
-            form.elements['createdAtFrom'].value = document.getElementById('createdAtFromField').value;
-            form.elements['createdAtTo'].value = document.getElementById('createdAtToField').value;
-            form.elements['createdBy'].value = document.getElementById('createdByField').value;
-            form.elements['updatedAtFrom'].value = document.getElementById('updatedAtFromField').value;
-            form.elements['updatedAtTo'].value = document.getElementById('updatedAtToField').value;
-            form.elements['updatedBy'].value = document.getElementById('updatedByField').value;
+            form.elements['type'].value = document.getElementById('typeField').value;
+            form.elements['valueFrom'].value = document.getElementById('valueFromField').value;
+            form.elements['valueTo'].value = document.getElementById('valueToField').value;
+            form.elements['minOrderValueFrom'].value = document.getElementById('minOrderValueFromField').value;
+            form.elements['minOrderValueTo'].value = document.getElementById('minOrderValueToField').value;
+            form.elements['maxDiscountFrom'].value = document.getElementById('maxDiscountFromField').value;
+            form.elements['maxDiscountTo'].value = document.getElementById('maxDiscountToField').value;
+            form.elements['maxUsageFrom'].value = document.getElementById('maxUsageFromField').value;
+            form.elements['maxUsageTo'].value = document.getElementById('maxUsageToField').value;
+            form.elements['usageCountFrom'].value = document.getElementById('usageCountFromField').value;
+            form.elements['usageCountTo'].value = document.getElementById('usageCountToField').value;
+            form.elements['maxUsagePerUserFrom'].value = document.getElementById('maxUsagePerUserFromField').value;
+            form.elements['maxUsagePerUserTo'].value = document.getElementById('maxUsagePerUserToField').value;
+            form.elements['startDateFrom'].value = document.getElementById('startDateFromField').value;
+            form.elements['startDateTo'].value = document.getElementById('startDateToField').value;
+            form.elements['endDateFrom'].value = document.getElementById('endDateFromField').value;
+            form.elements['endDateTo'].value = document.getElementById('endDateToField').value;
+            form.elements['isDeleted'].value = document.getElementById('isDeletedField').value;
+
             form.elements['size'].value = document.getElementById('sizeField').value;
             form.submit();
         }
@@ -319,6 +357,28 @@
 
     </script>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        function confirmDelete(button) {
+            let id = button.getAttribute('data-id');
+            let title = button.getAttribute('data-title');
+            Swal.fire({
+                title: 'Xác nhận xóa',
+                text: `Bạn có chắc chắn muốn xóa mã giảm giá "${title}" không?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Xóa',
+                cancelButtonText: 'Hủy'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = `/admin/coupon/delete/${id}`;
+                }
+            });
+        }
+    </script>
 
 </section>
 </body>

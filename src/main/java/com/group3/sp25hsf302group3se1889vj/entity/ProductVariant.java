@@ -29,5 +29,5 @@ public class ProductVariant extends BaseEntity {
     private String color;
 
 
-    private int stockQuantity;
+    private int quantity;
 }

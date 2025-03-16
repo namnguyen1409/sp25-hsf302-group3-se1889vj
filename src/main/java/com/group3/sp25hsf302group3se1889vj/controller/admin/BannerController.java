@@ -120,9 +120,20 @@ public class BannerController {
         return "redirect:/admin/banner/";
     }
 
+    @GetMapping("/view/{id}")
+    public String view(Model model,
+                        @PathVariable("id") Long id
+    ) {
+        BannerDTO banner = bannerService.findById(id);
+        model.addAttribute("entity", banner);
+        return "admin/banner/view";
+    }
+
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable("id") Long id) {
         bannerService.delete(id);
         return "redirect:/admin/banner/";
     }
+
+
 }

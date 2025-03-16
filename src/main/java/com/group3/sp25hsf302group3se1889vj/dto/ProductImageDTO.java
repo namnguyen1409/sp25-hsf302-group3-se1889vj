@@ -1,5 +1,8 @@
 package com.group3.sp25hsf302group3se1889vj.dto;
 
+import com.group3.sp25hsf302group3se1889vj.entity.Product;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.*;
 
 @EqualsAndHashCode(callSuper = true)
@@ -7,6 +10,8 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductImageDTO extends BaseDTO {
-    // TODO: Add fields here
-    private String name;
+    private int position;
+    private String url;
+    private String alt;
+    private Long productId;
 }

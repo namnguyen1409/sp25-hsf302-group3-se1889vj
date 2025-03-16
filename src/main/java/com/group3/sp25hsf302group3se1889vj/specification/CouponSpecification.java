@@ -13,6 +13,68 @@ public class CouponSpecification {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
+            if(filterDTO.getCode() != null && !filterDTO.getCode().isEmpty()) {
+                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("code")), "%" + filterDTO.getCode().toLowerCase() + "%"));
+            }
+            if(filterDTO.getDescription() != null && !filterDTO.getDescription().isEmpty()) {
+                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("description")), "%" + filterDTO.getDescription().toLowerCase() + "%"));
+            }
+            if(filterDTO.getType() != null) {
+                predicates.add(criteriaBuilder.equal(root.get("type"), filterDTO.getType()));
+            }
+            if(filterDTO.getValueFrom() != null) {
+                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("value"), filterDTO.getValueFrom()));
+            }
+            if(filterDTO.getValueTo() != null) {
+                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("value"), filterDTO.getValueTo()));
+            }
+            if(filterDTO.getMinOrderValueFrom() != null) {
+                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("minOrderValue"), filterDTO.getMinOrderValueFrom()));
+            }
+            if(filterDTO.getMinOrderValueTo() != null) {
+                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("minOrderValue"), filterDTO.getMinOrderValueTo()));
+            }
+            if(filterDTO.getMaxDiscountFrom() != null) {
+                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("maxDiscount"), filterDTO.getMaxDiscountFrom()));
+            }
+            if(filterDTO.getMaxDiscountTo() != null) {
+                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("maxDiscount"), filterDTO.getMaxDiscountTo()));
+            }
+            if(filterDTO.getMaxUsageFrom() != null) {
+                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("maxUsage"), filterDTO.getMaxUsageFrom()));
+            }
+            if(filterDTO.getMaxUsageTo() != null) {
+                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("maxUsage"), filterDTO.getMaxUsageTo()));
+            }
+            if(filterDTO.getUsageCountFrom() != null) {
+                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("usageCount"), filterDTO.getUsageCountFrom()));
+            }
+            if(filterDTO.getUsageCountTo() != null) {
+                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("usageCount"), filterDTO.getUsageCountTo()));
+            }
+            if(filterDTO.getMaxUsagePerUserFrom() != null) {
+                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("maxUsagePerUser"), filterDTO.getMaxUsagePerUserFrom()));
+            }
+            if(filterDTO.getMaxUsagePerUserTo() != null) {
+                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("maxUsagePerUser"), filterDTO.getMaxUsagePerUserTo()));
+            }
+            if(filterDTO.getStartDateFrom() != null) {
+                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("startDate"), filterDTO.getStartDateFrom()));
+            }
+            if(filterDTO.getStartDateTo() != null) {
+                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("startDate"), filterDTO.getStartDateTo()));
+            }
+            if(filterDTO.getEndDateFrom() != null) {
+                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("endDate"), filterDTO.getEndDateFrom()));
+            }
+            if(filterDTO.getEndDateTo() != null) {
+                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("endDate"), filterDTO.getEndDateTo()));
+            }
+            if(filterDTO.getIsDeleted() != null) {
+                predicates.add(criteriaBuilder.equal(root.get("isDeleted"), filterDTO.getIsDeleted()));
+            }
+
+            // base predicates
             if(filterDTO.getCreatedAtFrom() != null) {
                 predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("createdAt"), filterDTO.getCreatedAtFrom()));
             }

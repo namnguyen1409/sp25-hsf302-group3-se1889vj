@@ -14,4 +14,6 @@ public interface ProductService {
     ProductDTO findById(Long id);
 
     void update(ProductDTO product);
+
+    boolean existsByCategoryId(Long id);
 }

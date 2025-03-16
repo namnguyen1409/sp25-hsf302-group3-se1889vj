@@ -83,6 +83,13 @@ public class DataInitializer {
             permissionRepository.findByName(type)
                     .orElseGet(() -> permissionRepository.save(Permission.builder().name(type).build()));
         }
+
+        var owner = userRepository.findByUsername(ownerUsername).get();
+        for (PermissionType type : PermissionType.values()) {
+            var permission = permissionRepository.findByName(type).get();
+            owner.getPermissions().add(permission);
+        }
+        userRepository.save(owner);
     }
 
 }

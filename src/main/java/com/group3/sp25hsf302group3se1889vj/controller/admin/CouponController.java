@@ -135,6 +135,15 @@ public class CouponController {
         return "redirect:/admin/coupon/";
     }
 
+    @GetMapping("/view/{id}")
+    public String view(Model model,
+                        @PathVariable("id") Long id
+    ) {
+        CouponDTO coupon = couponService.findById(id);
+        model.addAttribute("entity", coupon);
+        return "admin/coupon/view";
+    }
+
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable("id") Long id) {
         couponService.delete(id);

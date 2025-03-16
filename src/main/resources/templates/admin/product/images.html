@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      lang="vi" layout:decorate="admin-template">
+
+<body>
+<section layout:fragment="content" class="container mt-4">
+
+    <div class="container mt-4">
+        <h2>Hình ảnh sản phẩm: <span th:text="${product.name}"></span></h2>
+
+        <div class="row">
+
+            <div class="col-md-6">
+                <form th:action="@{/admin/product/{id}/images/add(id=${product.id})}" method="post" th:object="${productImageDTO}">
+
+                    <div class="mb-3">
+                        <div th:replace="fragments/input-image :: customInputImage('url', 'bi-image', 'Hình ảnh')"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div th:replace="fragments/input :: customInput ('alt', 'text', 'bi-tag', 'Mô tả ngắn', true)"></div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Thêm ảnh</button>
+                </form>
+            </div>
+
+            <div class="col-md-6">
+                <ul id="image-list" class="list-group">
+                    <li th:each="image : ${productImages}" class="list-group-item d-flex align-items-center" th:data-id="${image.id}" th:attr="data-order=${image.position}">
+                        <img th:src="'/' + ${image.url}" alt="" width="50" class="me-3 rounded shadow-sm">
+                        <span th:text="${image.alt}"></span>
+                        <button class="btn btn-danger btn-sm ms-auto delete-btn" th:data-id="${image.id}" th:data-product="${product.id}">Xóa</button>
+                    </li>
+                </ul>
+
+                <button id="saveOrder" class="btn btn-success mt-3">Lưu thứ tự</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.2/Sortable.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script>
+
+        let csrfToken = $("meta[name='_csrf']").attr("content");
+        let csrfHeader = $("meta[name='_csrf_header']").attr("content");
+
+        var sortable = new Sortable(document.getElementById('image-list'), {
+            animation: 150,
+        });
+
+        $("#saveOrder").click(function () {
+            let imageIds = [];
+            $("#image-list li").each(function () {
+                imageIds.push($(this).data("id"));
+            });
+
+            $.ajax({
+                type: "POST",
+                url: "/admin/product/images/update-order",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader(csrfHeader, csrfToken);
+                },
+                contentType: "application/json",
+                data: JSON.stringify(imageIds),
+                success: function () {
+                    swal("Thành công", "Lưu thứ tự ảnh thành công", "success");
+                }
+            });
+        });
+
+        $(".delete-btn").click(function () {
+            let imageId = $(this).data("id");
+            let productId = $(this).data("product");
+
+            $.ajax({
+                type: "POST",
+                url: `/admin/product/images/${imageId}/delete`,
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader(csrfHeader, csrfToken);
+                },
+                data: { productId: productId },
+                success: function () {
+                    location.reload();
+                },
+                error: function (xhr, status, error) {
+                    location.reload();
+                }
+            });
+        });
+
+    </script>
+
+</section>
+</body>
+</html>

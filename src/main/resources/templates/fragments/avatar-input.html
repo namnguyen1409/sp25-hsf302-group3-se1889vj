@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<body>
+
+<div class="d-flex justify-content-center my-3" th:fragment="customInputImage(name, label)">
+
+    <style>
+        .avatar-container {
+            position: relative;
+            display: inline-block;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid #007bff;
+            transition: 0.3s;
+        }
+        .avatar-container:hover {
+            opacity: 0.8;
+        }
+        .avatar-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .upload-icon {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 5px;
+            border-radius: 50%;
+            font-size: 14px;
+        }
+    </style>
+
+    <div class="avatar-container" th:id="__${name}__ + 'Container'">
+        <img th:src="@{${#strings.isEmpty(__${name}__)} ? '/default-avatar.png' : '/' + __${name}__}"
+             th:id="__${name}__ + 'Preview'">
+        <span class="upload-icon">
+            <i class="bi bi-camera"></i>
+        </span>
+    </div>
+    <input type="file" th:id="__${name}__ + 'File'" accept="image/*" class="d-none">
+    <input type="hidden" th:field="*{__${name}__}" th:id="__${name}__">
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const fileInput = document.getElementById("[[${name}]]File");
+        const previewImg = document.getElementById("[[${name}]]Preview");
+        const avatarContainer = document.getElementById("[[${name}]]Container");
+        const hiddenInput = document.getElementById("[[${name}]]");
+
+        avatarContainer.addEventListener('click', function () {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener('change', async function () {
+            const file = fileInput.files[0];
+            if (file) {
+                const url = await uploadImage(file, 'image', 2, ['jpg', 'jpeg', 'png', 'gif'], '/file/upload');
+                hiddenInput.value = url;
+                previewImg.src = '/' + url;
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

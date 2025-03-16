@@ -1,6 +1,7 @@
 package com.group3.sp25hsf302group3se1889vj.service.impl;
 
 import com.group3.sp25hsf302group3se1889vj.dto.RegisterCustomerDTO;
+import com.group3.sp25hsf302group3se1889vj.dto.UpdateProfileDTO;
 import com.group3.sp25hsf302group3se1889vj.entity.CustomerAddress;
 import com.group3.sp25hsf302group3se1889vj.entity.Token;
 import com.group3.sp25hsf302group3se1889vj.entity.User;
@@ -196,5 +197,19 @@ public class UserServiceImpl implements UserService {
     public UserDTO getUserById(Long id) {
         Optional<User> user = userRepository.findById(id);
         return userMapper.mapToUserDTO(user.get());
+    }
+
+    @Override
+    public void updateProfile(UpdateProfileDTO updateProfileDTO) {
+        User user = userRepository.findById(updateProfileDTO.getId())
+                .orElseThrow(() -> new Http404("Không tìm thấy người dùng"));
+
+        user.setFirstName(updateProfileDTO.getFirstName());
+        user.setLastName(updateProfileDTO.getLastName());
+        user.setGender(updateProfileDTO.getGender());
+        user.setBirthday(updateProfileDTO.getBirthday());
+        user.setAddress(updateProfileDTO.getAddress());
+        user.setAvatar(updateProfileDTO.getAvatar());
+        userRepository.save(user);
     }
 }

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      lang="en" layout:decorate="admin-template">
+<head>
+    <title>Chỉnh sửa hồ sơ</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+</head>
+<body>
+<section layout:fragment="content" class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg border-0">
+                <div class="card-body">
+                    <h3 class="fw-bold text-center text-primary">Chỉnh sửa hồ sơ</h3>
+                    <hr>
+
+                    <form th:action="@{/admin/profile/edit}" method="post" th:object="${updateProfileDTO}">
+
+                        <div class="mb-3">
+                            <div th:replace="fragments/input-image :: customInputImage('avatar', 'bi-image', 'Ảnh đại diện')"></div>
+                        </div>
+
+                        <div class="row" style="margin-bottom: 20px;">
+                            <div class="col-6">
+                                <div th:replace="fragments/input :: customInput('firstName', 'text', 'bi-person', 'Họ', true)"></div>
+                            </div>
+                            <div class="col-6">
+                                <div th:replace="fragments/input :: customInput('lastName', 'text', 'bi-person', 'Tên', true)"></div>
+                            </div>
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <div class="input-group-text p-3">
+                                <i class="bi bi-person"></i>
+                            </div>
+                            <div class="form-floating">
+                                <select th:field="*{gender}" class="form-select" required placeholder="Giới tính">
+                                    <option value="true">Nam</option>
+                                    <option value="false">Nữ</option>
+                                </select>
+                                <label th:for="*{gender}" class="form-label ">Giới tính</label>
+                            </div>
+                        </div>
+
+
+                        <div class="input-group mb-3">
+                            <div th:replace="fragments/input :: customInput('birthday', 'date', 'bi-calendar', 'Ngày sinh', true)"></div>
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <div th:replace="fragments/input :: customInput('address', 'text', 'bi-geo-alt', 'Địa chỉ', true)"></div>
+                        </div>
+
+                        <hr>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-save me-2"></i>Lưu thay đổi
+                            </button>
+                            <a href="/profile" class="btn btn-secondary ms-2">
+                                <i class="bi bi-arrow-left"></i> Quay lại
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+</body>
+</html>

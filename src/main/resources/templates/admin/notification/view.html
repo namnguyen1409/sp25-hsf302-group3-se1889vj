@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      lang="vi" layout:decorate="admin-template">
+<head>
+    <title>Chi tiết Mã Giảm Giá</title>
+</head>
+<body>
+<section layout:fragment="content" class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-success text-white">
+            <h4 class="mb-0">Chi tiết Thông báo</h4>
+        </div>
+        <div class="card-body" th:object="${entity}">
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Tiêu đề:</strong> <span th:text="*{title}"></span></p>
+                    <p><strong>Nội dung:</strong> <span th:text="*{content}"></span></p>
+                    <p><strong>Loại:</strong> <span th:text="*{type}" id="type"></span></p>
+                    <p><strong>Người nhận:</strong> <span th:text="*{username}"></span></p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Ngày gửi:</strong> <span th:text="*{createdAt}" class="dateTime"></span></p>
+                    <p><strong>Ngày đọc:</strong> <span th:text="*{updatedAt}" class="dateTime"></span></p>
+                </div>
+            </div>
+            <hr>
+            <div class="text-end">
+                <a th:href="@{/admin/notification}" class="btn btn-secondary">Quay lại</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const type = document.getElementById('type');
+        if (type.innerText === 'INFO') {
+            type.innerText = 'Thông báo';
+        } else if (type.innerText === 'WARNING') {
+            type.innerText = 'Cảnh báo';
+        } else if (type.innerText === 'ERROR') {
+            type.innerText = 'Lỗi';
+        } else {
+            type.innerText = 'Thành công';
+        }
+    </script>
+
+</section>
+</body>
+</html>

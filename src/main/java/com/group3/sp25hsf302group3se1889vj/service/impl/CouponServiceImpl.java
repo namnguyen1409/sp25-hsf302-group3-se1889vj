@@ -1,12 +1,17 @@
 package com.group3.sp25hsf302group3se1889vj.service.impl;
 
+import com.group3.sp25hsf302group3se1889vj.dto.CategoryDTO;
 import com.group3.sp25hsf302group3se1889vj.dto.CouponDTO;
+import com.group3.sp25hsf302group3se1889vj.dto.NotificationDTO;
 import com.group3.sp25hsf302group3se1889vj.dto.filter.CouponFilterDTO;
 import com.group3.sp25hsf302group3se1889vj.entity.Coupon;
+import com.group3.sp25hsf302group3se1889vj.enums.NotificationType;
+import com.group3.sp25hsf302group3se1889vj.enums.PermissionType;
 import com.group3.sp25hsf302group3se1889vj.mapper.CouponMapper;
 import com.group3.sp25hsf302group3se1889vj.repository.CouponRepository;
 import com.group3.sp25hsf302group3se1889vj.service.CouponService;
 import com.group3.sp25hsf302group3se1889vj.specification.CouponSpecification;
+import com.group3.sp25hsf302group3se1889vj.util.SecurityUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -68,4 +73,5 @@ public class CouponServiceImpl implements CouponService {
         coupon.restore();
         couponRepository.save(coupon);
     }
+
 }

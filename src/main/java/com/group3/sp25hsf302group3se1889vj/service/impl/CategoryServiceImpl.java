@@ -2,12 +2,17 @@ package com.group3.sp25hsf302group3se1889vj.service.impl;
 
 import com.group3.sp25hsf302group3se1889vj.dto.BrandDTO;
 import com.group3.sp25hsf302group3se1889vj.dto.CategoryDTO;
+import com.group3.sp25hsf302group3se1889vj.dto.NotificationDTO;
 import com.group3.sp25hsf302group3se1889vj.dto.filter.CategoryFilterDTO;
 import com.group3.sp25hsf302group3se1889vj.entity.Category;
+import com.group3.sp25hsf302group3se1889vj.enums.NotificationType;
+import com.group3.sp25hsf302group3se1889vj.enums.PermissionType;
 import com.group3.sp25hsf302group3se1889vj.mapper.CategoryMapper;
 import com.group3.sp25hsf302group3se1889vj.repository.CategoryRepository;
 import com.group3.sp25hsf302group3se1889vj.service.CategoryService;
+import com.group3.sp25hsf302group3se1889vj.service.NotificationService;
 import com.group3.sp25hsf302group3se1889vj.specification.CategorySpecification;
+import com.group3.sp25hsf302group3se1889vj.util.SecurityUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +29,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryMapper categoryMapper;
     private final CategoryRepository categoryRepository;
+    private final NotificationService notificationService;
 
     @Override
     public List<CategoryDTO> getParentCategories() {
@@ -50,6 +56,7 @@ public class CategoryServiceImpl implements CategoryService {
             category.setParent(parentCategory);
         }
         categoryRepository.save(category);
+        sendCategoryNotification("được tạo", categoryDTO, NotificationType.INFO);
     }
 
     @Override
@@ -84,6 +91,30 @@ public class CategoryServiceImpl implements CategoryService {
             category.setParent(null);
         }
         categoryRepository.save(category);
+        sendCategoryNotification("được cập nhật", categoryDTO, NotificationType.INFO);
     }
+
+    @Override
+    public void delete(Long id) {
+        log.info("delete category id: {}", id);
+        var category = categoryRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Category not found"));
+        var categoryDTO = categoryMapper.mapToCategoryDTO(category);
+        categoryRepository.deleteById(id);
+        sendCategoryNotification("được xóa", categoryDTO, NotificationType.WARNING);
+    }
+
+    /**
+     * Tạo thông báo cho thao tác trên banner.
+     */
+    private void sendCategoryNotification(String action, CategoryDTO category, NotificationType type) {
+        var username = SecurityUtil.getCurrentUsername();
+        NotificationDTO notification = new NotificationDTO();
+        notification.setType(type);
+        notification.setTitle("Danh mục đã " + action);
+        notification.setContent("Danh mục \"" + category.getName() + "\" đã " + action + " bởi " + username);
+        notificationService.sendNotificationToPermission(notification, PermissionType.MANAGE_CATEGORY);
+    }
+
 
 }

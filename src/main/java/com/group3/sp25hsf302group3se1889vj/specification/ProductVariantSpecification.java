@@ -13,6 +13,23 @@ public class ProductVariantSpecification {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
+            // custom predicates
+            if(filterDTO.getProductId() != null) {
+                predicates.add(criteriaBuilder.equal(root.get("product").get("id"), filterDTO.getProductId()));
+            }
+            if(filterDTO.getProductSize() != null && !filterDTO.getProductSize().isEmpty()) {
+                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("size")), "%" + filterDTO.getProductSize().toLowerCase() + "%"));
+            }
+            if(filterDTO.getProductColor() != null && !filterDTO.getProductColor().isEmpty()) {
+                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("color")), "%" + filterDTO.getProductColor().toLowerCase() + "%"));
+            }
+            if(filterDTO.getQuantityFrom() != null) {
+                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("quantity"), filterDTO.getQuantityFrom()));
+            }
+            if(filterDTO.getQuantityTo() != null) {
+                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("quantity"), filterDTO.getQuantityTo()));
+            }
+
             // base predicates
             if(filterDTO.getCreatedAtFrom() != null) {
                 predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("createdAt"), filterDTO.getCreatedAtFrom()));

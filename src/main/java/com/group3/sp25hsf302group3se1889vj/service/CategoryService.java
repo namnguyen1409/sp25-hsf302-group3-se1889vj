@@ -25,4 +25,6 @@ public interface CategoryService {
     boolean existsByNameAndParentIdAndIdNot(String name, Long parentId, Long id);
 
     void update(CategoryDTO categoryDTO);
+
+    void delete(Long id);
 }

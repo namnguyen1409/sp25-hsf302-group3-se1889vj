@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Entity
 @Data
 @SuperBuilder(toBuilder = true)
@@ -16,11 +16,17 @@ import lombok.experimental.SuperBuilder;
 @Table(name = "product_images")
 public class ProductImage extends BaseEntity {
 
+    @EqualsAndHashCode.Include
     private int position;
 
+    @EqualsAndHashCode.Include
     private String url;
 
-    @ManyToOne
+    @EqualsAndHashCode.Include
+    private String alt;
+
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
 

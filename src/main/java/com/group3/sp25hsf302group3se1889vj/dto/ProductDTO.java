@@ -23,10 +23,10 @@ public class ProductDTO extends BaseDTO {
     private String name;
 
     @Size(max = 1000, message = "Mô tả không được vượt quá 1000 ký tự")
-    @FieldMetadata(title = "Mô tả", cssClass = "description")
+    @FieldMetadata(title = "Mô tả", cssClass = "html")
     private String description;
 
-    @FieldMetadata(title = "Ảnh", cssClass = "product-thumbnail")
+    @FieldMetadata(title = "Ảnh", cssClass = "image")
     private String thumbnail;
 
     @NotNull(message = "Thương hiệu không được để trống")
@@ -53,4 +53,7 @@ public class ProductDTO extends BaseDTO {
 
     @FieldMetadata(title = "Danh mục")
     private String categoryName;
+
+    @FieldMetadata(title = "Tồn kho")
+    private Integer quantity;
 }

@@ -65,13 +65,14 @@
                 </ul>
             </div>
             <div class="dropdown ms-3">
-                <button class="btn btn-outline-secondary position-relative" type="button" id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <a class="btn btn-outline-secondary position-relative" type="button" th:href="@{/admin/notification}">
                     <i class="bi bi-bell"></i>
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                    3
-                    <span class="visually-hidden">unread messages</span>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" th:text="${unreadNotificationsCount}">
+                    <span class="visually-hidden">
+                        thông báo mới
+                    </span>
                 </span>
-                </button>
+                </a>
             </div>
         </div>
 

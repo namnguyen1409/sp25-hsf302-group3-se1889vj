@@ -30,4 +30,8 @@ public class OrderItem extends BaseEntity {
     @JoinColumn(name = "product_variant_id")
     private ProductVariant productVariant;
 
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
+
 }

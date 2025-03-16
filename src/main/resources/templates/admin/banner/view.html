@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      lang="vi" layout:decorate="admin-template">
+<head>
+    <title>Chi tiết Banner</title>
+</head>
+<body>
+<section layout:fragment="content" class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Chi tiết Banner</h4>
+        </div>
+        <div class="card-body" th:object="${entity}">
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Tiêu đề:</strong> <span th:text="*{title}"></span></p>
+                    <p><strong>Liên kết:</strong> <a th:href="*{url}" th:text="*{url}" target="_blank"></a></p>
+                    <p><strong>Mô tả:</strong> <span th:text="*{description}"></span></p>
+                </div>
+                <div class="col-md-6 text-center">
+                    <img th:src="'/' + *{image}" alt="Banner Image" class="img-fluid rounded shadow-sm" style="max-height: 300px">
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Ngày tạo:</strong>
+                        <span th:text="*{createdAt}" class="dateTime"></span>
+                    </p>
+                    <p><strong>Người tạo:</strong> <span th:text="*{createdBy}"></span></p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Ngày cập nhật:</strong>
+                        <span th:text="*{updatedAt}" class="dateTime"></span>
+                    </p>
+                    <p><strong>Người cập nhật:</strong> <span th:text="*{updatedBy}"></span></p>
+                </div>
+            </div>
+            <hr>
+            <div class="text-end">
+                <a th:href="@{/admin/banner}" class="btn btn-secondary">Quay lại</a>
+                <a th:href="@{/admin/banner/edit/{id}(id=*{id})}" class="btn btn-warning">Chỉnh sửa</a>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

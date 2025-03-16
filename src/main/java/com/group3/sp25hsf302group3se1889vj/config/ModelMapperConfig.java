@@ -2,6 +2,7 @@ package com.group3.sp25hsf302group3se1889vj.config;
 
 import com.group3.sp25hsf302group3se1889vj.dto.*;
 import com.group3.sp25hsf302group3se1889vj.entity.*;
+import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 import org.springframework.context.annotation.Bean;
@@ -21,12 +22,15 @@ public class ModelMapperConfig {
         ModelMapper modelMapper = new ModelMapper();
 
         modelMapper.addMappings(new PropertyMap<Category, CategoryDTO>() {
+            Converter<Category, Long> parentToIdConverter = ctx ->
+                    ctx.getSource() == null ? null : ctx.getSource().getId();
+
+            Converter<Category, String> parentToNameConverter = ctx ->
+                    ctx.getSource() == null ? null : ctx.getSource().getName();
             @Override
             protected void configure() {
-                if (source.getParent() != null) {
-                    map().setParentId(source.getParent().getId());
-                    map().setParentName(source.getParent().getName());
-                }
+                using(parentToIdConverter).map(source.getParent(), destination.getParentId());
+                using(parentToNameConverter).map(source.getParent(), destination.getParentName());
                 using(context -> {
                     Set<Category> subCategories = (Set<Category>) context.getSource();
                     return subCategories != null ? subCategories.stream()
@@ -38,34 +42,17 @@ public class ModelMapperConfig {
         });
 
 
-        modelMapper.addMappings(new PropertyMap<Brand, BrandDTO>() {
-            @Override
-            protected void configure() {
-                // TODO: Thêm các thao tác mapping khác nếu cần
-            }
-        });
-
-
-        modelMapper.addMappings(new PropertyMap<Coupon, CouponDTO>() {
-            @Override
-            protected void configure() {
-                // TODO: Thêm các thao tác mapping khác nếu cần
-            }
-
-        });
-
-        modelMapper.addMappings(new PropertyMap<CustomerAddress, CustomerAddressDTO>() {
-            @Override
-            protected void configure() {
-                // TODO: Thêm các thao tác mapping khác nếu cần
-            }
-        });
-
-
         modelMapper.addMappings(new PropertyMap<Notification, NotificationDTO>() {
             @Override
             protected void configure() {
-                // TODO: Thêm các thao tác mapping khác nếu cần
+                map().setUsername(source.getUser().getUsername());
+            }
+        });
+
+        modelMapper.addMappings(new PropertyMap<ProductImage, ProductImageDTO>() {
+            @Override
+            protected void configure() {
+                map().setProductId(source.getProduct().getId());
             }
         });
 

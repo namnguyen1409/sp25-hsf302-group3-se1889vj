@@ -23,12 +23,14 @@
 
                 <div class="mb-3">
                     <label class="form-label">Danh mục cha</label>
-                    <select class="form-select" th:field="*{parentId}">
+                    <select class="form-select" th:field="*{parentId}" th:value="${categoryDTO.parentId}">
                         <option value="">Không có</option>
                         <option th:each="cat : ${categories}"
-                                th:if="${cat.parentId == null}"
+                                th:if="${categoryDTO.parentId != null}"
                                 th:value="${cat.id}"
-                                th:text="${cat.name}">
+                                th:text="${cat.name}"
+                                th:selected="${cat.id == categoryDTO.parentId}"
+                        >
                         </option>
                     </select>
                 </div>

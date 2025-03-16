@@ -8,8 +8,10 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Entity
 @Data
 @SuperBuilder(toBuilder = true)
@@ -18,15 +20,19 @@ import java.math.BigDecimal;
 @Table(name = "products")
 public class Product extends BaseEntity {
 
+    @EqualsAndHashCode.Include
     @Column(nullable = false, columnDefinition = "NVARCHAR(255)")
     private String name;
 
+    @EqualsAndHashCode.Include
     @Column(nullable = false, columnDefinition = "NVARCHAR(MAX)")
     private String description;
 
+    @EqualsAndHashCode.Include
     @Column(nullable = false, columnDefinition = "BIT")
     private boolean isActive = true;
 
+    @EqualsAndHashCode.Include
     private String thumbnail;
 
     @ManyToOne
@@ -38,5 +44,11 @@ public class Product extends BaseEntity {
     private BigDecimal priceOrigin;
 
     private BigDecimal priceSale;
+
+    private int quantity;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Set<ProductImage> images = new HashSet<>();
+
 
 }

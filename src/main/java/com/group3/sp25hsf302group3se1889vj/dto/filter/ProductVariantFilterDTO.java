@@ -8,6 +8,9 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductVariantFilterDTO extends BaseFilterDTO {
-    // TODO: Add fields here
-    private String name;
+    private Long productId;
+    private String productSize;
+    private String productColor;
+    private Integer quantityFrom;
+    private Integer quantityTo;
 }

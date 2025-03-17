@@ -41,7 +41,7 @@ public class CouponDTO extends BaseDTO {
     private BigDecimal minOrderValue;
 
     @FieldMetadata(title = "Giảm tối đa", cssClass = "price")
-    private Integer maxDiscount;
+    private BigDecimal maxDiscount;
 
     @FieldMetadata(title = "Số lượng mã")
     @PositiveOrZero(message = "Số lượng mã phải là số dương hoặc bằng 0")
@@ -63,5 +63,15 @@ public class CouponDTO extends BaseDTO {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @NotNull(message = "Ngày kết thúc không được để trống")
     private LocalDateTime endDate;
+
+
+    // methods validation
+    public boolean isValid(BigDecimal orderValue) {
+        return orderValue.compareTo(minOrderValue) >= 0
+                && !LocalDateTime.now().isBefore(startDate)
+                && !LocalDateTime.now().isAfter(endDate)
+                && maxUsage > usageCount
+                && !super.isDeleted();
+    }
 
 }

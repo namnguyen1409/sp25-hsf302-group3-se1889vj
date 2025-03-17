@@ -7,7 +7,7 @@
 <section class="container mt-4" layout:fragment="content">
     <div class="row justify-content-center h-100">
         <div class="col-lg-8 d-flex flex-column nowrap justify-content-center">
-            <form class="p-md-4 border rounded shadow-sm" method="post" th:action="@{/admin/coupon/add}"
+            <form class="p-md-4 border rounded shadow-sm" method="post" th:action="@{/admin/coupon/edit}"
                   th:object="${entity}">
                 <h4 class="text-center mb-5">
                     Chỉnh sửa mã giảm giá
@@ -29,11 +29,11 @@
 
                 <div class="mb-3">
                     <div class="form-floating">
-                        <select class="form-select" th:field="*{type}" disabled>
-                            <option value="PERCENTAGE">
+                        <select class="form-select" disabled>
+                            <option value="PERCENTAGE" th:selected="${entity.type == 'PERCENTAGE'}">
                                 Phần trăm
                             </option>
-                            <option value="AMOUNT">
+                            <option value="AMOUNT" th:selected="${entity.type == 'AMOUNT'}">
                                 Số tiền
                             </option>
                         </select>
@@ -41,6 +41,7 @@
                             Loại mã giảm giá
                         </label>
                     </div>
+                    <input type="hidden" th:field="*{type}">
                 </div>
 
                 <div class="mb-3">
@@ -80,24 +81,6 @@
             </form>
         </div>
     </div>
-
-    <script>
-        function toggleMaxDiscountField() {
-            var couponType = document.getElementById("couponType").value;
-            var maxDiscountDiv = document.getElementById("maxDiscountDiv");
-
-            if (couponType === "AMOUNT") {
-                maxDiscountDiv.style.display = "none";
-            } else {
-                maxDiscountDiv.style.display = "block";
-            }
-        }
-
-        window.onload = function () {
-            toggleMaxDiscountField();
-        }
-    </script>
-
 </section>
 </body>
 </html>

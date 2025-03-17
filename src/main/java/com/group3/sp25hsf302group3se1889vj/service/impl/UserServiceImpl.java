@@ -1,5 +1,6 @@
 package com.group3.sp25hsf302group3se1889vj.service.impl;
 
+import com.group3.sp25hsf302group3se1889vj.dto.ChangePasswordDTO;
 import com.group3.sp25hsf302group3se1889vj.dto.RegisterCustomerDTO;
 import com.group3.sp25hsf302group3se1889vj.dto.UpdateProfileDTO;
 import com.group3.sp25hsf302group3se1889vj.entity.CustomerAddress;
@@ -89,15 +90,15 @@ public class UserServiceImpl implements UserService {
         user.setRole(RoleType.CUSTOMER);
         user = userRepository.save(user);
 
-        // tạo địa chỉ mặc định cho khách hàng
-        CustomerAddress customerAddress = new CustomerAddress();
-        customerAddress.setDefault(true);
-        customerAddress.setAddress(registerCustomerDTO.getAddress());
-        customerAddress.setFullName(registerCustomerDTO.getFirstName() + " " + registerCustomerDTO.getLastName());
-        customerAddress.setPhone(registerCustomerDTO.getPhone());
-        customerAddress.setCreatedBy(user.getUsername());
-
-        customerAddressRepository.save(customerAddress);
+//        // tạo địa chỉ mặc định cho khách hàng
+//        CustomerAddress customerAddress = new CustomerAddress();
+//        customerAddress.setDefault(true);
+//        customerAddress.setAddress(registerCustomerDTO.getAddress());
+//        customerAddress.setFullName(registerCustomerDTO.getFirstName() + " " + registerCustomerDTO.getLastName());
+//        customerAddress.setPhone(registerCustomerDTO.getPhone());
+//        customerAddress.setCreatedBy(registerCustomerDTO.getUsername());
+//
+//        customerAddressRepository.save(customerAddress);
 
         Token token = new Token();
         token.setEmail(registerCustomerDTO.getEmail());
@@ -210,6 +211,21 @@ public class UserServiceImpl implements UserService {
         user.setBirthday(updateProfileDTO.getBirthday());
         user.setAddress(updateProfileDTO.getAddress());
         user.setAvatar(updateProfileDTO.getAvatar());
+        userRepository.save(user);
+    }
+
+    @Override
+    public boolean checkPassword(ChangePasswordDTO changePasswordDTO) {
+        User user = userRepository.findById(changePasswordDTO.getId())
+                .orElseThrow(() -> new Http404("Không tìm thấy người dùng"));
+        return passwordEncoder.matches(changePasswordDTO.getOldPassword(), user.getPassword());
+    }
+
+    @Override
+    public void changePassword(ChangePasswordDTO changePasswordDTO) {
+        User user = userRepository.findById(changePasswordDTO.getId())
+                .orElseThrow(() -> new Http404("Không tìm thấy người dùng"));
+        user.setPassword(passwordEncoder.encode(changePasswordDTO.getPassword()));
         userRepository.save(user);
     }
 }

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" layout:decorate="customer-template" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <style>
+        .filter-section {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+    </style>
+</head>
+<body>
+<section layout:fragment="content">
+    <div class="container mt-4">
+        <h2 class="text-center mb-4 fw-bold">Tìm kiếm sản phẩm</h2>
+
+
+        <form th:action="@{/search}" method="post" th:object="${filterDTO}" id="searchForm">
+            <input th:field="*{page}" type="hidden">
+            <input th:field="*{orderBy}" type="hidden">
+            <input th:field="*{direction}" type="hidden">
+            <input th:field="*{size}" type="hidden">
+            <input th:field="*{query}" type="hidden">
+            <input th:field="*{categoryId}" type="hidden">
+            <input th:field="*{brandId}" type="hidden">
+            <input th:field="*{priceFrom}" type="hidden">
+            <input th:field="*{priceTo}" type="hidden">
+        </form>
+
+
+        <div class="row">
+
+            <div class="col-md-3">
+                <div class="filter-section" th:object="${filterDTO}">
+                    <h5 class="fw-bold">Bộ lọc tìm kiếm</h5>
+                    <div class="mb-3">
+                        <div class="form-floating mb-3">
+                            <input class="form-control" id="queryField" placeholder="Nhập từ khóa" th:value="${filterDTO.query}"
+                                   type="text">
+                            <label for="queryField">Nhập từ khóa</label>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label d-none">Danh mục</label>
+                        <select class="form-select" id="categoryIdField" style="width: 100%;" th:value="*{categoryId}">
+                            <option value="">Chọn danh mục</option>
+                            <th:block th:each="category : ${categories}">
+                                <option th:text="${category.name}" th:value="${category.id}"
+                                    th:selected="${category.id == filterDTO.categoryId}"
+                                ></option>
+                                <th:block th:each="subCategory : ${category.subCategories}">
+                                    <option th:text="${category.name + ' > ' + subCategory.name}"
+                                            th:selected="${subCategory.id == filterDTO.categoryId}"
+                                            th:value="${subCategory.id}"></option>
+                                </th:block>
+                            </th:block>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label d-none">Thương hiệu</label>
+                        <select class="form-select" id="brandIdField" style="width: 100%;" th:value="*{brandId}">
+                            <option value="">Chọn thương hiệu</option>
+                            <th:block th:each="brand : ${brands}">
+                                <option th:text="${brand.name}" th:value="${brand.id}"
+                                    th:selected="${brand.id == filterDTO.brandId}"
+                                ></option>
+                            </th:block>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="form-floating mb-3">
+                            <input class="form-control" id="priceFromField" placeholder="Giá từ" th:value="${filterDTO.priceFrom}"
+                                   type="number">
+                            <label for="priceFromField">Giá từ</label>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-floating mb-3">
+                            <input class="form-control" id="priceToField" placeholder="Giá đến" th:value="${filterDTO.priceTo}"
+                                   type="number">
+                            <label for="priceToField">Giá đến</label>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <button class="btn btn-primary" onclick="searchProduct()">Tìm kiếm</button>
+                        <button class="btn btn-secondary" onclick="resetField()">Đặt lại</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-9">
+                <div class="row">
+                    <th:block th:each="product : ${products}">
+                        <div th:replace="fragments/product-card :: productCard(${product})"></div>
+                    </th:block>
+                </div>
+            </div>
+
+        </div>
+
+        <th:block th:if="${products.totalPages == 0}">
+            <div class="alert alert-warning text-center mt-5">
+                Không có bản ghi nào, thử <a class="alert-link" href="javascript:void(0);" onclick="resetField()"> đặt
+                lại bộ lọc </a>
+            </div>
+        </th:block>
+        <th:block th:if="${products.totalPages > 0}">
+            <div th:replace="fragments/pagination :: pagination(${products})"></div>
+        </th:block>
+    </div>
+
+    <script>
+
+        function goToPage(page) {
+            document.getElementById('page').value = page;
+            document.getElementById('searchForm').submit();
+        }
+
+
+        function searchProduct() {
+            let searchForm = document.getElementById('searchForm');
+            searchForm.elements['query'].value = document.getElementById('queryField').value;
+            searchForm.elements['categoryId'].value = document.getElementById('categoryIdField').value;
+            searchForm.elements['brandId'].value = document.getElementById('brandIdField').value;
+            searchForm.elements['priceFrom'].value = document.getElementById('priceFromField').value;
+            searchForm.elements['priceTo'].value = document.getElementById('priceToField').value;
+            searchForm.submit();
+        }
+
+        function resetField() {
+            document.getElementById('queryField').value = '';
+            document.getElementById('categoryIdField').value = '';
+            document.getElementById('brandIdField').value = '';
+            document.getElementById('priceFromField').value = '';
+            document.getElementById('priceToField').value = '';
+
+            searchProduct();
+        }
+
+    </script>
+
+</section>
+</body>
+</html>

@@ -1,0 +1,11 @@
+http://localhost:8080/vnpay-return?vnp_Amount=85000000
+&vnp_BankCode=VNPAY
+&vnp_CardType=QRCODE
+&vnp_OrderInfo=Thanh+to%C3%A1n+%C4%91%C6%A1n+h%C3%A0ng%3A+16
+&vnp_PayDate=20250317090717
+&vnp_ResponseCode=24
+&vnp_TmnCode=ETQ6XZEO
+&vnp_TransactionNo=0
+&vnp_TransactionStatus=02
+&vnp_TxnRef=16
+&vnp_SecureHash=35e0b092f5dc620abacca9f3290448c3a878bf6b25fa4dba52621678996988b02b0570b1c5fa4a8745bfbd13163e0720f42d8fee46c1dce028f3fb6d95d6ddfc

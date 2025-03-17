@@ -100,6 +100,32 @@ em {
 textarea {
     resize: none; }
 
+
+/* Đảm bảo hình ảnh không bị méo, tất cả có cùng tỷ lệ */
+.fixed-aspect-ratio {
+    aspect-ratio: 3/4; /* Dành cho danh mục */
+    object-fit: cover;
+}
+
+.product-image {
+    aspect-ratio: 1/1; /* Dành cho sản phẩm */
+    object-fit: cover;
+}
+
+/* Đảm bảo chiều cao của card đồng nhất */
+.card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.card-body {
+    flex-grow: 1; /* Căng đều nội dung */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
 /* 1.4 - Layout */
 @media (max-width: 1199px) and (min-width: 992px) {
     .container {

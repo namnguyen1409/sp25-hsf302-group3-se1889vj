@@ -5,6 +5,7 @@ import com.group3.sp25hsf302group3se1889vj.dto.StaticPageDTO;
 import com.group3.sp25hsf302group3se1889vj.dto.filter.StaticPageFilterDTO;
 import com.group3.sp25hsf302group3se1889vj.entity.Banner;
 import com.group3.sp25hsf302group3se1889vj.entity.StaticPage;
+import com.group3.sp25hsf302group3se1889vj.exception.Http404;
 import com.group3.sp25hsf302group3se1889vj.mapper.StaticPageMapper;
 import com.group3.sp25hsf302group3se1889vj.repository.StaticPageRepository;
 import com.group3.sp25hsf302group3se1889vj.service.StaticPageService;
@@ -15,6 +16,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import lombok.AllArgsConstructor;
+
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -65,5 +68,17 @@ public class StaticPageServiceImpl implements StaticPageService {
     @Override
     public boolean existsByTitle(String title) {
         return staticPageRepository.existsByTitle(title);
+    }
+
+    @Override
+    public StaticPageDTO findBySlug(String slug) {
+        return staticPageRepository.findBySlug((slug))
+                .map(staticPageMapper::toDTO)
+                .orElseThrow(() -> new Http404("Trang không tồn tại"));
+    }
+
+    @Override
+    public List<StaticPageDTO> getStaticPage() {
+        return staticPageRepository.findAll().stream().map(staticPageMapper::toDTO).toList();
     }
 }

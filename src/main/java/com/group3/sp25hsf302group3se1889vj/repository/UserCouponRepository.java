@@ -8,4 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface UserCouponRepository extends JpaRepository<UserCoupon, Long> {
+    int countByCouponCodeAndCreatedBy(String code, String currentUsername);
 }

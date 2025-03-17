@@ -10,14 +10,15 @@
         }
 
     </style>
+
     <div class="home-slider swiper swiper-initialized swiper-horizontal swiper-pointer-events swiper-backface-hidden">
 
-        <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel slide" data-bs-ride="carousel" id="carouselExample">
             <ol class="carousel-indicators">
                 <th:block th:each="banner, iterStat : ${banners}">
                     <li data-bs-target="#carouselExample"
-                        th:data-bs-slide-to="${iterStat.index}"
-                        th:classappend="${iterStat.first} ? 'active'">
+                        th:classappend="${iterStat.first} ? 'active'"
+                        th:data-bs-slide-to="${iterStat.index}">
                     </li>
                 </th:block>
             </ol>
@@ -26,28 +27,59 @@
                 <th:block th:each="banner, iterStat : ${banners}">
                     <div class="carousel-item" th:classappend="${iterStat.first} ? 'active'">
                         <a th:href="${banner.url}">
-                            <img th:src="@{'/' + ${banner.image}}" class="d-block w-100" th:alt="${banner.title}" style="aspect-ratio: 22/9; object-fit: cover;">
+                            <img class="d-block w-100" style="aspect-ratio: 22/9; object-fit: cover;" th:alt="${banner.title}"
+                                 th:src="@{'/' + ${banner.image}}">
                         </a>
                         <div class="carousel-caption d-none d-md-block">
-                            <h3 th:text="${banner.title}" class="text-white p-2 rounded fw-bold text-shadow">
+                            <h3 class="text-white p-2 rounded fw-bold text-shadow" th:text="${banner.title}">
                             </h3>
-                            <p th:text="${banner.description}" class="text-white p-2 rounded text-shadow">
+                            <p class="text-white p-2 rounded text-shadow" th:text="${banner.description}">
                             </p>
                         </div>
                     </div>
                 </th:block>
             </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <button class="carousel-control-prev" data-bs-slide="prev" data-bs-target="#carouselExample" type="button">
+                <span aria-hidden="true" class="carousel-control-prev-icon"></span>
                 <span class="visually-hidden">Previous</span>
             </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <button class="carousel-control-next" data-bs-slide="next" data-bs-target="#carouselExample" type="button">
+                <span aria-hidden="true" class="carousel-control-next-icon"></span>
                 <span class="visually-hidden">Next</span>
             </button>
         </div>
-
     </div>
+
+    <section class="container mt-5">
+        <h2 class="text-center mb-4 fw-bold">Danh Mục Sản Phẩm</h2>
+        <div class="row">
+            <th:block th:each="category : ${categories}">
+                <div class="col-md-3 col-sm-6 mb-4" th:if="${category.image != null && !category.image.isEmpty()}">
+                    <div class="card shadow-sm border-0">
+                        <img class="card-img-top fixed-aspect-ratio" th:alt="${category.name}"
+                             th:src="@{'/' + ${category.image}}">
+                        <div class="card-body text-center">
+                            <h5 class="card-title fw-bold" th:text="${category.name}"></h5>
+                            <p class="card-text text-muted" th:text="${category.description}"></p>
+                            <a class="btn btn-primary" href="#">Xem sản phẩm</a>
+                        </div>
+                    </div>
+                </div>
+            </th:block>
+        </div>
+    </section>
+
+    <!-- Danh sách sản phẩm mới -->
+    <section class="container mt-5">
+        <h2 class="text-center mb-4 fw-bold">Sản Phẩm Mới</h2>
+        <div class="row">
+            <th:block th:each="product : ${newProducts}">
+                <div th:replace="fragments/product-card :: productCard(${product})"></div>
+            </th:block>
+        </div>
+    </section>
+
+
 
 </section>
 </body>

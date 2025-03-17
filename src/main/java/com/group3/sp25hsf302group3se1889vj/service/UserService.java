@@ -1,5 +1,6 @@
 package com.group3.sp25hsf302group3se1889vj.service;
 
+import com.group3.sp25hsf302group3se1889vj.dto.ChangePasswordDTO;
 import com.group3.sp25hsf302group3se1889vj.dto.RegisterCustomerDTO;
 
 import javax.crypto.BadPaddingException;
@@ -29,4 +30,8 @@ public interface UserService {
     UserDTO getUserById(Long id);
 
     void updateProfile(UpdateProfileDTO updateProfileDTO);
+
+    boolean checkPassword(ChangePasswordDTO changePasswordDTO);
+
+    void changePassword(ChangePasswordDTO changePasswordDTO);
 }

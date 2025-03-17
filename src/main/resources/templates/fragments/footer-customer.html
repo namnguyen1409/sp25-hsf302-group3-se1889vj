@@ -69,27 +69,33 @@
                             Danh sách trang tĩnh
                         </h2>
                         <div class="widget-footer__content block-collapse">
-                            <ul class="footerNav-link">
+                            <ul class="footerNav-link" th:each="page : ${staticPage}">
                                 <li class="item">
-                                    <a href="/search" title="Tìm kiếm">Tìm kiếm</a>
+                                    <a th:href="@{${'/pages/' + page.slug}}" th:text="${page.title}"></a>
                                 </li>
-                                <li class="item">
-                                    <a href="/pages/about-us" title="Giới thiệu">Giới thiệu</a>
-                                </li>
-                                <li class="item">
-                                    <a href="/pages/chinh-sach-doi-tra" title="Chính sách đổi trả">Chính sách đổi
-                                        trả</a>
-                                </li>
-                                <li class="item">
-                                    <a href="/pages/chinh-sach-bao-mat" title="Chính sách bảo mật">Chính sách bảo
-                                        mật</a>
-                                </li>
-                                <li class="item">
-                                    <a href="/pages/dieu-khoan-dich-vu" title="Tuyển dụng">Tuyển dụng</a>
-                                </li>
-                                <li class="item">
-                                    <a href="/pages/lien-he" title="Liên hệ">Liên hệ</a>
-                                </li>
+                            </ul>
+
+
+<!--                                <li class="item">-->
+<!--                                    <a href="/search" title="Tìm kiếm">Tìm kiếm</a>-->
+<!--                                </li>-->
+<!--                                <li class="item">-->
+<!--                                    <a href="/pages/about-us" title="Giới thiệu">Giới thiệu</a>-->
+<!--                                </li>-->
+<!--                                <li class="item">-->
+<!--                                    <a href="/pages/chinh-sach-doi-tra" title="Chính sách đổi trả">Chính sách đổi-->
+<!--                                        trả</a>-->
+<!--                                </li>-->
+<!--                                <li class="item">-->
+<!--                                    <a href="/pages/chinh-sach-bao-mat" title="Chính sách bảo mật">Chính sách bảo-->
+<!--                                        mật</a>-->
+<!--                                </li>-->
+<!--                                <li class="item">-->
+<!--                                    <a href="/pages/dieu-khoan-dich-vu" title="Tuyển dụng">Tuyển dụng</a>-->
+<!--                                </li>-->
+<!--                                <li class="item">-->
+<!--                                    <a href="/pages/lien-he" title="Liên hệ">Liên hệ</a>-->
+<!--                                </li>-->
                             </ul>
                         </div>
                     </div>

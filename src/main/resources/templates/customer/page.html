@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html
+        lang="en"
+        layout:decorate="customer-template" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<body>
+<section class="section-home-slider" layout:fragment="content">
+  <div class="home-slider swiper swiper-initialized swiper-horizontal swiper-pointer-events swiper-backface-hidden">
+      <div th:utext="${page.content}" class="ql-editor">
+
+      </div>
+  </div>
+
+</section>
+</body>
+</html>

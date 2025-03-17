@@ -26,6 +26,10 @@ public class Category extends BaseEntity {
     @Column(columnDefinition = "NVARCHAR(1000)")
     private String description;
 
+    @EqualsAndHashCode.Include
+    @Column(columnDefinition = "NVARCHAR(255)")
+    private String image;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "parent_id")
     private Category parent;

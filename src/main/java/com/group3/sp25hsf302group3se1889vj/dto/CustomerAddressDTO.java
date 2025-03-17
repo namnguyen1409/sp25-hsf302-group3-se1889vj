@@ -10,7 +10,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CustomerAddressDTO extends BaseDTO {
-    // TODO: Add fields here
+    private boolean isDefault;
     @NotBlank(message = "Họ và tên không được để trống")
     @FieldMetadata(title = "Họ và tên")
     private String fullName;

@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Entity
 @Data
 @SuperBuilder(toBuilder = true)
@@ -21,6 +21,7 @@ public class OrderStatusHistory extends BaseEntity {
     @JoinColumn(name = "order_id")
     private Order order;
 
+    @EqualsAndHashCode.Include
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
 

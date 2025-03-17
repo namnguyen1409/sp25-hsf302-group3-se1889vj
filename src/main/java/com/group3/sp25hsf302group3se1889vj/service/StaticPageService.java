@@ -5,6 +5,8 @@ import com.group3.sp25hsf302group3se1889vj.dto.filter.StaticPageFilterDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 public interface StaticPageService {
 
     Page<StaticPageDTO> findAll(StaticPageFilterDTO filterDTO, Pageable pageable);
@@ -20,4 +22,8 @@ public interface StaticPageService {
     boolean existsBySlug(String slug);
 
     boolean existsByTitle(String title);
+
+    StaticPageDTO findBySlug(String slug);
+
+    List<StaticPageDTO> getStaticPage();
 }

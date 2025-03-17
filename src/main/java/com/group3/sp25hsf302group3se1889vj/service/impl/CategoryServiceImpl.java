@@ -83,6 +83,7 @@ public class CategoryServiceImpl implements CategoryService {
                 .orElseThrow(() -> new IllegalArgumentException("Category not found"));
         category.setName(categoryDTO.getName());
         category.setDescription(categoryDTO.getDescription());
+        category.setImage(categoryDTO.getImage());
         if (categoryDTO.getParentId() != null) {
             var parentCategory = categoryRepository.findById(categoryDTO.getParentId())
                     .orElseThrow(() -> new IllegalArgumentException("Parent category not found"));

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import lombok.AllArgsConstructor;
 
 import javax.swing.text.html.Option;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -51,6 +52,11 @@ public class CustomerAddressServiceImpl implements CustomerAddressService {
             return customerAddressMapper.mapToCustomerAddressDTO(customerAddress.get());
         }
         return null;
+    }
+
+    @Override
+    public List<CustomerAddressDTO> findAllByCreatedBy(String currentUsername) {
+        return customerAddressRepository.findAllByCreatedBy(currentUsername).stream().map(customerAddressMapper::mapToCustomerAddressDTO).toList();
     }
 
 

@@ -42,14 +42,15 @@ public class OrderController {
                 : Sort.by(filterDTO.getOrderBy()).descending();
 
         // TODO: Add more fields here
-        List<String> fields = Arrays.asList("id");
+        List<String> fields = Arrays.asList("id", "status", "totalPrice", "discountAmount", "finalPrice", "note");
+        model.addAttribute("fields", fields);
         model.addAttribute("fieldTitles", metadataExtractor.getFieldTitles(OrderDTO.class, fields));
         model.addAttribute("fieldClasses", metadataExtractor.getFieldClasses(OrderDTO.class, fields));
 
         Pageable pageable = PageRequest.of(filterDTO.getPage() - 1, filterDTO.getSize(), sortDirection);
 
         Page<OrderDTO> page = orderService.findAll(filterDTO, pageable);
-        model.addAttribute("page", page);
+        model.addAttribute("pages", page);
         model.addAttribute("filterDTO", filterDTO);
         return "admin/order/list";
     }

@@ -137,4 +137,6 @@ public class BrandController {
         model.addAttribute("entity", brand);
         return "admin/brand/detail";
     }
+
+
 }

@@ -26,10 +26,10 @@
                 <div class="mb-3">
                     <div class="form-floating">
                         <select class="form-select" th:field="*{type}">
-                            <option value="PERCENTAGE">
+                            <option value="PERCENTAGE" th:selected="${entity.type == 'PERCENTAGE'}">
                                 Phần trăm
                             </option>
-                            <option value="AMOUNT">
+                            <option value="AMOUNT" th:selected="${entity.type == 'AMOUNT'}">
                                 Số tiền
                             </option>
                         </select>
@@ -76,24 +76,6 @@
             </form>
         </div>
     </div>
-
-    <script>
-        function toggleMaxDiscountField() {
-            var couponType = document.getElementById("couponType").value;
-            var maxDiscountDiv = document.getElementById("maxDiscountDiv");
-
-            if (couponType === "AMOUNT") {
-                maxDiscountDiv.style.display = "none";
-            } else {
-                maxDiscountDiv.style.display = "block";
-            }
-        }
-
-        window.onload = function () {
-            toggleMaxDiscountField();
-        }
-    </script>
-
 </section>
 </body>
 </html>

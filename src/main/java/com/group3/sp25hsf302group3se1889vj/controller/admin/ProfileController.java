@@ -1,5 +1,6 @@
 package com.group3.sp25hsf302group3se1889vj.controller.admin;
 
+import com.group3.sp25hsf302group3se1889vj.dto.ChangePasswordDTO;
 import com.group3.sp25hsf302group3se1889vj.dto.UpdateProfileDTO;
 import com.group3.sp25hsf302group3se1889vj.mapper.UserMapper;
 import com.group3.sp25hsf302group3se1889vj.service.StorageService;
@@ -41,9 +42,6 @@ public class ProfileController {
             @ModelAttribute("updateProfileDTO") @Validated UpdateProfileDTO updateProfileDTO,
             BindingResult bindingResult
     ){
-
-
-
         if(bindingResult.hasErrors()){
             return "admin/profile-edit";
         }
@@ -53,6 +51,32 @@ public class ProfileController {
             updateProfileDTO.setAvatar(image);
         }
         userService.updateProfile(updateProfileDTO);
+        return "redirect:/admin/profile";
+    }
+
+    @GetMapping("/admin/change-password")
+    public String changePassword(
+            Model model
+    ){
+        model.addAttribute("changePasswordDTO", new ChangePasswordDTO());
+        return "admin/change-password";
+    }
+
+    @PostMapping("/admin/change-password")
+    public String changePassword(
+            @ModelAttribute("changePasswordDTO") @Validated ChangePasswordDTO changePasswordDTO,
+            BindingResult bindingResult
+    ){
+        changePasswordDTO.setId(SecurityUtil.getUser().getId());
+        if(!userService.checkPassword(changePasswordDTO)){
+            bindingResult.rejectValue("oldPassword", "error.oldPassword", "Mật khẩu cũ không đúng");
+        }
+
+        if(bindingResult.hasErrors()){
+            return "admin/change-password";
+        }
+
+        userService.changePassword(changePasswordDTO);
         return "redirect:/admin/profile";
     }
 

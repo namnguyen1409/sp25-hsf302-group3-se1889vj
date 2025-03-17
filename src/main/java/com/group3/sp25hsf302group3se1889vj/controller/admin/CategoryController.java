@@ -4,6 +4,7 @@ import com.group3.sp25hsf302group3se1889vj.dto.CategoryDTO;
 import com.group3.sp25hsf302group3se1889vj.dto.filter.CategoryFilterDTO;
 import com.group3.sp25hsf302group3se1889vj.service.CategoryService;
 import com.group3.sp25hsf302group3se1889vj.service.ProductService;
+import com.group3.sp25hsf302group3se1889vj.service.StorageService;
 import com.group3.sp25hsf302group3se1889vj.util.FlashMessageUtil;
 import com.group3.sp25hsf302group3se1889vj.util.MetadataExtractor;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +35,7 @@ public class CategoryController {
     private final CategoryService categoryService;
     private final MetadataExtractor metadataExtractor;
     private final ProductService productService;
+    private final StorageService storageService;
 
     @GetMapping({"/list", "", "/"})
     public String list(
@@ -84,9 +86,18 @@ public class CategoryController {
         if (categoryService.existsByNameAndParentId(categoryDTO.getName(), categoryDTO.getParentId())) {
             bindingResult.rejectValue("name", "error.categoryDTO", "Tên danh mục đã tồn tại");
         }
+
+
         if (bindingResult.hasErrors()) {
             return "admin/category/add";
         }
+        if (categoryDTO.getImage() != null && !categoryDTO.getImage().isBlank()) {
+            var image = storageService.moveToUploads(categoryDTO.getImage());
+            if (image != null) {
+                categoryDTO.setImage(image);
+            }
+        }
+
         categoryService.save(categoryDTO);
         return "redirect:/admin/category/list";
     }
@@ -114,6 +125,12 @@ public class CategoryController {
         }
         if (bindingResult.hasErrors()) {
             return "admin/category/edit";
+        }
+        if (categoryDTO.getImage() != null && !categoryDTO.getImage().isBlank()) {
+            var image = storageService.moveToUploads(categoryDTO.getImage());
+            if (image != null) {
+                categoryDTO.setImage(image);
+            }
         }
         categoryService.update(categoryDTO);
         return "redirect:/admin/category/list";

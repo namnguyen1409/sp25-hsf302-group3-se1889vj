@@ -2,6 +2,7 @@ package com.group3.sp25hsf302group3se1889vj.config;
 
 import com.group3.sp25hsf302group3se1889vj.dto.*;
 import com.group3.sp25hsf302group3se1889vj.entity.*;
+import org.hibernate.collection.spi.PersistentSet;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
@@ -20,6 +21,8 @@ public class ModelMapperConfig {
     @Bean
     public ModelMapper modelMapper() {
         ModelMapper modelMapper = new ModelMapper();
+
+        modelMapper.addConverter(new PersistentSetToSetConverter());
 
         modelMapper.addMappings(new PropertyMap<Category, CategoryDTO>() {
             Converter<Category, Long> parentToIdConverter = ctx ->
@@ -41,6 +44,33 @@ public class ModelMapperConfig {
             }
         });
 
+        modelMapper.addMappings(new PropertyMap<Order,OrderDTO>() {
+            @Override
+            protected void configure() {
+
+            }
+        });
+
+        modelMapper.addMappings(new PropertyMap<OrderItem, OrderItemDTO>() {
+            @Override
+            protected void configure() {
+                map().setOrderId(source.getOrder().getId());
+                map().setProductId(source.getProduct().getId());
+                map().setProductVariantId(source.getProductVariant().getId());
+            }
+        });
+
+
+
+
+        modelMapper.addMappings(new PropertyMap<OrderStatusHistory, OrderStatusHistoryDTO>() {
+            @Override
+            protected void configure() {
+                skip(destination.getOrderStatus());
+                map().setOrderId(source.getOrder().getId());
+            }
+        });
+
 
         modelMapper.addMappings(new PropertyMap<Notification, NotificationDTO>() {
             @Override
@@ -55,8 +85,6 @@ public class ModelMapperConfig {
                 map().setProductId(source.getProduct().getId());
             }
         });
-
-
 
         modelMapper.getConfiguration().setAmbiguityIgnored(true);
         return modelMapper;

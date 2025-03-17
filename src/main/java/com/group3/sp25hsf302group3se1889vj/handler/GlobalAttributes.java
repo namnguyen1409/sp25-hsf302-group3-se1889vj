@@ -4,11 +4,11 @@ package com.group3.sp25hsf302group3se1889vj.handler;
 
 import com.group3.sp25hsf302group3se1889vj.dto.BrandDTO;
 import com.group3.sp25hsf302group3se1889vj.dto.CategoryDTO;
+import com.group3.sp25hsf302group3se1889vj.dto.StaticPageDTO;
+import com.group3.sp25hsf302group3se1889vj.entity.StaticPage;
 import com.group3.sp25hsf302group3se1889vj.entity.User;
 import com.group3.sp25hsf302group3se1889vj.security.userdetails.CustomUserDetails;
-import com.group3.sp25hsf302group3se1889vj.service.BrandService;
-import com.group3.sp25hsf302group3se1889vj.service.CategoryService;
-import com.group3.sp25hsf302group3se1889vj.service.NotificationService;
+import com.group3.sp25hsf302group3se1889vj.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -25,6 +25,8 @@ public class GlobalAttributes {
     private final CategoryService categoryService;
     private final BrandService brandService;
     private final NotificationService notificationService;
+    private final StaticPageService staticPageService;
+    private final ShoppingCartService shoppingCartService;
 
     @Value("${recaptcha.key.site}")
     private String recaptchaSiteKey;
@@ -58,6 +60,20 @@ public class GlobalAttributes {
     public int getUnreadNotificationsCount() {
         try{
             return notificationService.countUnreadNotificationsByUserId(getCurrentUser().getId());
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
+    @ModelAttribute("staticPage")
+    public List<StaticPageDTO> getStaticPage() {
+        return staticPageService.getStaticPage();
+    }
+
+    @ModelAttribute("cartCount")
+    public int getCartCount() {
+        try {
+            return shoppingCartService.countTotalQuantityByUsername(getCurrentUser().getUsername());
         } catch (Exception e) {
             return 0;
         }

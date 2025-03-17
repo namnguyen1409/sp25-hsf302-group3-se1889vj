@@ -24,4 +24,6 @@ public interface CouponService {
     boolean isExistCodeAndIdNot(String code, Long id);
 
     void restore(Long id);
+
+    CouponDTO findByCode(String code);
 }

@@ -69,6 +69,18 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
+    public void sendNotificationToUser(NotificationDTO notificationDTO, String username) {
+        var user = userRepository.findByUsername(username);
+        if (user.isEmpty()) {
+            throw new RuntimeException("User not found");
+        }
+        Notification notification = notificationMapper.toEntity(notificationDTO);
+        notification.setUser(user.get());
+        notificationRepository.save(notification);
+        webSocketController.sendMessage(username, notificationMapper.toDTO(notification));
+    }
+
+    @Override
     public void markAsRead(Long id) {
         Notification notification = notificationRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Notification not found"));

@@ -6,6 +6,7 @@ import com.group3.sp25hsf302group3se1889vj.enums.CouponType;
 import com.group3.sp25hsf302group3se1889vj.service.CouponService;
 import com.group3.sp25hsf302group3se1889vj.util.MetadataExtractor;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +23,7 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
+@Slf4j
 @PreAuthorize("hasRole('OWNER')")
 @Controller
 @RequestMapping("/admin/coupon")
@@ -128,8 +130,11 @@ public class CouponController {
         }
 
         if(bindingResult.hasErrors()) {
+            log.info("{}", bindingResult.getAllErrors());
             return "admin/coupon/edit";
         }
+
+        log.info("{}", coupon);
 
         couponService.update(coupon);
         return "redirect:/admin/coupon/";

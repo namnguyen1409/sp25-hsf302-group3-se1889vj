@@ -1,0 +1,30 @@
+<!-- src/main/resources/templates/fragments/product-card.html -->
+<div th:fragment="productCard(product)" class="col-lg-2 col-md-3 col-sm-6 mb-4">
+    <div class="card shadow-sm border-0">
+        <div class="position-relative">
+            <img class="card-img-top product-image" th:alt="${product.name}" th:src="@{'/' + ${product.thumbnail}}">
+            <span class="badge bg-success position-absolute top-0 start-0 m-2" th:if="${product.isActive}">Mới</span>
+        </div>
+        <div class="card-body text-center">
+            <h6 class="card-title fw-bold">
+                <span th:text="${product.name}"></span>
+            </h6>
+            <strong class="text-muted small">
+                Tên thương: <span th:text="${product.brand.name}"></span>
+            </strong>
+            <strong class="text-muted small">
+                Phân loại: <span th:text="${product.category.name}"></span>
+            </strong>
+            <p class="fw-bold text-danger">
+                <span th:text="${#numbers.formatDecimal(product.priceSale, 0, 'COMMA', 0, 'POINT')}"></span> ₫
+                <span class="text-muted text-decoration-line-through small ms-2"
+                      th:if="${product.priceOrigin != product.priceSale}">
+                    <span th:text="${#numbers.formatDecimal(product.priceOrigin, 0, 'COMMA', 0, 'POINT')}"></span> ₫
+                </span>
+            </p>
+            <a class="btn btn-primary" th:href="'/product/' + ${product.id}">
+                Xem chi tiết
+            </a>
+        </div>
+    </div>
+</div>

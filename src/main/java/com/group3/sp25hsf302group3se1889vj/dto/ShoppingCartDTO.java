@@ -7,6 +7,9 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ShoppingCartDTO extends BaseDTO {
-    // TODO: Add fields here
-    private Long UserId;
+    private Long productId;
+    private Long productVariantId;
+    private ProductDTO product;
+    private ProductVariantDTO productVariant;
+    private int quantity;
 }

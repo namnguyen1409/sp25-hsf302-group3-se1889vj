@@ -32,6 +32,7 @@
 
     <link rel="stylesheet" th:href="@{/css/style-customer.css}">
     <link rel="stylesheet" th:href="@{/css/style-customer-2.css}">
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet"/>
 </head>
 <body>
 <div class="mainBody-theme-container mainBody-modalshow mainBody-product">
@@ -99,6 +100,51 @@
             timer: 150000,
         })
     </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const socket = new SockJS('/ws'); // Kết nối đến WebSocket
+            const stompClient = Stomp.over(socket);
+
+            stompClient.connect({}, function (frame) {
+                console.log("Connected: " + frame);
+
+                // Đăng ký lắng nghe thông báo cho người dùng hiện tại
+                stompClient.subscribe('/user/queue/notifications', function (notification) {
+                    const data = JSON.parse(notification.body);
+                    showNotification(data);
+                });
+            });
+
+            function showNotification(data) {
+                toastr.options = {
+                    "closeButton": true,
+                    "progressBar": true,
+                    "positionClass": "toast-bottom-right",
+                    "timeOut": "5000"
+                };
+
+                switch (data.type) {
+                    case "SUCCESS":
+                        toastr.success(data.content, data.title);
+                        break;
+                    case "ERROR":
+                        toastr.error(data.content, data.title);
+                        break;
+                    case "INFO":
+                        toastr.info(data.content, data.title);
+                        break;
+                    case "WARNING":
+                        toastr.warning(data.content, data.title);
+                        break;
+                    default:
+                        toastr.info(data.content, data.title);
+                }
+            }
+        });
+
+    </script>
+
 
 </th:block>
 

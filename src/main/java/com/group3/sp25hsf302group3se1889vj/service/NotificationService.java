@@ -18,6 +18,9 @@ public interface NotificationService {
 
     void sendNotificationToPermission(NotificationDTO notificationDTO, PermissionType permissionType);
 
+    void sendNotificationToUser(NotificationDTO notificationDTO, String username);
+
+
     void markAsRead(Long id);
 
     int countUnreadNotificationsByUserId(Long id);

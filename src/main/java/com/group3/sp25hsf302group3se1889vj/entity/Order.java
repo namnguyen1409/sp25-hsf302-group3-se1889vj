@@ -2,17 +2,16 @@ package com.group3.sp25hsf302group3se1889vj.entity;
 
 import com.group3.sp25hsf302group3se1889vj.enums.OrderStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
+import java.util.Set;
 
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Entity
-@Data
+@Getter
+@Setter
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
@@ -23,6 +22,7 @@ public class Order extends BaseEntity {
     @JoinColumn(name = "customer_address_id")
     private CustomerAddress customerAddress;
 
+    @EqualsAndHashCode.Include
     @Enumerated(EnumType.STRING)
     @Column(name = "status", columnDefinition = "NVARCHAR(20)")
     private OrderStatus status;
@@ -35,5 +35,20 @@ public class Order extends BaseEntity {
 
     @Column(name = "final_price")
     private BigDecimal finalPrice;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private Set<OrderItem> orderItems;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private Set<OrderStatusHistory> orderStatusHistories;
+
+    @Column(name = "note", columnDefinition = "NVARCHAR(255)")
+    private String note;
+
+    @Column(name = "cancel_reason", columnDefinition = "NVARCHAR(255)")
+    private String cancelReason;
+
+
+
 
 }

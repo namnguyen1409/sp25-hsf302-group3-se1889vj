@@ -32,11 +32,15 @@ public class Coupon extends BaseEntity {
 
     private BigDecimal value;
     private BigDecimal minOrderValue;
-    private Integer maxDiscount;
+    private BigDecimal maxDiscount;
     private Integer maxUsage;
     private Integer usageCount = 0;
     private Integer maxUsagePerUser;
 
     private LocalDateTime startDate;
     private LocalDateTime endDate;
+
+    public boolean isValid(BigDecimal totalPrice) {
+        return LocalDateTime.now().isAfter(startDate) && LocalDateTime.now().isBefore(endDate) && totalPrice.compareTo(minOrderValue) >= 0 && usageCount < maxUsage;
+    }
 }

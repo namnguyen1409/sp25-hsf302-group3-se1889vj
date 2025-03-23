@@ -17,11 +17,11 @@
                     <p><strong>Mã giảm giá:</strong> <span th:text="*{code}"></span></p>
                     <p><strong>Mô tả:</strong> <span th:text="*{description}"></span></p>
                     <p><strong>Loại:</strong> <span th:text="*{type}" id="type"></span></p>
-                    <p><strong>Giá trị:</strong> <span th:text="*{value}"></span></p>
+                    <p><strong>Giá trị:</strong> <span th:text="*{value}" id="value"></span></p>
                 </div>
                 <div class="col-md-6">
-                    <p><strong>Đơn hàng tối thiểu:</strong> <span th:text="*{minOrderValue}"></span></p>
-                    <p><strong>Giảm tối đa:</strong> <span th:text="*{maxDiscount}"></span></p>
+                    <p><strong>Đơn hàng tối thiểu:</strong> <span th:text="*{minOrderValue}" class="price"></span></p>
+                    <p><strong>Giảm tối đa:</strong> <span th:text="*{maxDiscount}" class="price"></span></p>
                     <p><strong>Số lượng mã:</strong> <span th:text="*{maxUsage}"></span></p>
                     <p><strong>Số lần đã sử dụng:</strong> <span th:text="*{usageCount}"></span></p>
                 </div>
@@ -47,11 +47,21 @@
 
     <script>
         const type = document.getElementById('type');
+        const value = document.getElementById('value');
         if (type.innerText === 'PERCENT') {
             type.innerText = 'Giảm phần trăm';
+            value.innerText += '%';
         } else {
             type.innerText = 'Giảm tiền';
+            value.innerText = formatCurrency(value.innerText);
         }
+
+        function formatCurrency(value) {
+            return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
+        }
+
+
+
     </script>
 
 </section>

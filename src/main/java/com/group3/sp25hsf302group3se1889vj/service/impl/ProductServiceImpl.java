@@ -121,6 +121,30 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findByIdAndIsActiveTrue(id).isPresent();
     }
 
+    @Override
+    public void active(Long id) {
+        var product = productRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Sản phẩm không tồn tại"));
+        product.setActive(true);
+        productRepository.save(product);
+        sendProductNotification("được kích hoạt", productMapper.mapToProductDTO(product), NotificationType.INFO);
+    }
+
+    @Override
+    public void deactive(Long id) {
+        var product = productRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Sản phẩm không tồn tại"));
+        product.setActive(false);
+        productRepository.save(product);
+        sendProductNotification("bị vô hiệu hóa", productMapper.mapToProductDTO(product), NotificationType.INFO);
+
+    }
+
+    @Override
+    public boolean existsByBrandId(Long id) {
+        return productRepository.existsByBrandId(id);
+    }
+
     private void sendProductNotification(String action, ProductDTO product, NotificationType type) {
         var username = SecurityUtil.getCurrentUsername();
         NotificationDTO notification = new NotificationDTO();

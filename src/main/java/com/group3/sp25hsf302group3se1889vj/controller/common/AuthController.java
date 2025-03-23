@@ -2,9 +2,14 @@ package com.group3.sp25hsf302group3se1889vj.controller.common;
 
 import com.group3.sp25hsf302group3se1889vj.dto.LoginDTO;
 import com.group3.sp25hsf302group3se1889vj.dto.RegisterCustomerDTO;
+import com.group3.sp25hsf302group3se1889vj.dto.RegisterStaffDTO;
+import com.group3.sp25hsf302group3se1889vj.dto.ResetPasswordDTO;
 import com.group3.sp25hsf302group3se1889vj.entity.Token;
 import com.group3.sp25hsf302group3se1889vj.entity.User;
+import com.group3.sp25hsf302group3se1889vj.enums.RoleType;
 import com.group3.sp25hsf302group3se1889vj.enums.TokenType;
+import com.group3.sp25hsf302group3se1889vj.exception.Http400;
+import com.group3.sp25hsf302group3se1889vj.exception.Http401;
 import com.group3.sp25hsf302group3se1889vj.exception.Http500;
 import com.group3.sp25hsf302group3se1889vj.repository.TokenRepository;
 import com.group3.sp25hsf302group3se1889vj.repository.UserRepository;
@@ -19,6 +24,7 @@ import com.group3.sp25hsf302group3se1889vj.util.CookieUtil;
 import com.group3.sp25hsf302group3se1889vj.util.EncryptionUtil;
 import com.group3.sp25hsf302group3se1889vj.util.FlashMessageUtil;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -37,6 +43,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
+@Slf4j
 @Controller
 @Data
 @Transactional
@@ -117,7 +124,10 @@ public class AuthController {
             cookieUtil.addCookie("jwtToken", jwt, Integer.parseInt(jwtExpiration / 1000L + ""), "/", true, false);
         }
 
-        return "redirect:admin/home";
+        if(user.getRole() == RoleType.CUSTOMER){
+            return "redirect:/";
+        }
+        return "redirect:/admin/home";
     }
 
     @GetMapping("/logout")
@@ -172,6 +182,103 @@ public class AuthController {
             return "redirect:/login";
         }
         FlashMessageUtil.addFlashMessage(redirectAttributes, "Kích hoạt tài khoản thành công", "success");
+        return "redirect:/login";
+    }
+
+    @GetMapping("/register-staff")
+    public String registerStaff(
+            @RequestParam("token") String token,
+            Model model
+    ) {
+        try {
+            var inviteToken = tokenService.findByTokenAndType(encryptionUtil.encrypt(token), TokenType.INVITE_TOKEN);
+            if (inviteToken == null) {
+                throw new Http400("Token không hợp lệ");
+            }
+            if (inviteToken.getUpdatedAt().plusDays(1).isBefore(LocalDateTime.now())) {
+                throw new Http400("Token đã hết hạn");
+            }
+            RegisterStaffDTO registerStaffDTO = new RegisterStaffDTO();
+            registerStaffDTO.setToken(token);
+            model.addAttribute("registerStaffDTO", registerStaffDTO);
+        } catch (Exception e) {
+            throw new Http500("Đã có lỗi xảy ra");
+        }
+        return "auth/register-staff";
+    }
+
+    @PostMapping("/register-staff")
+    public String registerStaff(
+            @ModelAttribute("registerStaffDTO") @Validated RegisterStaffDTO registerStaffDTO,
+            BindingResult bindingResult,
+            RedirectAttributes redirectAttributes
+    ) {
+        if (bindingResult.hasErrors()) {
+            return "auth/register-staff";
+        }
+        try {
+            userService.registerStaff(registerStaffDTO);
+            FlashMessageUtil.addFlashMessage(redirectAttributes, "Đăng ký tài khoản thành công", "success");
+        } catch (Exception e) {
+            throw new Http500("Đã có lỗi xảy ra");
+        }
+        return "redirect:/login";
+    }
+
+    @GetMapping("/forgot-password")
+    public String forgotPassword(Model model) {
+        model.addAttribute("title", "Forgot Password");
+        return "auth/forgot-password";
+    }
+
+    @PostMapping("/forgot-password")
+    public String forgotPassword(
+            @RequestParam("email") String email,
+            RedirectAttributes redirectAttributes
+    ) {
+        try {
+            userService.forgotPassword(email);
+            FlashMessageUtil.addFlashMessage(redirectAttributes, "Vui lòng kiểm tra email để đặt lại mật khẩu", "error");
+        } catch (Exception e) {
+            throw new Http500("Đã có lỗi xảy ra");
+        }
+        return "redirect:/login";
+    }
+
+    @GetMapping("/reset-password")
+    public String resetPassword(
+            @RequestParam("token") String token,
+            Model model
+    ) {
+        try {
+            var resetToken = tokenService.findByTokenAndType(encryptionUtil.encrypt(token), TokenType.RESET_PASSWORD_TOKEN);
+            if (resetToken == null) {
+                throw new Http400("Token không hợp lệ");
+            }
+            if (resetToken.getUpdatedAt().plusDays(1).isBefore(LocalDateTime.now())) {
+                throw new Http400("Token đã hết hạn");
+            }
+            ResetPasswordDTO resetPasswordDTO = new ResetPasswordDTO();
+            resetPasswordDTO.setToken(token);
+            model.addAttribute("resetPasswordDTO", resetPasswordDTO);
+        } catch (Exception e) {
+            throw new Http500("Đã có lỗi xảy ra");
+        }
+        return "auth/reset-password";
+    }
+
+    @PostMapping("/reset-password")
+    public String resetPassword(
+            @ModelAttribute("resetPasswordDTO") @Validated ResetPasswordDTO resetPasswordDTO,
+            RedirectAttributes redirectAttributes
+    ) {
+        try {
+            userService.resetPassword(resetPasswordDTO);
+            FlashMessageUtil.addFlashMessage(redirectAttributes, "Đặt lại mật khẩu thành công", "success");
+        } catch (Exception e) {
+            log.info(e.getMessage());
+            throw new Http500("Đã có lỗi xảy ra");
+        }
         return "redirect:/login";
     }
 

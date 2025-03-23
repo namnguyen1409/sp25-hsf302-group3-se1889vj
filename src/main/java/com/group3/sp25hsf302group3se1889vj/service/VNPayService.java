@@ -1,6 +1,6 @@
 package com.group3.sp25hsf302group3se1889vj.service;
 
-import com.group3.sp25hsf302group3se1889vj.config.VNPayConfig;
+
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,7 +12,6 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -23,8 +22,8 @@ public class VNPayService {
     @Value("${vnpay.vnp_Version}")
     private String vnp_Version;
 
-//    @Value("${vnpay.vnp_TmnCode}")
-    private final String vnp_TmnCode = "ETQ6XZEO";
+    @Value("${vnpay.vnp_TmnCode}")
+    private String vnp_TmnCode;
 
     @Value("${vnpay.vnp_CurrCode}")
     private String vnp_CurrCode;
@@ -35,8 +34,8 @@ public class VNPayService {
     @Value("${vnpay.vnp_IpAddr}")
     private String vnp_IpAddr;
 
-//    @Value("${vnpay.vnp_HashSecret}")
-    private final String vnp_HashSecret = "8CWBN537VQMZRFCS028OT00XL7PERCVC";
+    @Value("${vnpay.vnp_HashSecret}")
+    private String vnp_HashSecret;
 
     @Value("${vnpay.vnp_Url}")
     private String vnp_Url;
@@ -147,9 +146,6 @@ public class VNPayService {
 
     private String hmacSHA512(String data, String secretKey) {
         try {
-            System.out.println("🔍 Data for HMAC: " + data);
-            System.out.println("🔑 Secret Key: " + secretKey);
-
             Mac hmac = Mac.getInstance("HmacSHA512");
             SecretKeySpec secretKeySpec = new SecretKeySpec(secretKey.getBytes(StandardCharsets.UTF_8), "HmacSHA512");
             hmac.init(secretKeySpec);
@@ -159,11 +155,7 @@ public class VNPayService {
             for (byte b : bytes) {
                 hash.append(String.format("%02x", b));
             }
-
-            String hashResult = hash.toString();
-            System.out.println("✅ Generated HMAC-SHA512: " + hashResult);
-
-            return hashResult;
+            return hash.toString();
         } catch (Exception e) {
             e.printStackTrace();  // In stack trace chi tiết khi lỗi
             throw new RuntimeException("Error generating HMAC-SHA512", e);

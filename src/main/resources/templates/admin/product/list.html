@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:custom="http://www.w3.org/1999/xhtml"
       lang="en" layout:decorate="admin-template"
 >
 <body>
@@ -73,29 +74,27 @@
     </style>
 
     <form th:object="${filterDTO}" th:action="@{/admin/product/list}" method="post" class="d-none" id="filterForm">
-        <input type="hidden" th:field="*{page}">
-        <input type="hidden" th:field="*{orderBy}">
-        <input type="hidden" th:field="*{direction}">
-        <input type="hidden" th:field="*{size}">
-        <input type="hidden" th:field="*{name}">
-        <input type="hidden" th:field="*{description}">
-        <input type="hidden" th:field="*{brandName}">
-        <input type="hidden" th:field="*{thumbnail}">
-        <input type="hidden" th:field="*{categoryName}">
-<!--        <input type="hidden" th:field="*{priceOrigin}">-->
-<!--        <input type="hidden" th:field="*{priceSale}">-->
-        <input type="hidden" th:field="*{priceOriginFrom}">
-        <input type="hidden" th:field="*{priceOriginTo}">
-        <input type="hidden" th:field="*{priceSaleFrom}">
-        <input type="hidden" th:field="*{priceSaleTo}">
-        <input type="hidden" th:field="*{createdAtFrom}">
-        <input type="hidden" th:field="*{createdAtTo}">
-        <input type="hidden" th:field="*{createdBy}">
-        <input type="hidden" th:field="*{updatedAtFrom}">
-        <input type="hidden" th:field="*{updatedAtTo}">
-        <input type="hidden" th:field="*{updatedBy}">
+        <input type="hidden" class="searchData" th:field="*{page}">
+        <input type="hidden" class="searchData" th:field="*{orderBy}">
+        <input type="hidden" class="searchData" th:field="*{direction}">
+        <input type="hidden" class="searchData" th:field="*{size}">
+        <input type="hidden" class="searchData" th:field="*{name}">
+        <input type="hidden" class="searchData" th:field="*{description}">
+        <input type="hidden" class="searchData" th:field="*{brandName}">
+        <input type="hidden" class="searchData" th:field="*{thumbnail}">
+        <input type="hidden" class="searchData" th:field="*{categoryName}">
+        <input type="hidden" class="searchData" th:field="*{isActive}">
+        <input type="hidden" class="searchData" th:field="*{priceOriginFrom}">
+        <input type="hidden" class="searchData" th:field="*{priceOriginTo}">
+        <input type="hidden" class="searchData" th:field="*{priceSaleFrom}">
+        <input type="hidden" class="searchData" th:field="*{priceSaleTo}">
+        <input type="hidden" class="searchData" th:field="*{createdAtFrom}">
+        <input type="hidden" class="searchData" th:field="*{createdAtTo}">
+        <input type="hidden" class="searchData" th:field="*{createdBy}">
+        <input type="hidden" class="searchData" th:field="*{updatedAtFrom}">
+        <input type="hidden" class="searchData" th:field="*{updatedAtTo}">
+        <input type="hidden" class="searchData" th:field="*{updatedBy}">
     </form>
-
 
     <div class="d-flex flex-wrap justify-content-between align-items-center mt-3 gap-2">
         <h2 class="text-center flex-grow-1 text-md-start text-center">Danh sách Sản Phẩm</h2>
@@ -123,6 +122,7 @@
             <table id="mainTable" class="table table-striped table-bordered" style="width:100%">
                 <thead class="table-primary">
                 <tr>
+                    <th>STT</th>
                     <th th:each="field: ${fields}"
                         th:data="${field}"
                         style="cursor: pointer; width: fit-content;"
@@ -138,47 +138,44 @@
                 <tbody>
                 <tr th:object="${filterDTO}">
                     <td>
+
+                    </td>
+                    <td>
                         <input type="text" class="form-control form-control-sm" th:value="*{name}" id="nameField" placeholder="Tên sản phẩm">
                     </td>
                     <td>
-                        <input type="text" class="form-control form-control-sm" th:value="*{description}" id="descriptionField" placeholder="Mô tả">
-                    </td>
-                    <td>
-<!--                        <input type="text" class="form-control form-control-sm" th:value="*{priceOrigin}" id="priceOriginField" placeholder="Giá gốc">-->
-                        <div class="d-flex gap-2">
+                        <div class="d-flex gap-2" style="max-width: 200px;">
                             <input type="number"
-                                   class="form-control form-control-sm"
-                                   th:value="*{priceOriginFrom}"
+                                   class="form-control form-control-sm currency-input"
+                                   custom:auto-id="*{priceOriginFrom}"
+                                   th:attr="data-raw=*{priceOriginFrom}"
                                    id="priceOriginFromField"
                                    placeholder="Từ"
-                                   min="0">
+                                   min="0" style="max-width: 100px;">
                             <input type="number"
-                                   class="form-control form-control-sm"
-                                   th:value="*{priceOriginTo}"
+                                   class="form-control form-control-sm currency-input"
+                                   custom:auto-id="*{priceOriginTo}"
+                                   th:attr="data-raw=*{priceOriginTo}"
                                    id="priceOriginToField"
                                    placeholder="Đến"
-                                   min="0">
+                                   min="0" style="max-width: 100px;">
                         </div>
                     </td>
                     <td>
-<!--                        <input type="text" class="form-control form-control-sm" th:value="*{priceSale}" id="priceSaleField" placeholder="Giá bán">-->
-                        <div class="d-flex gap-2">
-                            <input type="number"
-                                   class="form-control form-control-sm"
-                                   th:value="*{priceSaleFrom}"
-                                   id="priceSaleFromField"
-                                   placeholder="Từ"
-                                   min="0">
-                            <input type="number"
-                                   class="form-control form-control-sm"
-                                   th:value="*{priceSaleTo}"
-                                   id="priceSaleToField"
-                                   placeholder="Đến"
-                                   min="0">
+                        <div class="d-flex gap-2" style="max-width: 200px;">
+                            <input type="text"
+                                   class="form-control form-control-sm currency-input"
+                                   custom:auto-id="*{priceSaleFrom}"
+                                   th:attr="data-raw=*{priceSaleFrom}"
+                                   placeholder="Từ" style="max-width: 100px;">
+                            <input type="text"
+                                   class="form-control form-control-sm currency-input"
+                                   custom:auto-id="*{priceSaleTo}"
+                                   th:attr="data-raw=*{priceSaleTo}"
+                                   placeholder="Đến" style="max-width: 100px;">
                         </div>
                     </td>
                     <td>
-                    <!-- ảnh-->
                     </td>
                     <td>
                         <input type="text" class="form-control form-control-sm" th:value="*{brandName}" id="brandNameField" placeholder="Thương hiệu">
@@ -186,26 +183,14 @@
                     <td>
                         <input type="text" class="form-control form-control-sm" th:value="*{categoryName}" id="categoryNameField" placeholder="Danh mục">
                     </td>
-
                     <td>
-                        <div class="d-flex gap-2" style="max-width: 200px">
-                            <input type="datetime-local" class="form-control form-control-sm" th:value="*{createdAtFrom}" id="createdAtFromField" style="max-width: 100px">
-                            <input type="datetime-local" class="form-control form-control-sm" th:value="*{createdAtTo}" id="createdAtToField" style="max-width: 100px">
-                        </div>
-                    </td>
-                    <td>
-                        <input type="text" class="form-control form-control-sm" th:value="*{createdBy}" id="createdByField" placeholder="Người tạo">
+                        <select class="form-select form-select-sm" id="isActiveField" onchange="updateFilter()">
+                            <option value="" th:selected="${filterDTO.isActive == ''}">Tất cả</option>
+                            <option value="true" th:selected="${filterDTO.isActive == true}">Đang bán</option>
+                            <option value="false" th:selected="${filterDTO.isActive == false}">Không bán</option>
+                        </select>
                     </td>
 
-                    <td>
-                        <div class="d-flex gap-2" style="max-width: 200px">
-                            <input type="datetime-local" class="form-control form-control-sm" th:value="*{updatedAtFrom}" id="updatedAtFromField" style="max-width: 100px">
-                            <input type="datetime-local" class="form-control form-control-sm" th:value="*{updatedAtTo}" id="updatedAtToField" style="max-width: 100px">
-                        </div>
-                    </td>
-                    <td>
-                        <input type="text" class="form-control form-control-sm" th:value="*{updatedBy}" id="updatedByField" placeholder="Người cập nhật">
-                    </td>
                     <td class="text-center sticky-column">
                         <button type="submit" class="btn btn-primary btn-sm" id="btnSubmit">
                             <i class="bi bi-search"></i>
@@ -214,18 +199,11 @@
                             <i class="bi bi-arrow-counterclockwise"></i>
                         </button>
                     </td>
-
                 </tr>
 
-                <tr th:if="${pages.totalPages > 0}" th:each="item : ${pages}">
-                    <th:block th:replace="fragments/list-body :: list-body(${item}, ${fields}, ${fieldTitles}, ${fieldClasses})"></th:block>
-
-
-
-
+                <tr th:if="${pages.totalPages > 0}" th:each="item, step : ${pages}">
+                    <th:block th:replace="fragments/list-body :: list-body(${item}, ${fields}, ${fieldTitles}, ${fieldClasses}, ${pages.number * pages.size + step.index})"></th:block>
                     <td class="text-center sticky-column">
-
-
                         <a th:href="@{'/admin/product/' + ${item.id} + '/images'}"
                            class="btn btn-sm btn-success">
                             <i class="bi bi-image"></i>
@@ -238,9 +216,15 @@
                            class="btn btn-sm btn-warning">
                             <i class="bi bi-pencil-square"></i>
                         </a>
-                        <a th:href="@{'/admin/product/delete/' + ${item.id}}"
-                           class="btn btn-sm btn-danger">
-                            <i class="bi bi-trash"></i>
+                        <a class="btn btn-sm btn-danger" th:if="${item.isActive}"
+                           th:attr="data-id=${item.id}, data-title=${item.name}"
+                           onclick="confirmDeActive(this)">
+                            <i class="bi bi-toggle-off"></i>
+                        </a>
+                        <a class="btn btn-sm btn-success" th:if="${!item.isActive}"
+                           th:attr="data-id=${item.id}, data-title=${item.name}"
+                           onclick="confirmActive(this)">
+                            <i class="bi bi-toggle-on"></i>
                         </a>
                     </td>
                 </tr>
@@ -257,69 +241,52 @@
         </th:block>
     </div>
 
+   <script th:src="@{/js/filter.js}"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+
     <script>
-        function goToPage(page) {
-            document.getElementById('page').value = page;
-            document.getElementById('filterForm').submit();
+        function confirmDeActive(e) {
+            let id = e.getAttribute('data-id');
+            let title = e.getAttribute('data-title');
+            swal.fire({
+                title: "Bạn có chắc chắn muốn ẩn sản phẩm này?",
+                text: "Sản phẩm " + title + " sẽ không còn hiển thị trên trang web",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Đồng ý",
+                cancelButtonText: "Hủy",
+                dangerMode: true
+            })
+                .then((willDelete) => {
+                    if (willDelete.isConfirmed) {
+                        window.location.href = "/admin/product/deactive/" + id;
+                    }
+                });
         }
-
-        document.querySelectorAll('th').forEach(th => {
-            if (!th.getAttribute('data')) return;
-            th.addEventListener('click', () => {
-                updateOrder(th.getAttribute('data'));
-            });
-        })
-
-        function updateOrder(field) {
-            let form = document.getElementById('filterForm');
-            let orderBy = form.elements['orderBy'].value;
-            let direction = form.elements['direction'].value;
-            if (orderBy === field) {
-                form.elements['direction'].value = direction === 'ASC' ? 'DESC' : 'ASC';
-            } else {
-                form.elements['orderBy'].value = field;
-                form.elements['direction'].value = 'ASC';
-            }
-            updateFilter();
+        function confirmActive(e) {
+            let id = e.getAttribute('data-id');
+            let title = e.getAttribute('data-title');
+            swal.fire({
+                title: "Bạn có chắc chắn muốn hiển thị sản phẩm này?",
+                text: "Sản phẩm " + title + " sẽ hiển thị trên trang web",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Đồng ý",
+                cancelButtonText: "Hủy",
+                dangerMode: true
+            })
+                .then((willDelete) => {
+                    if (willDelete.isConfirmed) {
+                        window.location.href = "/admin/product/active/" + id;
+                    }
+                });
         }
-
-        document.getElementById('btnSubmit').addEventListener('click', () => {
-            updateFilter();
-        });
-
-        function resetField() {
-            let form = document.getElementById('filterForm');
-            Array.from(form.elements).forEach(el => {
-                el.value = '';
-            });
-            updateFilter();
-        }
-
-        function updateFilter() {
-            let form = document.getElementById('filterForm');
-            form.elements['name'].value = document.getElementById('nameField').value;
-            form.elements['description'].value = document.getElementById('descriptionField').value;
-            // form.elements['priceOrigin'].value = document.getElementById('priceOriginField').value;
-            // form.elements['priceSale'].value = document.getElementById('priceSaleField').value;
-            form.elements['priceOriginFrom'].value = document.getElementById('priceOriginFromField').value;
-            form.elements['priceOriginTo'].value = document.getElementById('priceOriginToField').value;
-
-            // Cập nhật giá trị cho khoảng giá bán
-            form.elements['priceSaleFrom'].value = document.getElementById('priceSaleFromField').value;
-            form.elements['priceSaleTo'].value = document.getElementById('priceSaleToField').value;
-            form.elements['brandName'].value = document.getElementById('brandNameField').value;
-            form.elements['categoryName'].value = document.getElementById('categoryNameField').value;
-            form.elements['createdAtFrom'].value = document.getElementById('createdAtFromField').value;
-            form.elements['createdAtTo'].value = document.getElementById('createdAtToField').value;
-            form.elements['createdBy'].value = document.getElementById('createdByField').value;
-            form.elements['updatedAtFrom'].value = document.getElementById('updatedAtFromField').value;
-            form.elements['updatedAtTo'].value = document.getElementById('updatedAtToField').value;
-            form.elements['updatedBy'].value = document.getElementById('updatedByField').value;
-            form.submit();
-        }
-
-
     </script>
+
+
 </section>
 </body>
 </html>

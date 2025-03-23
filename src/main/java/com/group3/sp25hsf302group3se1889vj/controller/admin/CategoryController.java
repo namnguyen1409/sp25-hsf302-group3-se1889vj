@@ -1,12 +1,15 @@
 package com.group3.sp25hsf302group3se1889vj.controller.admin;
 
+import com.group3.sp25hsf302group3se1889vj.dto.BrandDTO;
 import com.group3.sp25hsf302group3se1889vj.dto.CategoryDTO;
+import com.group3.sp25hsf302group3se1889vj.dto.filter.BrandFilterDTO;
 import com.group3.sp25hsf302group3se1889vj.dto.filter.CategoryFilterDTO;
 import com.group3.sp25hsf302group3se1889vj.service.CategoryService;
 import com.group3.sp25hsf302group3se1889vj.service.ProductService;
 import com.group3.sp25hsf302group3se1889vj.service.StorageService;
 import com.group3.sp25hsf302group3se1889vj.util.FlashMessageUtil;
 import com.group3.sp25hsf302group3se1889vj.util.MetadataExtractor;
+import com.group3.sp25hsf302group3se1889vj.util.PaginationUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -42,23 +45,15 @@ public class CategoryController {
             Model model,
             @ModelAttribute(value = "filterDTO", binding = false) CategoryFilterDTO filterDTO
     ) {
-        if (filterDTO == null) {
-            filterDTO = new CategoryFilterDTO();
-        }
-        Sort sortDirection = "asc".equalsIgnoreCase(filterDTO.getDirection())
-                ? Sort.by(filterDTO.getOrderBy()).ascending()
-                : Sort.by(filterDTO.getOrderBy()).descending();
-
-        List<String> fields = Arrays.asList("name", "description", "parentName", "createdAt", "createdBy", "updatedAt", "updatedBy");
-        model.addAttribute("fields", fields);
-        model.addAttribute("fieldTitles", metadataExtractor.getFieldTitles(CategoryDTO.class, fields));
-        model.addAttribute("fieldClasses", metadataExtractor.getFieldClasses(CategoryDTO.class, fields));
-
-        Pageable pageable = PageRequest.of(filterDTO.getPage() - 1, filterDTO.getSize(), sortDirection);
-
-        Page<CategoryDTO> pages = categoryService.searchCategories(filterDTO, pageable);
-        model.addAttribute("pages", pages);
-        model.addAttribute("filterDTO", filterDTO);
+        PaginationUtil.setupPagination(
+                model,
+                filterDTO,
+                categoryService,
+                metadataExtractor,
+                CategoryFilterDTO::new,
+                CategoryDTO.class,
+                Arrays.asList("name", "parentName", "image", "createdBy")
+        );
         return "admin/category/list";
     }
 
@@ -70,6 +65,16 @@ public class CategoryController {
         redirectAttributes.addFlashAttribute("filterDTO", filterDTO);
         return "redirect:/admin/category/list";
     }
+
+
+    @GetMapping("/view/{id}")
+    public String view(Model model, @PathVariable Long id) {
+        CategoryDTO categoryDTO = categoryService.findById(id);
+        model.addAttribute("entity", categoryDTO);
+        return "admin/category/view";
+    }
+
+
 
     @GetMapping("/add")
     public String add(Model model) {
@@ -139,11 +144,21 @@ public class CategoryController {
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable("id") Long id,
                          RedirectAttributes redirectAttributes) {
+        CategoryDTO categoryDTO = categoryService.findById(id);
+        if (categoryDTO == null) {
+            FlashMessageUtil.addFlashMessage(redirectAttributes, "Danh mục không tồn tại", "error");
+            return "redirect:/admin/category/list";
+        }
+        if (categoryService.existsByParentId(id)) {
+            FlashMessageUtil.addFlashMessage(redirectAttributes, "Danh mục này đang chứa danh mục con, không thể xóa", "error");
+            return "redirect:/admin/category/list";
+        }
         if (productService.existsByCategoryId(id)) {
             FlashMessageUtil.addFlashMessage(redirectAttributes, "Danh mục này đang chứa sản phẩm, không thể xóa", "error");
             return "redirect:/admin/category/list";
         }
         categoryService.delete(id);
+        FlashMessageUtil.addFlashMessage(redirectAttributes, "Xóa danh mục thành công", "success");
         return "redirect:/admin/category/list";
     }
 

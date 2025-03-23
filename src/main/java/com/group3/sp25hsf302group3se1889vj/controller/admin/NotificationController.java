@@ -6,6 +6,7 @@ import com.group3.sp25hsf302group3se1889vj.dto.filter.NotificationFilterDTO;
 import com.group3.sp25hsf302group3se1889vj.dto.filter.OrderFilterDTO;
 import com.group3.sp25hsf302group3se1889vj.service.NotificationService;
 import com.group3.sp25hsf302group3se1889vj.util.MetadataExtractor;
+import com.group3.sp25hsf302group3se1889vj.util.PaginationUtil;
 import com.group3.sp25hsf302group3se1889vj.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -33,26 +34,28 @@ public class NotificationController {
             Model model,
             @ModelAttribute(value = "filterDTO", binding = false) NotificationFilterDTO filterDTO
     ) {
-        if(filterDTO == null) {
+        if (filterDTO == null) {
             filterDTO = new NotificationFilterDTO();
         }
-        Sort sortDirection = "asc".equalsIgnoreCase(filterDTO.getDirection())
-                ? Sort.by(filterDTO.getOrderBy()).ascending()
-                : Sort.by(filterDTO.getOrderBy()).descending();
-
-        List<String> fields = Arrays.asList("title", "content", "isRead", "type","createdAt", "updatedAt");
-        model.addAttribute("fields", fields);
-        model.addAttribute("fieldTitles", metadataExtractor.getFieldTitles(NotificationDTO.class, fields));
-        model.addAttribute("fieldClasses", metadataExtractor.getFieldClasses(NotificationDTO.class, fields));
-
         filterDTO.setUsername(SecurityUtil.getCurrentUsername());
-
-        Pageable pageable = PageRequest.of(filterDTO.getPage() - 1, filterDTO.getSize(), sortDirection);
-
-        Page<NotificationDTO> page = notificationService.findAll(filterDTO, pageable);
-        model.addAttribute("pages", page);
-        model.addAttribute("filterDTO", filterDTO);
+        PaginationUtil.setupPagination(
+                model,
+                filterDTO,
+                notificationService,
+                metadataExtractor,
+                NotificationFilterDTO::new,
+                NotificationDTO.class,
+                Arrays.asList("title", "content", "isRead", "type","createdAt", "updatedAt")
+        );
         return "admin/notification/list";
+    }
+
+    @PostMapping({"/list", "", "/"})
+    public String list(
+            @ModelAttribute(value = "filterDTO") NotificationFilterDTO filterDTO,
+            Model model
+    ) {
+        return list(model, filterDTO);
     }
 
     @DeleteMapping("/{id}")
@@ -66,7 +69,7 @@ public class NotificationController {
         return ResponseEntity.ok("Đã xóa thông báo");
     }
 
-    @DeleteMapping("/deleteAll")
+    @DeleteMapping("/delete-all")
     @ResponseBody
     public ResponseEntity<String> deleteAll() {
         notificationService.deleteAll(SecurityUtil.getCurrentUsername());

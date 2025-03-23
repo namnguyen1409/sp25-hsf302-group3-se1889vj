@@ -1,5 +1,5 @@
 <!-- src/main/resources/templates/fragments/product-card.html -->
-<div th:fragment="productCard(product)" class="col-lg-2 col-md-3 col-sm-6 mb-4">
+<div th:fragment="productCard(product)" class="col-lg-3 col-md-4 col-sm-6 mb-4">
     <div class="card shadow-sm border-0">
         <div class="position-relative">
             <img class="card-img-top product-image" th:alt="${product.name}" th:src="@{'/' + ${product.thumbnail}}">

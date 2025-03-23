@@ -28,7 +28,7 @@ public class CouponDTO extends BaseDTO {
     @Size(min = 1, max = 255, message = "Mô tả phải từ 1 đến 255 ký tự")
     private String description;
 
-    @FieldMetadata(title = "Loại")
+    @FieldMetadata(title = "Loại", cssClass = "couponType")
     @NotNull(message = "Loại không được để trống")
     private CouponType type;
 

@@ -13,28 +13,31 @@
 
             <div class="col-md-6">
                 <form th:action="@{/admin/product/{id}/images/add(id=${product.id})}" method="post" th:object="${productImageDTO}">
-
                     <div class="mb-3">
                         <div th:replace="fragments/input-image :: customInputImage('url', 'bi-image', 'Hình ảnh')"></div>
                     </div>
-
                     <div class="mb-3">
                         <div th:replace="fragments/input :: customInput ('alt', 'text', 'bi-tag', 'Mô tả ngắn', true)"></div>
                     </div>
-
                     <button type="submit" class="btn btn-primary">Thêm ảnh</button>
+                    <a th:href="@{/admin/product}" class="btn btn-primary">
+                        <i class="bi bi-arrow-left"></i> Quay lại
+                    </a>
                 </form>
             </div>
 
             <div class="col-md-6">
                 <ul id="image-list" class="list-group">
-                    <li th:each="image : ${productImages}" class="list-group-item d-flex align-items-center" th:data-id="${image.id}" th:attr="data-order=${image.position}">
-                        <img th:src="'/' + ${image.url}" alt="" width="50" class="me-3 rounded shadow-sm">
-                        <span th:text="${image.alt}"></span>
-                        <button class="btn btn-danger btn-sm ms-auto delete-btn" th:data-id="${image.id}" th:data-product="${product.id}">Xóa</button>
+                    <li th:each="image : ${productImages}" class="list-group-item d-flex align-items-center justify-content-between p-3 shadow-sm rounded" th:data-id="${image.id}">
+                        <div class="d-flex align-items-center">
+                            <img th:src="'/' + ${image.url}" alt="" width="50" class="rounded shadow-sm border me-3">
+                            <span class="fw-semibold text-secondary" th:text="${image.alt}"></span>
+                        </div>
+                        <button class="btn btn-danger btn-sm ms-auto delete-btn" th:data-id="${image.id}" th:data-product="${product.id}">
+                            <i class="bi bi-trash"></i> Xóa
+                        </button>
                     </li>
                 </ul>
-
                 <button id="saveOrder" class="btn btn-success mt-3">Lưu thứ tự</button>
             </div>
         </div>

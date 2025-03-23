@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" layout:decorate="customer-template" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+>
+<body>
+<section layout:fragment="content" class="container py-5">
+    <style>
+        .list-hover:hover {
+            background-color: #f300ef;
+        }
+    </style>
+    <div class="row justify-content-center mb-5">
+        <!-- Sidebar -->
+        <div class="col-md-4 p-2" style="height: fit-content">
+            <div class="card border-0 shadow-lg rounded-4 fw-bold">
+                <div class="card-body p-0">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item list-hover">
+                            <a th:href="@{/account}" class="text-decoration-none text-dark d-flex align-items-center">
+                                <i class="bi bi-person me-2 text-primary"></i> Hồ sơ cá nhân
+                            </a>
+                        </li>
+                        <li class="list-group-item list-hover">
+                            <a th:href="@{/address}" class="text-decoration-none text-dark d-flex align-items-center">
+                                <i class="bi bi-geo me-2 text-primary"></i> Sổ địa chỉ
+                            </a>
+                        </li>
+                        <li class="list-group-item list-hover">
+                            <a th:href="@{/change-password}" class="text-decoration-none text-dark d-flex align-items-center">
+                                <i class="bi bi-key me-2 text-primary"></i> Đổi mật khẩu
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card border-0 shadow-lg rounded-4">
+                <div class="card-header bg-primary text-white fw-bold">Thêm địa chỉ mới</div>
+                <div class="card-body">
+                    <form th:action="@{/address/edit}" method="post" th:object="${address}">
+                        <input type="hidden" th:field="*{id}">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <div th:replace="fragments/input :: customInput('fullName', 'text', 'bi-person', 'Họ và tên', true)"></div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <div th:replace="fragments/input :: customInput('phone', 'text', 'bi-telephone', 'Số điện thoại', true)"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div th:replace="fragments/input :: customInput('address', 'text', 'bi-geo-alt', 'Địa chỉ', true)"></div>
+                        </div>
+                        <div class="mb-3">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-save"></i> Lưu thay đổi
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+</section>
+</body>
+</html>

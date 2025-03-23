@@ -1,11 +1,15 @@
 package com.group3.sp25hsf302group3se1889vj.service.impl;
 
+import com.group3.sp25hsf302group3se1889vj.dto.NotificationDTO;
 import com.group3.sp25hsf302group3se1889vj.dto.OrderDTO;
 import com.group3.sp25hsf302group3se1889vj.dto.ShoppingCartDTO;
+import com.group3.sp25hsf302group3se1889vj.entity.Order;
 import com.group3.sp25hsf302group3se1889vj.entity.ShoppingCart;
+import com.group3.sp25hsf302group3se1889vj.enums.NotificationType;
 import com.group3.sp25hsf302group3se1889vj.mapper.ShoppingCartMapper;
 import com.group3.sp25hsf302group3se1889vj.repository.ProductRepository;
 import com.group3.sp25hsf302group3se1889vj.repository.ShoppingCartRepository;
+import com.group3.sp25hsf302group3se1889vj.service.NotificationService;
 import com.group3.sp25hsf302group3se1889vj.service.ShoppingCartService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,6 +26,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     private final ShoppingCartRepository shoppingCartRepository;
     private final ProductRepository productRepository;
     private final ShoppingCartMapper shoppingCartMapper;
+    private final NotificationService notificationService;
 
     @Transactional
     @Override
@@ -78,6 +83,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             });
         }
 
+        sendNotificationToCustomer("Thêm vào giỏ hàng", "Sản phẩm đã được thêm vào giỏ hàng", shoppingCartDTO.getCreatedBy(), NotificationType.INFO);
+
         log.info("Thêm vào giỏ hàng thành công: {}", shoppingCartDTO);
     }
 
@@ -121,5 +128,14 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             throw new IllegalArgumentException("Số lượng sản phẩm trong giỏ hàng vượt quá số lượng tồn kho");
         }
     }
+
+    private void sendNotificationToCustomer(String title, String content, String to,NotificationType type) {
+        NotificationDTO notification = new NotificationDTO();
+        notification.setType(type);
+        notification.setTitle(title);
+        notification.setContent(content);
+        notificationService.sendNotificationToUser(notification, to);
+    }
+
 
 }

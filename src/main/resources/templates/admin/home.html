@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       lang="en" layout:decorate="admin-template">
 <body>
 <section layout:fragment="content" class="m-auto h-100 ">
@@ -15,6 +15,10 @@
                     <br>
                     Hãy chọn một chức năng ở thanh sidebar bên trái để bắt đầu sử dụng
                 </p>
+
+                <a th:href="@{/admin/dashboard}" class="btn btn-primary mt-4">
+                    <i class="bi bi-dashboard me-2"></i> Trang thống kê
+                </a>
 
             </div>
         </div>

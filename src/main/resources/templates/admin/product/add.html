@@ -7,43 +7,44 @@
 <section layout:fragment="content" class="container mt-4">
     <div class="row justify-content-center h-100">
         <div class="col-lg-8 d-flex flex-column nowrap justify-content-center">
-            <form th:action="@{/admin/product/add}" th:object="${entity}" method="post"
-                  class="p-md-4 border rounded shadow-sm" enctype="multipart/form-data">
+            <form th:action="@{/admin/product/add}" th:object="${entity}" method="post" id="addForm"
+                  class="p-md-4 border rounded shadow-sm">
                 <h4 class="text-center mb-5">Thêm mới Sản Phẩm</h4>
 
                 <div class="mb-3">
-                    <div th:replace="fragments/input :: customInput ('name', 'text', 'bi-tag', 'Tên Sản Phẩm', true)"></div>
+                    <div th:replace="fragments/input :: customInput ('name', 'text', 'bi-box', 'Tên Sản Phẩm', true)"></div>
                 </div>
 
                 <div class="mb-3">
-                    <div th:replace="fragments/input :: customInput ('priceOrigin', 'number', 'bi-currency-dollar', 'Giá Gốc', true)"></div>
+                    <div th:replace="fragments/input :: customInput ('priceOrigin', 'text', 'bi-cash-stack', 'Giá Gốc', true)"></div>
                 </div>
 
                 <div class="mb-3">
-                    <div th:replace="fragments/input :: customInput ('priceSale', 'number', 'bi-tag-fill', 'Giá Bán', true)"></div>
+                    <div th:replace="fragments/input :: customInput ('priceSale', 'text', 'bi-cash-coin', 'Giá Bán', true)"></div>
                 </div>
 
                 <div class="mb-3">
-                    <div th:replace="fragments/input :: customInput ('quantity', 'number', 'bi-tag-fill', 'Tồn kho', true)"></div>
+                    <div th:replace="fragments/input :: customInput ('quantity', 'number', 'bi-box-seam', 'Tồn kho', true)"></div>
                 </div>
 
-                <div class="mb-3">
-                    <label class="form-label required">Thương Hiệu</label>
-                    <select class="form-select" th:field="*{brandId}">
-                        <option value="">Chọn thương hiệu</option>
+                <div class="form-floating mb-3">
+                    <select class="form-select" th:field="*{brandId}" id="brandSelect">
+                        <option value="" selected>Chọn thương hiệu</option>
                         <option th:each="brand : ${brands}"
                                 th:value="${brand.id}"
                                 th:text="${brand.name}">
                         </option>
                     </select>
+                    <label for="brandSelect">Thương Hiệu</label>
                     <div class="invalid-feedback" th:if="${#fields.hasErrors('brandId')}">
                         <span th:errors="*{brandId}"></span>
                     </div>
                 </div>
 
-                <div class="mb-3">
-                    <label class="form-label required">Danh Mục</label>
-                    <select class="form-control" data-live-search="true" data-none-selected-text="Chọn danh mục" th:field="*{categoryId}">
+
+                <div class="form-floating mb-3">
+                    <select class="form-select" id="categorySelect" data-live-search="true" data-none-selected-text="Chọn danh mục" th:field="*{categoryId}">
+                        <option value="" selected>Chọn danh mục</option>
                         <th:block th:each="category : ${categories}">
                             <optgroup th:label="${category.name}">
                                 <option th:each="subCategory : ${category.subCategories}"
@@ -53,10 +54,12 @@
                             </optgroup>
                         </th:block>
                     </select>
+                    <label for="categorySelect">Danh Mục</label>
                     <div class="invalid-feedback" th:if="${#fields.hasErrors('categoryId')}">
                         <span th:errors="*{categoryId}"></span>
                     </div>
                 </div>
+
 
                 <div class="mb-3">
                     <div th:replace="fragments/input-image :: customInputImage('thumbnail', 'bi-image', 'Hình ảnh')"></div>
@@ -65,6 +68,15 @@
                 <div class="mb-3">
                     <div th:replace="fragments/textarea :: customTextarea('description', 'bi-justify', 'Mô tả')"></div>
                 </div>
+
+                <div class="mb-3">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" th:field="*{active}" id="activeField">
+                        <label class="form-check-label" for="activeField">Kích hoạt</label>
+                    </div>
+                </div>
+
+
 
                 <div class="text-center">
                     <button type="submit" class="btn btn-primary">
@@ -77,6 +89,49 @@
             </form>
         </div>
     </div>
+
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function () {
+            let priceOrigin = document.querySelector('input[name="priceOrigin"]');
+            let priceSale = document.querySelector('input[name="priceSale"]');
+            formatPrice(priceOrigin);
+            formatPrice(priceSale);
+            function formatPrice(input) {
+                input.addEventListener('keydown', function (event) {
+                    let rawValue = this.getAttribute('data-raw') || '';
+
+                    if (event.key === 'Backspace') {
+                        event.preventDefault();
+                        if (rawValue.length > 1) {
+                            rawValue = rawValue.slice(0, -1);
+                            this.setAttribute('data-raw', rawValue);
+                            this.value = formatCurrency(rawValue);
+                        } else {
+                            this.setAttribute('data-raw', '');
+                            this.value = '';
+                        }
+                    }
+                });
+
+                input.addEventListener('input', function () {
+                    let rawValue = this.value.replace(/\D/g, '');
+                    rawValue = rawValue.replace(/^0+/, '') || '0';
+                    this.setAttribute('data-raw', rawValue);
+                    this.value = formatCurrency(rawValue);
+                });
+                input.setAttribute('data-raw', input.value);
+                input.value = formatCurrency(input.getAttribute('data-raw') || '');
+            }
+
+            $('#addForm').submit(function (e) {
+                let priceOrigin = document.querySelector('input[name="priceOrigin"]');
+                let priceSale = document.querySelector('input[name="priceSale"]');
+                priceOrigin.value = priceOrigin.value.replace(/\D/g, '');
+                priceSale.value = priceSale.value.replace(/\D/g, '');
+            });
+        })
+    </script>
 
 </section>
 </body>

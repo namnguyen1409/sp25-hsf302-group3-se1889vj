@@ -194,6 +194,70 @@ footer {
     overflow: hidden;
 }
 
+.feature-item a.active {
+    background-color: #007bff; /* Màu xanh */
+    color: white;
+}
+
+
+
+.tbl-container {
+    max-width: 100%;
+    max-height: fit-content;
+}
+
+.tbl-fixed {
+    overflow-x: scroll;
+    overflow-y: hidden;
+    height: fit-content;
+    scrollbar-width: none;
+}
+
+.tbl-fixed::-webkit-scrollbar {
+    display: none;
+}
+
+table {
+    min-width: max-content;
+}
+table th {
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 1;
+}
+
+.description {
+    display: inline-block;
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.sticky-column {
+    border-left: 1px solid #dee2e6;
+    position: sticky;
+    right: 0;
+    background-color: white;
+    z-index: 1;
+}
+
+.currency-input {
+    max-width: 150px;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+
 @media (max-width: 767px) { /* Kích thước tối đa của màn hình nhỏ (dưới 768px) */
     form.p-md-4 {
         border: none !important; /* Loại bỏ viền */

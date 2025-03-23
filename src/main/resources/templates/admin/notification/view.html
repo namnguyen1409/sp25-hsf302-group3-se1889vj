@@ -8,7 +8,10 @@
 <body>
 <section layout:fragment="content" class="container mt-4">
     <div class="card shadow-sm">
-        <div class="card-header bg-success text-white">
+        <div class="card-header text-white"
+             th:classappend="(${entity.type.name() == 'INFO'} ? 'bg-primary' :
+                     (${entity.type.name() == 'WARNING'} ? 'bg-warning' :
+                     (${entity.type.name() == 'ERROR'} ? 'bg-danger' : 'bg-success')))">
             <h4 class="mb-0">Chi tiết Thông báo</h4>
         </div>
         <div class="card-body" th:object="${entity}">
@@ -27,6 +30,7 @@
             <hr>
             <div class="text-end">
                 <a th:href="@{/admin/notification}" class="btn btn-secondary">Quay lại</a>
+                <a th:href="@{/admin/notification/delete/{id}(id=${entity.id})}" class="btn btn-danger">Xóa</a>
             </div>
         </div>
     </div>

@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Size;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-public interface ProductVariantService {
+public interface ProductVariantService extends PagingService<ProductVariantDTO, ProductVariantFilterDTO> {
 
     Page<ProductVariantDTO> findAll(ProductVariantFilterDTO filterDTO, Pageable pageable);
 

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      lang="vi" layout:decorate="admin-template">
+
+<body>
+<section layout:fragment="content" class="container-fluid mt-4">
+    <div class="row justify-content-center">
+        <div class="card p-4 shadow">
+            <h3 class="text-center mb-4">Chi tiết Trang tĩnh</h3>
+            <table class="table table-bordered">
+                <tr>
+                    <th>Tiêu đề:</th>
+                    <td th:text="${entity.title}"></td>
+                </tr>
+                <tr>
+                    <th>Slug:</th>
+                    <td th:text="${entity.slug}"></td>
+                </tr>
+                <tr>
+                    <th>Nội dung:</th>
+                    <td style="max-width: 400px; overflow: auto;">
+                        <div class="w-100 ql-editor" th:utext="${entity.content}">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Ngày tạo:</th>
+                    <td th:text="${#temporals.format(entity.createdAt, 'dd-MM-yyyy')}"></td>
+                </tr>
+                <tr>
+                    <th>Người tạo:</th>
+                    <td th:text="${entity.createdBy}"></td>
+                </tr>
+                <tr>
+                    <th>Ngày cập nhật:</th>
+                    <td th:text="${#temporals.format(entity.updatedAt, 'dd-MM-yyyy')}"></td>
+                </tr>
+                <tr>
+                    <th>Người cập nhật:</th>
+                    <td th:text="${entity.updatedBy}"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</section>
+</body>
+</html>

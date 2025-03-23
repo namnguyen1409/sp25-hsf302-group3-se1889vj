@@ -28,4 +28,15 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
     @Modifying
     @Query(value = "UPDATE Product p SET p.quantity = p.quantity + ?2, p.updatedAt = CURRENT_TIMESTAMP WHERE p.id = ?1")
     void addQuantity(Long productId, int quantity);
+
+    boolean existsByBrandId(Long id);
+
+    @Query("SELECT c.name, COUNT(p) FROM Product p JOIN p.category c GROUP BY c.id, c.name")
+    List<Object[]> countProductsByCategory();
+
+    @Query("SELECT b.name, COUNT(p) FROM Product p JOIN p.brand b GROUP BY b.name")
+    List<Object[]> countProductsByBrand();
+
+    @Query("SELECT p.isActive, COUNT(p) FROM Product p GROUP BY p.isActive")
+    List<Object[]> countProductsByStatus();
 }

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      lang="vi" layout:decorate="admin-template">
+<head>
+    <title>Chi tiết Danh mục</title>
+</head>
+<body>
+<section layout:fragment="content" class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Chi tiết Danh mục</h4>
+        </div>
+        <div class="card-body" th:object="${entity}">
+            <!-- Tên danh mục -->
+            <div class="row mb-3">
+                <div class="col-md-3 fw-bold">Tên danh mục:</div>
+                <div class="col-md-9" th:text="*{name}">-</div>
+            </div>
+
+            <!-- Ảnh danh mục -->
+            <div class="row mb-3">
+                <div class="col-md-3 fw-bold">Ảnh:</div>
+                <div class="col-md-9">
+                    <div th:if="*{image != null and image != ''}">
+                        <img th:src="@{'/' + *{image}}" alt="Ảnh danh mục" class="img-thumbnail" style="max-width: 200px;">
+                    </div>
+                    <div th:if="*{image == null or image == ''}" class="text-muted">
+                        <i class="bi bi-image"></i> Chưa có ảnh
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mô tả -->
+            <div class="row mb-3">
+                <div class="col-md-3 fw-bold">Mô tả:</div>
+                <div class="col-md-9" th:utext="*{description != null ? description : '-'}">-</div>
+            </div>
+
+            <!-- Danh mục cha -->
+            <div class="row mb-3">
+                <div class="col-md-3 fw-bold">Danh mục cha:</div>
+                <div class="col-md-9" th:text="*{parentName != null ? parentName : '-'}">-</div>
+            </div>
+
+            <!-- Danh mục con -->
+            <div class="row mb-3">
+                <div class="col-md-3 fw-bold">Danh mục con:</div>
+                <div class="col-md-9">
+                    <ul class="list-group" th:if="*{subCategories != null and !subCategories.isEmpty()}">
+                        <li class="list-group-item" th:each="subCategory : *{subCategories}" th:text="${subCategory.name}"></li>
+                    </ul>
+                    <p class="text-muted" th:if="*{subCategories == null or subCategories.isEmpty()}">
+                        <i class="bi bi-folder-x"></i> Không có danh mục con
+                    </p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-3 fw-bold">Ngày tạo:</div>
+                <div class="col-md-9 dateTime" th:text="*{createdAt}">-</div>
+                <div class="col-md-3 fw-bold">Người tạo:</div>
+                <div class="col-md-9" th:text="*{createdBy}">-</div>
+                <div class="col-md-3 fw-bold">Ngày cập nhật:</div>
+                <div class="col-md-9 dateTime" th:text="*{updatedAt}">-</div>
+                <div class="col-md-3 fw-bold">Người cập nhật:</div>
+                <div class="col-md-9" th:text="*{updatedBy}">-</div>
+            </div>
+
+        </div>
+
+
+        <!-- Nút quay lại -->
+        <div class="card-footer text-end">
+            <a th:href="@{/admin/category/list}" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Quay lại
+            </a>
+        </div>
+    </div>
+</section>
+</body>
+</html>

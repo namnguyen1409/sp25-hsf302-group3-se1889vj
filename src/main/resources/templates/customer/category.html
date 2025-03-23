@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en" layout:decorate="customer-template" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <style>
+        .filter-section {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+    </style>
+</head>
+<body>
+<section layout:fragment="content">
+    <div class="container mt-4">
+        <h2 class="text-center mb-4 fw-bold" th:text="${category.name}">
+        </h2>
+        <form th:action="@{/category/{id}(id=${category.id})}" method="post" th:object="${filterDTO}" id="searchForm">
+            <input th:field="*{page}" type="hidden">
+            <input th:field="*{orderBy}" type="hidden">
+            <input th:field="*{direction}" type="hidden">
+            <input th:field="*{size}" type="hidden">
+            <input th:field="*{query}" type="hidden">
+            <input th:field="*{categoryId}" type="hidden">
+            <input th:field="*{brandId}" type="hidden">
+            <input th:field="*{priceFrom}" type="hidden">
+            <input th:field="*{priceTo}" type="hidden">
+        </form>
+
+
+        <div class="row">
+            <th:block th:object="${category}">
+                <div class="col-12 text-center">
+                    <img th:if="${category.image != null}" th:src="@{'/' + ${category.image}}" class="img-fluid rounded shadow-sm category-image" alt="Category image" style="width: 150px;">
+                    <p class="text-muted" th:text="${category.description}"></p>
+                </div>
+
+                <!-- Danh mục con -->
+                <div class="col-12 mt-4">
+                    <div class="d-flex flex-wrap justify-content-center gap-3">
+                        <th:block th:each="child : ${category.subCategories}">
+                            <a th:href="@{'/category/' + ${child.id}}" class="btn btn-outline-primary rounded-pill px-4">
+                                <i class="bi bi-folder"></i> <!-- Thêm icon Bootstrap -->
+                                <span th:text="${child.name}"></span>
+                            </a>
+                        </th:block>
+                    </div>
+                </div>
+            </th:block>
+
+            <hr class="my-4">
+
+            <!-- Danh sách sản phẩm -->
+            <div class="col-12">
+                <div class="row g-4">
+                    <th:block th:each="product : ${products}">
+                        <div th:replace="fragments/product-card :: productCard(${product})"></div>
+                    </th:block>
+                </div>
+            </div>
+        </div>
+
+        <th:block th:if="${products.totalPages == 0}">
+            <div class="alert alert-warning text-center mt-5">
+                Không tìm thấy sản phẩm nào thuộc phân loại này
+            </div>
+        </th:block>
+        <th:block th:if="${products.totalPages > 0}">
+            <div th:replace="fragments/pagination :: pagination(${products})"></div>
+        </th:block>
+    </div>
+
+    <script>
+
+        function goToPage(page) {
+            document.getElementById('page').value = page;
+            document.getElementById('searchForm').submit();
+        }
+
+
+        function searchProduct() {
+            let searchForm = document.getElementById('searchForm');
+            searchForm.elements['query'].value = document.getElementById('queryField').value;
+            searchForm.elements['categoryId'].value = document.getElementById('categoryIdField').value;
+            searchForm.elements['brandId'].value = document.getElementById('brandIdField').value;
+            searchForm.elements['priceFrom'].value = document.getElementById('priceFromField').value;
+            searchForm.elements['priceTo'].value = document.getElementById('priceToField').value;
+            searchForm.submit();
+        }
+
+        function resetField() {
+            document.getElementById('queryField').value = '';
+            document.getElementById('categoryIdField').value = '';
+            document.getElementById('brandIdField').value = '';
+            document.getElementById('priceFromField').value = '';
+            document.getElementById('priceToField').value = '';
+
+            searchProduct();
+        }
+
+    </script>
+
+</section>
+</body>
+</html>

@@ -95,6 +95,9 @@
       <table id="mainTable" class="table table-striped table-bordered" style="width:100%">
         <thead class="table-primary">
         <tr>
+          <th>
+            STT
+          </th>
           <th th:each="field: ${fields}"
               th:data="${field}"
               style="cursor: pointer; width: fit-content;"
@@ -109,6 +112,7 @@
         </thead>
         <tbody>
         <tr th:object="${filterDTO}">
+          <td></td>
           <td>
             <input type="text" class="form-control form-control-sm" th:value="*{title}" id="titleField" placeholder="Tên danh mục">
           </td>
@@ -116,25 +120,7 @@
             <input type="text" class="form-control form-control-sm" th:value="*{slug}" id="slugField" placeholder="Tên liên kết">
           </td>
           <td>
-            <input type="text" class="form-control form-control-sm" th:value="*{content}" id="contentField" placeholder="Nội dung">
-          </td>
-          <td>
-            <div class="d-flex gap-2" style="max-width: 200px">
-              <input type="datetime-local" class="form-control form-control-sm" th:value="*{createdAtFrom}" id="createdAtFromField" style="max-width: 100px">
-              <input type="datetime-local" class="form-control form-control-sm" th:value="*{createdAtTo}" id="createdAtToField" style="max-width: 100px">
-            </div>
-          </td>
-          <td>
             <input type="text" class="form-control form-control-sm" th:value="*{createdBy}" id="createdByField" placeholder="Người tạo">
-          </td>
-          <td>
-            <div class="d-flex gap-2" style="max-width: 200px">
-              <input type="datetime-local" class="form-control form-control-sm" th:value="*{updatedAtFrom}" id="updatedAtFromField" style="max-width: 100px">
-              <input type="datetime-local" class="form-control form-control-sm" th:value="*{updatedAtTo}" id="updatedAtToField" style="max-width: 100px">
-            </div>
-          </td>
-          <td>
-            <input type="text" class="form-control form-control-sm" th:value="*{updatedBy}" id="updatedByField" placeholder="Người cập nhật">
           </td>
           <td class="text-center sticky-column">
             <button type="submit" class="btn btn-primary btn-sm" id="btnSubmit">
@@ -146,9 +132,13 @@
           </td>
         </tr>
 
-        <tr th:if="${pages.totalPages > 0}" th:each="item : ${pages}">
-          <th:block th:replace="fragments/list-body :: list-body(${item}, ${fields}, ${fieldTitles}, ${fieldClasses})"></th:block>
+        <tr th:if="${pages.totalPages > 0}" th:each="item, step : ${pages}">
+          <th:block th:replace="fragments/list-body :: list-body(${item}, ${fields}, ${fieldTitles}, ${fieldClasses}, ${pages.number * pages.size + step.index})"></th:block>
           <td class="text-center sticky-column">
+            <a th:href="@{'/admin/static-page/view/' + ${item.id}}"
+               class="btn btn-sm btn-info">
+              <i class="bi bi-eye"></i>
+            </a>
             <a th:href="@{'/admin/static-page/edit/' + ${item.id}}"
                class="btn btn-sm btn-warning">
               <i class="bi bi-pencil-square"></i>
@@ -162,6 +152,11 @@
         </tr>
         </tbody>
       </table>
+      <div class="row mt-2">
+        <div class="col text-start">
+          <span th:text="'Hiển thị từ bản ghi ' + ${n1} + ' đến ' + ${n2} + ' trong tổng số ' + ${total} + ' bản ghi'"></span>
+        </div>
+      </div>
     </div>
     <th:block th:if="${pages.totalPages == 0}">
       <div class="alert alert-warning text-center mt-5">

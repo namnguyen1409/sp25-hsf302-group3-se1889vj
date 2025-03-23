@@ -1,6 +1,5 @@
 package com.group3.sp25hsf302group3se1889vj.service.impl;
 
-import com.group3.sp25hsf302group3se1889vj.dto.BrandDTO;
 import com.group3.sp25hsf302group3se1889vj.dto.CategoryDTO;
 import com.group3.sp25hsf302group3se1889vj.dto.NotificationDTO;
 import com.group3.sp25hsf302group3se1889vj.dto.filter.CategoryFilterDTO;
@@ -40,7 +39,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Page<CategoryDTO> searchCategories(CategoryFilterDTO categoryFilterDTO, Pageable pageable) {
+    public Page<CategoryDTO> findAll(CategoryFilterDTO categoryFilterDTO, Pageable pageable) {
         Specification<Category> specification = CategorySpecification.filterCategory(categoryFilterDTO);
         return categoryRepository.findAll(specification, pageable)
                 .map(categoryMapper::mapToCategoryDTO);
@@ -102,7 +101,12 @@ public class CategoryServiceImpl implements CategoryService {
                 .orElseThrow(() -> new IllegalArgumentException("Category not found"));
         var categoryDTO = categoryMapper.mapToCategoryDTO(category);
         categoryRepository.deleteById(id);
-        sendCategoryNotification("được xóa", categoryDTO, NotificationType.WARNING);
+        sendCategoryNotification("bị xóa", categoryDTO, NotificationType.WARNING);
+    }
+
+    @Override
+    public boolean existsByParentId(Long id) {
+        return categoryRepository.existsByParentId(id);
     }
 
     /**

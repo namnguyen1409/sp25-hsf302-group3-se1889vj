@@ -9,6 +9,7 @@ import com.group3.sp25hsf302group3se1889vj.service.ProductService;
 import com.group3.sp25hsf302group3se1889vj.service.ProductVariantService;
 import com.group3.sp25hsf302group3se1889vj.service.StorageService;
 import com.group3.sp25hsf302group3se1889vj.util.MetadataExtractor;
+import com.group3.sp25hsf302group3se1889vj.util.PaginationUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -41,30 +42,18 @@ public class ProductVariantController {
             Model model,
             @ModelAttribute(value = "filterDTO", binding = false) ProductVariantFilterDTO filterDTO,
             @PathVariable("productId") Long productId) {
-        if (filterDTO == null) {
-            filterDTO = new ProductVariantFilterDTO();
-        }
-        Sort sortDirection = "asc".equalsIgnoreCase(filterDTO.getDirection())
-                ? Sort.by(filterDTO.getOrderBy()).ascending()
-                : Sort.by(filterDTO.getOrderBy()).descending();
-
-
-        List<String> fields = Arrays.asList("size", "color", "quantity","createdAt","createdBy", "updatedAt", "updatedBy");
-        model.addAttribute("fields", fields);
-        model.addAttribute("fieldTitles", metadataExtractor.getFieldTitles(ProductVariantDTO.class, fields));
-        model.addAttribute("fieldClasses", metadataExtractor.getFieldClasses(ProductVariantDTO.class, fields));
-
-        filterDTO.setProductId(productId);
-
-        Pageable pageable = PageRequest.of(filterDTO.getPage() - 1, filterDTO.getSize(), sortDirection);
-
-        Page<ProductVariantDTO> page = productVariantService.findAll(filterDTO, pageable);
-
         ProductDTO productDTO = productService.findById(productId);
-        model.addAttribute("pages", page);
-        model.addAttribute("filterDTO", filterDTO);
-        model.addAttribute("productVariant", new ProductVariantDTO());
         model.addAttribute("product", productDTO);
+        PaginationUtil.setupPagination(
+                model,
+                filterDTO,
+                productVariantService,
+                metadataExtractor,
+                ProductVariantFilterDTO::new,
+                ProductVariantDTO.class,
+                Arrays.asList("size", "color", "quantity")
+        );
+
         return "admin/product/variant/list";
     }
 
@@ -87,18 +76,18 @@ public class ProductVariantController {
 
     @PostMapping("/add")
     public String add(
-            @ModelAttribute @Validated ProductVariantDTO productVariantDTO,
+            @ModelAttribute("productVariant") @Validated ProductVariantDTO productVariant,
             BindingResult result,
             @PathVariable("productId") Long productId
     ) {
-        productVariantDTO.setProductId(productId);
-        if (productVariantService.existsByProductIdAndSizeAndColor(productId, productVariantDTO.getSize(), productVariantDTO.getColor())) {
-            result.rejectValue("size", "error.productVariant", "Size và màu đã tồn tại");
+        productVariant.setProductId(productId);
+        if (productVariantService.existsByProductIdAndSizeAndColor(productId, productVariant.getSize(), productVariant.getColor())) {
+            result.rejectValue("size", "size.exist", "Size và màu đã tồn tại");
         }
         if (result.hasErrors()) {
             return "admin/product/variant/add";
         }
-        productVariantService.save(productVariantDTO);
+        productVariantService.save(productVariant);
         return "redirect:/admin/product/" + productId + "/variants";
     }
 

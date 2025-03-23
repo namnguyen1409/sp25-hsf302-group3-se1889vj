@@ -9,6 +9,7 @@ import com.group3.sp25hsf302group3se1889vj.dto.filter.ProductFilterDTO;
 import com.group3.sp25hsf302group3se1889vj.service.*;
 import com.group3.sp25hsf302group3se1889vj.util.FlashMessageUtil;
 import com.group3.sp25hsf302group3se1889vj.util.MetadataExtractor;
+import com.group3.sp25hsf302group3se1889vj.util.PaginationUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -46,25 +47,15 @@ public class ProductController {
             Model model,
             @ModelAttribute(value = "filterDTO", binding = false) ProductFilterDTO filterDTO
     ) {
-        if (filterDTO == null) {
-            filterDTO = new ProductFilterDTO();
-        }
-        Sort sortDirection = "asc".equalsIgnoreCase(filterDTO.getDirection())
-                ? Sort.by(filterDTO.getOrderBy()).ascending()
-                : Sort.by(filterDTO.getOrderBy()).descending();
-
-
-        List<String> fields = Arrays.asList("name", "description", "priceOrigin", "priceSale","thumbnail","brandName",
-                                            "categoryName","createdAt","createdBy", "updatedAt", "updatedBy");
-        model.addAttribute("fields", fields);
-        model.addAttribute("fieldTitles", metadataExtractor.getFieldTitles(ProductDTO.class, fields));
-        model.addAttribute("fieldClasses", metadataExtractor.getFieldClasses(ProductDTO.class, fields));
-
-        Pageable pageable = PageRequest.of(filterDTO.getPage() - 1, filterDTO.getSize(), sortDirection);
-
-        Page<ProductDTO> page = productService.findAll(filterDTO, pageable);
-        model.addAttribute("pages", page);
-        model.addAttribute("filterDTO", filterDTO);
+        PaginationUtil.setupPagination(
+                model,
+                filterDTO,
+                productService,
+                metadataExtractor,
+                ProductFilterDTO::new,
+                ProductDTO.class,
+                Arrays.asList("name", "priceOrigin", "priceSale","thumbnail","brandName", "categoryName","isActive")
+        );
         return "admin/product/list";
     }
 
@@ -188,5 +179,18 @@ public class ProductController {
         productImageService.deleteImage(imageId);
         return "redirect:/products/" + productId + "/images";
     }
+
+    @GetMapping("/active/{id}")
+    public String active(@PathVariable Long id) {
+        productService.active(id);
+        return "redirect:/admin/product/";
+    }
+
+    @GetMapping("/deactive/{id}")
+    public String deactive(@PathVariable Long id) {
+        productService.deactive(id);
+        return "redirect:/admin/product/";
+    }
+
 
 }

@@ -13,6 +13,25 @@ public class NotificationSpecification {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
+            if (filterDTO.getUsername() != null && !filterDTO.getUsername().isEmpty()) {
+                predicates.add(criteriaBuilder.equal(criteriaBuilder.lower(root.get("user").get("username")), filterDTO.getUsername().toLowerCase()));
+            }
+
+            if (filterDTO.getTitle() != null && !filterDTO.getTitle().isEmpty()) {
+                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("title")), "%" + filterDTO.getTitle().toLowerCase() + "%"));
+            }
+            if (filterDTO.getContent() != null && !filterDTO.getContent().isEmpty()) {
+                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("content")), "%" + filterDTO.getContent().toLowerCase() + "%"));
+            }
+            if (filterDTO.getType() != null) {
+                predicates.add(criteriaBuilder.equal(root.get("type"), filterDTO.getType()));
+            }
+
+            if (filterDTO.getIsRead() != null) {
+                predicates.add(criteriaBuilder.equal(root.get("isRead"), filterDTO.getIsRead()));
+            }
+
+
             // base predicates
             if(filterDTO.getCreatedAtFrom() != null) {
                 predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("createdAt"), filterDTO.getCreatedAtFrom()));

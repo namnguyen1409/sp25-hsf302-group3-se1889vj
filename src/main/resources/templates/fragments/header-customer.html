@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       lang="vi">
 <head>
     <meta charset="UTF-8">
@@ -62,7 +63,17 @@
                                     </a>
                                 </div>
                             </div>
-                            <div class="header-action-item header-action_account">
+
+                            <div class="header-action-item header-action_account" sec:authorize="isAnonymous()">
+                                <div class="header-action_text">
+                                    <a class="header-action__link" aria-label="Tài khoản" title="Tài khoản" th:href="@{/login}">
+                                        <span class="box-icon">
+                                            <i class="bi fs-5 fw-bold  bi-person"></i>
+                                        </span>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="header-action-item header-action_account" sec:authorize="hasRole('CUSTOMER')">
                                 <div class="header-action_text">
                                     <a class="header-action__link  header-action_clicked " id="site-account-handle" aria-label="Tài khoản" title="Tài khoản" th:href="@{/account}">
 										<span class="box-icon">
@@ -71,20 +82,29 @@
                                     </a>
                                 </div>
                             </div>
-                            <div class="header-action-item header-action_cart js-sitenav-cart js-act-sitenav show-mb"  data-id="#js-sitenav-cart">
+                            <div class="header-action-item header-action_cart js-sitenav-cart js-act-sitenav show-mb" sec:authorize="hasRole('CUSTOMER')">
                                 <div class="header-action_text">
                                     <a class="header-action__link" id="site-cart-handle" aria-label="Giỏ hàng" title="Giỏ hàng" th:href="@{/cart}">
 										<span class="box-icon">
                                             <i class="bi fs-5 fw-bold  bi-cart"></i>
 											<span class="count-holder">
-												<span class="count" th:text="${cartCount}">
+												<span class="count" th:text="${cartCount}" id="cart-count">
                                                 </span>
 											</span>
 										</span>
                                     </a>
                                 </div>
                             </div>
-                            <div class="header-action-item header-action_notification">
+                            <div class="header-action-item header-action_cart js-sitenav-cart js-act-sitenav show-mb" sec:authorize="hasRole('CUSTOMER')">
+                                <div class="header-action_text">
+                                    <a class="header-action__link" aria-label="Đơn hàng" title="Đơn hàng" th:href="@{/orders}">
+										<span class="box-icon">
+                                            <i class="bi fs-5 fw-bold bi-bag"></i>
+										</span>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="header-action-item header-action_notification" sec:authorize="isAuthenticated()">
                                 <div class="header-action_text">
                                     <a class="header-action__link" id="site-notification-handle" aria-label="Thông báo" title="Thông báo" th:href="@{/notification}">
                                         <span class="box-icon">
@@ -97,6 +117,7 @@
                                     </a>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </div>

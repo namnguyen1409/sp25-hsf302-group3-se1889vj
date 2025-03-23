@@ -32,4 +32,6 @@ public interface StorageService {
     boolean isImage(MultipartFile file);
 
     void deleteFile(String filename);
+
+    void deleteAllTempFiles();
 }

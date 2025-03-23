@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html
+        lang="en"
+        layout:decorate="customer-template" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<body>
+<section layout:fragment="content" class="container mt-4">
+    <div class="card shadow-sm mt-5 mb-5">
+        <div class="card-header text-white"
+             th:classappend="(${entity.type.name() == 'INFO'} ? 'bg-primary' :
+                     (${entity.type.name() == 'WARNING'} ? 'bg-warning' :
+                     (${entity.type.name() == 'ERROR'} ? 'bg-danger' : 'bg-success')))">
+            <h4 class="mb-0">Chi tiết Thông báo</h4>
+        </div>
+        <div class="card-body" th:object="${entity}">
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Tiêu đề:</strong> <span th:text="*{title}"></span></p>
+                    <p><strong>Nội dung:</strong> <span th:text="*{content}"></span></p>
+                    <p><strong>Loại:</strong> <span th:text="*{type}" id="type"></span></p>
+                    <p><strong>Người nhận:</strong> <span th:text="*{username}"></span></p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Ngày gửi:</strong> <span th:text="*{createdAt}" class="dateTime"></span></p>
+                    <p><strong>Ngày đọc:</strong> <span th:text="*{updatedAt}" class="dateTime"></span></p>
+                </div>
+            </div>
+            <hr>
+            <div class="text-end">
+                <a th:href="@{/notification}" class="btn btn-secondary">Quay lại</a>
+                <a th:attr="data-id=${entity.id}, data-title=${entity.title}" class="btn btn-primary"
+                    onclick="confirmDelete(this)"
+                >Xóa</a>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+
+        let csrfToken = $("meta[name='_csrf']").attr("content");
+        let csrfHeader = $("meta[name='_csrf_header']").attr("content");
+
+        function confirmDelete(button) {
+            let id = button.getAttribute('data-id');
+            let title = button.getAttribute('data-title');
+            Swal.fire({
+                title: 'Xác nhận xóa',
+                text: `Bạn có chắc chắn muốn xóa thông báo "${title}" không?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Xóa',
+                cancelButtonText: 'Hủy'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    let url = `/notification/${id}`;
+                    let headers = {
+                        [csrfHeader]: csrfToken
+                    };
+                    fetch(url, {
+                        method: 'DELETE',
+                        headers: headers
+                    }).then(response => {
+                        if (response.ok) {
+                            Swal.fire({
+                                title: 'Thành công',
+                                text: 'Xóa thông báo thành công',
+                                icon: 'success'
+                            }).then(() => {
+                                window.location = '/notification';
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Thất bại',
+                                text: 'Xóa thông báo thất bại',
+                                icon: 'error'
+                            });
+                        }
+                    });
+                }
+            });
+        }
+
+        const type = document.getElementById('type');
+        if (type.innerText === 'INFO') {
+            type.innerText = 'Thông báo';
+        } else if (type.innerText === 'WARNING') {
+            type.innerText = 'Cảnh báo';
+        } else if (type.innerText === 'ERROR') {
+            type.innerText = 'Lỗi';
+        } else {
+            type.innerText = 'Thành công';
+        }
+    </script>
+
+</section>
+</body>
+</html>

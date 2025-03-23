@@ -11,6 +11,8 @@ import java.math.BigDecimal;
 public class OrderItemDTO extends BaseDTO {
     private Long orderId;
     private Long productId;
+    private ProductDTO product;
+    private ProductVariantDTO productVariant;
     private Long productVariantId;
     private int quantity;
     private BigDecimal price;

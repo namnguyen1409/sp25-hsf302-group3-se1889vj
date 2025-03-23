@@ -22,6 +22,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import lombok.AllArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -80,6 +81,14 @@ public class BrandServiceImpl implements BrandService {
         return brandRepository.findAll().stream()
                 .map(brandMapper::toDTO)
                 .toList();
+    }
+
+    @Override
+    @Transactional
+    public void delete(Long id) {
+        var brand = brandRepository.findById(id).orElseThrow();
+        sendBrandNotification("bị xóa", brandMapper.toDTO(brand), NotificationType.ERROR);
+        brandRepository.delete(brand);
     }
 
     /**

@@ -20,6 +20,10 @@ spring:
     suffix: .html
     cache: false
     mode: HTML
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
   mvc:
     view:
       prefix: classpath:/templates/
@@ -41,9 +45,9 @@ app:
   secret: DeDuB9695l2RiYlBSZo1MxiA/bRPGcHmMkLfyOFggs8=
   algorithm: AES
   jwt:
-    expiration: 86400000 # 1 day
+    expiration: 86400000
   refresh:
-    expiration: 2592000000 # 30 days
+    expiration: 2592000000
   url: http://localhost:8080
 
 recaptcha:
@@ -62,8 +66,8 @@ vnpay:
   vnp_CurrCode: VND
   vnp_Locale: vn
   vnp_IpAddr: 127.0.0.1
-  vnp_TmnCode: B79SLRRJ
-  vnp_HashSecret: 88187SFVCSIYZ0UL2AOMMMDFROEQ2DG7
+  vnp_TmnCode: ETQ6XZEO
+  vnp_HashSecret: 8CWBN537VQMZRFCS028OT00XL7PERCVC
   vnp_Url: https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
   vnp_apiUrl: https://sandbox.vnpayment.vn/merchant_webapi/api/transaction
   vnp_ReturnUrl: http://localhost:8080/vnpay-return
@@ -78,5 +82,5 @@ owner:
   phone: 0123456789
   gender: true
   birthday: 2004-09-14
-  address: 123 Đường 123, Quận 1, TP.HCM
+  address: 123 Đường 123, Quận 123, TP. 123
   avatar: images/male.png

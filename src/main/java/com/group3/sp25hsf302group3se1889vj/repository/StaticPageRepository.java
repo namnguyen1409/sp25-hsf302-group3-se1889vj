@@ -15,4 +15,8 @@ public interface StaticPageRepository extends JpaRepository<StaticPage, Long>, J
     boolean existsByTitle(String title);
 
     Optional<StaticPage> findBySlug(String slug);
+
+    boolean existsBySlugAndIdNot(String slug, Long id);
+
+    boolean existsByTitleAndIdNot(String title, Long id);
 }

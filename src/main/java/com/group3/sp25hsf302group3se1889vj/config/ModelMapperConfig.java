@@ -86,6 +86,15 @@ public class ModelMapperConfig {
             }
         });
 
+        modelMapper.addMappings(
+                new PropertyMap<OrderTransaction, OrderTransactionDTO>() {
+                    @Override
+                    protected void configure() {
+                        map().setOrderId(source.getOrder().getId());
+                    }
+                }
+        );
+
         modelMapper.getConfiguration().setAmbiguityIgnored(true);
         return modelMapper;
     }

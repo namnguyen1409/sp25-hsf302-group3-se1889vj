@@ -14,4 +14,6 @@ public interface CategoryRepository extends JpaRepository<Category, Long>, JpaSp
     boolean existsByNameAndParentId(String name, Long parentId);
 
     boolean existsByNameAndParentIdAndIdNot(String name, Long parentId, Long id);
+
+    boolean existsByParentId(Long id);
 }

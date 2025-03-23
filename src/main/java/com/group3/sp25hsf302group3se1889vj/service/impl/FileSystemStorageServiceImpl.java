@@ -22,6 +22,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Stream;
@@ -205,6 +206,23 @@ public class FileSystemStorageServiceImpl implements StorageService {
             throw new StorageException("Failed to delete file.", e);
         }
     }
+
+    @Override
+    public void deleteAllTempFiles() {
+        try (Stream<Path> walk = Files.walk(tempLocation)) {
+            walk.sorted(Comparator.reverseOrder())
+                    .forEach(path -> {
+                        try {
+                            Files.deleteIfExists(path);
+                        } catch (IOException e) {
+                            System.err.println("Failed to delete: " + path);
+                        }
+                    });
+        } catch (IOException e) {
+            throw new StorageException("Failed to delete temp files.", e);
+        }
+    }
+
 
     @Override
     public void init() {

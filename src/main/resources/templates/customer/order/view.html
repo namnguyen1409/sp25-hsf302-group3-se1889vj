@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      lang="vi" layout:decorate="customer-template">
+<head>
+    <title>Chi tiết Đơn hàng</title>
+</head>
+<body>
+<section layout:fragment="content" class="container mt-4">
+    <div class="card shadow-sm mb-5">
+        <div class="card-header bg-success text-white">
+            <h4 class="mb-0">Chi tiết Đơn hàng</h4>
+        </div>
+        <div class="card-body" th:object="${order}">
+
+            <!-- THÔNG TIN ĐƠN HÀNG -->
+            <div class="card mb-3">
+                <div class="card-header bg-primary text-white">Thông tin Đơn hàng</div>
+                <div class="card-body">
+                    <p><strong>Mã đơn hàng:</strong> <span th:text="*{id}"></span></p>
+                    <p><strong>Trạng thái:</strong>
+                        <span class="badge bg-warning text-dark status" th:text="*{status}"></span>
+                    </p>
+                    <p><strong>Tổng tiền:</strong>
+                        <span class="text-danger fw-bold" th:text="*{#numbers.formatDecimal(totalPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'"></span>
+                    </p>
+                    <p><strong>Giảm giá:</strong>
+                        <span class="text-success fw-bold" th:text="*{#numbers.formatDecimal(discountAmount, 0, 'COMMA', 0, 'POINT')} + ' đ'"></span>
+                    </p>
+                    <p><strong>Phải trả:</strong>
+                        <span class="text-primary fw-bold" th:text="*{#numbers.formatDecimal(finalPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'"></span>
+                    </p>
+                    <p><strong>Ghi chú:</strong> <span th:text="*{note}"></span></p>
+                    <p th:if="*{cancelReason}" class="text-danger">
+                        <strong>Lý do hủy:</strong> <span th:text="*{cancelReason}"></span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- THÔNG TIN KHÁCH HÀNG -->
+            <div class="card mb-3">
+                <div class="card-header bg-info text-white">Thông tin Khách hàng</div>
+                <div class="card-body">
+                    <p><strong>Họ và tên:</strong> <span th:text="*{customerAddress.fullName}"></span></p>
+                    <p><strong>Số điện thoại:</strong> <span th:text="*{customerAddress.phone}"></span></p>
+                    <p><strong>Địa chỉ:</strong> <span th:text="*{customerAddress.address}"></span></p>
+                </div>
+            </div>
+
+            <!-- DANH SÁCH SẢN PHẨM -->
+            <div class="card mb-3">
+                <div class="card-header bg-secondary text-white">Sản phẩm trong đơn hàng</div>
+                <div class="card-body">
+                    <div th:each="item : *{orderItems}" class="card mb-2">
+                        <div class="card-body">
+                            <h6 class="card-title" th:text="${item.product.name}"></h6>
+                            <p class="mb-1"><strong>Biến thể:</strong>
+                                <th:block th:if="${item.productVariant != null}">
+                                    <span th:text="${item.productVariant.size}"></span> - <span th:text="${item.productVariant.color}"></span>
+                                </th:block>
+                                <th:block th:unless="${item.productVariant != null}">
+                                    <span>Không có</span>
+                                </th:block>
+                            </p>
+                            <p class="mb-1"><strong>Số lượng:</strong> <span th:text="${item.quantity}"></span></p>
+                            <p class="mb-1"><strong>Đơn giá:</strong>
+                                <span th:text="${#numbers.formatDecimal(item.price, 0, 'COMMA', 0, 'POINT')} + ' đ'"></span>
+                            </p>
+                            <p class="mb-0"><strong>Thành tiền:</strong>
+                                <span th:text="${#numbers.formatDecimal(item.price * item.quantity, 0, 'COMMA', 0, 'POINT')} + ' đ'"></span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LỊCH SỬ TRẠNG THÁI -->
+            <div class="card mb-3">
+                <div class="card-header bg-warning text-dark">Lịch sử trạng thái</div>
+                <div class="card-body">
+                    <div th:each="history : *{orderStatusHistories}" class="border-bottom pb-2 mb-2 history-status">
+                        <p class="mb-1"><strong>Trạng thái:</strong> <span class="status" th:text="${history.orderStatus}"></span></p>
+                        <p class="mb-1"><strong>Người thực hiện:</strong> <span th:text="${history.createdBy} ?: 'Hệ thống'"></span></p>
+                        <p class="mb-0"><strong>Thời gian:</strong> <span class="dateTime" th:text="${history.createdAt}"
+                                                                          th:attr="data-time=${history.createdAt}"
+                        ></span></p>
+                    </div>
+                </div>
+            </div>
+
+            <hr>
+            <div class="text-end">
+
+                <th:block th:if="*{status != null}">
+                    <a class="btn btn-danger btn-sm cancel-order"
+                       th:attr="data-id=*{id}"
+                       th:if="*{status.name() == 'PENDING_PAYMENT'
+                                    or status.name() == 'PAYMENT_SUCCESS'
+                                    or status.name() == 'CONFIRMED'}"
+
+                    >
+                        <i class="bi bi-x-circle"></i> Hủy
+                    </a>
+                    <a class="btn btn-primary btn-sm"
+                       th:if="*{status.name() == 'PENDING_PAYMENT'}"
+                       th:href="@{/orders/pay/{id}(id=*{id})}"
+                    >
+                        <i class="bi bi-credit-card"></i> Thanh toán
+                    </a>
+                </th:block>
+
+                <a th:href="@{/orders}" class="btn btn-secondary">Quay lại</a>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+
+
+        $(".cancel-order").click(function (e) {
+            e.preventDefault(); // Ngăn chặn hành động mặc định của thẻ <a>
+            let orderId = $(this).data("id");
+
+            Swal.fire({
+                title: "Nhập lý do hủy đơn",
+                input: "text",
+                inputPlaceholder: "Lý do hủy đơn...",
+                showCancelButton: true,
+                confirmButtonText: "Hủy đơn",
+                cancelButtonText: "Quay lại",
+                inputValidator: (value) => {
+                    if (!value) {
+                        return "Bạn phải nhập lý do hủy!";
+                    }
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    let reason = result.value;
+                    window.location.href = "/orders/cancel/" + orderId + "?reason=" + encodeURIComponent(reason);
+                }
+            });
+        });
+
+
+
+        $('.status').each(function () {
+            const status = $(this).text();
+            if (status === 'PENDING_PAYMENT') {
+                $(this).text('Chờ thanh toán');
+            } else if (status === 'PAYMENT_SUCCESS') {
+                $(this).text('Đã thanh toán');
+            } else if (status === 'CONFIRMED') {
+                $(this).text('Đã xác nhận');
+            } else if (status === 'SHIPPED') {
+                $(this).text('Đang giao hàng');
+            } else if (status === 'DELIVERED') {
+                $(this).text('Đã giao hàng');
+            } else if (status === 'CANCELLED') {
+                $(this).text('Đã hủy');
+            }
+        });
+
+
+        $(document).ready(function () {
+            let $historyItems = $(".history-status");
+
+            // Sắp xếp theo `data-time`
+            $historyItems.sort(function (a, b) {
+                let timeA = new Date($(a).find(".dateTime").attr("data-time"));
+                let timeB = new Date($(b).find(".dateTime").attr("data-time"));
+                return timeA - timeB; // Sắp xếp từ cũ đến mới
+            });
+
+            // Gán lại vào DOM
+            $(".history-status").parent().append($historyItems);
+        });
+
+    </script>
+
+</section>
+</body>
+</html>

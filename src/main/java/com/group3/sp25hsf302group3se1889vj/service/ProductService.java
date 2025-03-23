@@ -10,9 +10,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
-public interface ProductService {
-
-    Page<ProductDTO> findAll(ProductFilterDTO filterDTO, Pageable pageable);
+public interface ProductService extends PagingService<ProductDTO, ProductFilterDTO> {
 
     void save(ProductDTO product);
 
@@ -29,5 +27,11 @@ public interface ProductService {
     CustomerProductDTO getProductById(Long id);
 
     boolean isProductActive(Long id);
+
+    void active(Long id);
+
+    void deactive(Long id);
+
+    boolean existsByBrandId(Long id);
 
 }

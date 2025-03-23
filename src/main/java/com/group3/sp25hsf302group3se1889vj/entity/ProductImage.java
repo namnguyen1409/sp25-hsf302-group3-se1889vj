@@ -23,8 +23,8 @@ public class ProductImage extends BaseEntity {
     private String url;
 
     @EqualsAndHashCode.Include
+    @Column(nullable = true, columnDefinition = "NVARCHAR(50)")
     private String alt;
-
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")

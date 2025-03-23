@@ -13,6 +13,26 @@ public class OrderTransactionSpecification {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
+            if(filterDTO.getTransactionId() != null && !filterDTO.getTransactionId().isEmpty()) {
+                predicates.add(criteriaBuilder.equal(root.get("transactionId"), filterDTO.getTransactionId()));
+            }
+
+            if(filterDTO.getAmountFrom() != null) {
+                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("amount"), filterDTO.getAmountFrom()));
+            }
+            if(filterDTO.getAmountTo() != null) {
+                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("amount"), filterDTO.getAmountTo()));
+            }
+            if (filterDTO.getVnPayResponseCode() != null && !filterDTO.getVnPayResponseCode().isEmpty()) {
+                predicates.add(criteriaBuilder.equal(root.get("vnPayResponseCode"), filterDTO.getVnPayResponseCode()));
+            }
+            if (filterDTO.getType() != null) {
+                predicates.add(criteriaBuilder.equal(root.get("type"), filterDTO.getType()));
+            }
+            if (filterDTO.getStatus() != null) {
+                predicates.add(criteriaBuilder.equal(root.get("status"), filterDTO.getStatus()));
+            }
+
             // base predicates
             if(filterDTO.getCreatedAtFrom() != null) {
                 predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("createdAt"), filterDTO.getCreatedAtFrom()));

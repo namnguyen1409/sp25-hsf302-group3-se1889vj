@@ -1,11 +1,15 @@
 package com.group3.sp25hsf302group3se1889vj.controller.admin;
 
+import com.group3.sp25hsf302group3se1889vj.dto.BannerDTO;
 import com.group3.sp25hsf302group3se1889vj.dto.BrandDTO;
+import com.group3.sp25hsf302group3se1889vj.dto.filter.BannerFilterDTO;
 import com.group3.sp25hsf302group3se1889vj.dto.filter.BrandFilterDTO;
 import com.group3.sp25hsf302group3se1889vj.service.BrandService;
+import com.group3.sp25hsf302group3se1889vj.service.ProductService;
 import com.group3.sp25hsf302group3se1889vj.service.StorageService;
 import com.group3.sp25hsf302group3se1889vj.util.FlashMessageUtil;
 import com.group3.sp25hsf302group3se1889vj.util.MetadataExtractor;
+import com.group3.sp25hsf302group3se1889vj.util.PaginationUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -31,30 +35,22 @@ public class BrandController {
     private final BrandService brandService;
     private final MetadataExtractor metadataExtractor;
     private final StorageService storageService;
+    private final ProductService productService;
 
     @GetMapping({"/list", "", "/"})
     public String list(
             Model model,
             @ModelAttribute(value = "filterDTO", binding = false) BrandFilterDTO filterDTO
     ) {
-        if (filterDTO == null) {
-            filterDTO = new BrandFilterDTO();
-        }
-        Sort sortDirection = "asc".equalsIgnoreCase(filterDTO.getDirection())
-                ? Sort.by(filterDTO.getOrderBy()).ascending()
-                : Sort.by(filterDTO.getOrderBy()).descending();
-
-
-        List<String> fields = Arrays.asList("name", "description", "logo", "createdAt", "createdBy","updatedAt", "updatedBy");
-        model.addAttribute("fields", fields);
-        model.addAttribute("fieldTitles", metadataExtractor.getFieldTitles(BrandDTO.class, fields));
-        model.addAttribute("fieldClasses", metadataExtractor.getFieldClasses(BrandDTO.class, fields));
-
-        Pageable pageable = PageRequest.of(filterDTO.getPage() - 1, filterDTO.getSize(), sortDirection);
-
-        Page<BrandDTO> page = brandService.findAll(filterDTO, pageable);
-        model.addAttribute("pages", page);
-        model.addAttribute("filterDTO", filterDTO);
+        PaginationUtil.setupPagination(
+                model,
+                filterDTO,
+                brandService,
+                metadataExtractor,
+                BrandFilterDTO::new,
+                BrandDTO.class,
+                Arrays.asList("name", "logo", "createdBy")
+        );
         return "admin/brand/list";
     }
 
@@ -80,7 +76,6 @@ public class BrandController {
             BindingResult result,
             RedirectAttributes redirectAttributes
     ) {
-        // TODO: Add more actions here
         if(brandService.existsByName(brand.getName())) {
             result.rejectValue("name", "error.exists", "Tên Thương hiệu đã tồn tại");
         }
@@ -136,6 +131,21 @@ public class BrandController {
 
         model.addAttribute("entity", brand);
         return "admin/brand/detail";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable("id") Long id,
+        RedirectAttributes redirectAttributes
+    ) {
+
+        if (productService.existsByBrandId(id)) {
+            FlashMessageUtil.addFlashMessage(redirectAttributes, "Không thể xóa thương hiệu vì đã có sản phẩm", "error");
+            return "redirect:/admin/brand/";
+        }
+
+        brandService.delete(id);
+        FlashMessageUtil.addFlashMessage(redirectAttributes, "Đã xóa thương hiệu", "success");
+        return "redirect:/admin/brand/";
     }
 
 

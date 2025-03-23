@@ -12,7 +12,6 @@
     </style>
 
     <div class="home-slider swiper swiper-initialized swiper-horizontal swiper-pointer-events swiper-backface-hidden">
-
         <div class="carousel slide" data-bs-ride="carousel" id="carouselExample">
             <ol class="carousel-indicators">
                 <th:block th:each="banner, iterStat : ${banners}">
@@ -61,13 +60,35 @@
                         <div class="card-body text-center">
                             <h5 class="card-title fw-bold" th:text="${category.name}"></h5>
                             <p class="card-text text-muted" th:text="${category.description}"></p>
-                            <a class="btn btn-primary" href="#">Xem sản phẩm</a>
+                            <a class="btn btn-primary" th:href="${'/category/' + category.id}">Xem sản phẩm</a>
                         </div>
                     </div>
                 </div>
             </th:block>
         </div>
     </section>
+
+
+    <section class="container mt-5">
+        <h2 class="text-center mb-4 fw-bold">Danh Sách Thương Hiệu</h2>
+        <div class="row">
+            <th:block th:each="brand : ${brands}">
+                <div class="col-md-3 col-sm-6 mb-4" th:if="${brand.logo != null && !brand.logo.isEmpty()}">
+                    <div class="card shadow-sm border-0">
+                        <img class="card-img-top fixed-aspect-ratio" th:alt="${brand.name}"
+                             th:src="@{'/' + ${brand.logo}}">
+                        <div class="card-body text-center">
+                            <h5 class="card-title fw-bold" th:text="${brand.name}"></h5>
+                            <p class="card-text text-muted" th:text="${brand.description}"></p>
+                            <a class="btn btn-primary" th:href="${'/brand/' + brand.id}">Xem sản phẩm</a>
+                        </div>
+                    </div>
+                </div>
+            </th:block>
+        </div>
+    </section>
+
+
 
     <!-- Danh sách sản phẩm mới -->
     <section class="container mt-5">

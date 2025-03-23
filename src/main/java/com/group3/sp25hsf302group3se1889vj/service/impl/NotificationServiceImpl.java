@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import lombok.AllArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -99,6 +100,7 @@ public class NotificationServiceImpl implements NotificationService {
         return notification.map(notificationMapper::toDTO).orElse(null);
     }
 
+    @Transactional
     @Override
     public void deleteAll(String currentUsername) {
         notificationRepository.deleteAllByUserUsername(currentUsername);

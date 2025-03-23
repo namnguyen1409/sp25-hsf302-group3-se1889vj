@@ -6,6 +6,7 @@ import com.group3.sp25hsf302group3se1889vj.service.BannerService;
 import com.group3.sp25hsf302group3se1889vj.service.StorageService;
 import com.group3.sp25hsf302group3se1889vj.util.FlashMessageUtil;
 import com.group3.sp25hsf302group3se1889vj.util.MetadataExtractor;
+import com.group3.sp25hsf302group3se1889vj.util.PaginationUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -37,24 +38,15 @@ public class BannerController {
             Model model,
             @ModelAttribute(value = "filterDTO", binding = false) BannerFilterDTO filterDTO
     ) {
-        if(filterDTO == null) {
-            filterDTO = new BannerFilterDTO();
-        }
-        Sort sortDirection = "asc".equalsIgnoreCase(filterDTO.getDirection())
-                ? Sort.by(filterDTO.getOrderBy()).ascending()
-                : Sort.by(filterDTO.getOrderBy()).descending();
-
-        // TODO: Add more fields here
-        List<String> fields = Arrays.asList("title", "url", "image", "description", "createdAt", "createdBy","updatedAt", "updatedBy");
-        model.addAttribute("fields", fields);
-        model.addAttribute("fieldTitles", metadataExtractor.getFieldTitles(BannerDTO.class, fields));
-        model.addAttribute("fieldClasses", metadataExtractor.getFieldClasses(BannerDTO.class, fields));
-
-        Pageable pageable = PageRequest.of(filterDTO.getPage() - 1, filterDTO.getSize(), sortDirection);
-
-        Page<BannerDTO> pages = bannerService.findAll(filterDTO, pageable);
-        model.addAttribute("pages", pages);
-        model.addAttribute("filterDTO", filterDTO);
+        PaginationUtil.setupPagination(
+                model,
+                filterDTO,
+                bannerService,
+                metadataExtractor,
+                BannerFilterDTO::new,
+                BannerDTO.class,
+                Arrays.asList("title", "url", "image")
+        );
         return "admin/banner/list";
     }
 

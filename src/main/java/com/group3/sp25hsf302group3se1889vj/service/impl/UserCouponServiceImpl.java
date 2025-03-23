@@ -1,5 +1,6 @@
 package com.group3.sp25hsf302group3se1889vj.service.impl;
 
+import com.group3.sp25hsf302group3se1889vj.entity.Coupon;
 import com.group3.sp25hsf302group3se1889vj.entity.UserCoupon;
 import com.group3.sp25hsf302group3se1889vj.repository.CouponRepository;
 import com.group3.sp25hsf302group3se1889vj.repository.UserCouponRepository;
@@ -23,6 +24,9 @@ public class UserCouponServiceImpl implements UserCouponService {
     @Transactional
     @Override
     public void useCoupon(String code, String createdBy) {
+        Coupon coupon = couponRepository.findByCode(code);
+        coupon.setUsageCount(coupon.getUsageCount() + 1);
+        couponRepository.save(coupon);
         UserCoupon userCoupon = new UserCoupon();
         userCoupon.setCoupon(couponRepository.findByCode(code));
         userCoupon.setCreatedBy(createdBy);

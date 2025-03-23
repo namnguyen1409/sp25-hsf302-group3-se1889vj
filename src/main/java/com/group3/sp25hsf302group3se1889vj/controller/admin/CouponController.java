@@ -1,10 +1,13 @@
 package com.group3.sp25hsf302group3se1889vj.controller.admin;
 
+import com.group3.sp25hsf302group3se1889vj.dto.CategoryDTO;
 import com.group3.sp25hsf302group3se1889vj.dto.CouponDTO;
+import com.group3.sp25hsf302group3se1889vj.dto.filter.CategoryFilterDTO;
 import com.group3.sp25hsf302group3se1889vj.dto.filter.CouponFilterDTO;
 import com.group3.sp25hsf302group3se1889vj.enums.CouponType;
 import com.group3.sp25hsf302group3se1889vj.service.CouponService;
 import com.group3.sp25hsf302group3se1889vj.util.MetadataExtractor;
+import com.group3.sp25hsf302group3se1889vj.util.PaginationUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -38,23 +41,15 @@ public class CouponController {
             Model model,
             @ModelAttribute(value = "filterDTO", binding = false) CouponFilterDTO filterDTO
     ) {
-        if(filterDTO == null) {
-            filterDTO = new CouponFilterDTO();
-        }
-        Sort sortDirection = "asc".equalsIgnoreCase(filterDTO.getDirection())
-                ? Sort.by(filterDTO.getOrderBy()).ascending()
-                : Sort.by(filterDTO.getOrderBy()).descending();
-
-        List<String> fields = Arrays.asList("code", "description", "type", "value", "minOrderValue", "maxDiscount", "maxUsage", "usageCount", "maxUsagePerUser", "startDate", "endDate", "isDeleted");
-        model.addAttribute("fields", fields);
-        model.addAttribute("fieldTitles", metadataExtractor.getFieldTitles(CouponDTO.class, fields));
-        model.addAttribute("fieldClasses", metadataExtractor.getFieldClasses(CouponDTO.class, fields));
-
-        Pageable pageable = PageRequest.of(filterDTO.getPage() - 1, filterDTO.getSize(), sortDirection);
-
-        Page<CouponDTO> pages = couponService.findAll(filterDTO, pageable);
-        model.addAttribute("pages", pages);
-        model.addAttribute("filterDTO", filterDTO);
+        PaginationUtil.setupPagination(
+                model,
+                filterDTO,
+                couponService,
+                metadataExtractor,
+                CouponFilterDTO::new,
+                CouponDTO.class,
+                Arrays.asList("code",  "type", "value", "minOrderValue", "maxDiscount", "isDeleted")
+        );
         return "admin/coupon/list";
     }
 

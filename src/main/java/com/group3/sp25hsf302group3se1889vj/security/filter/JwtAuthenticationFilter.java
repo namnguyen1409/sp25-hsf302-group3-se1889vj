@@ -1,6 +1,7 @@
 package com.group3.sp25hsf302group3se1889vj.security.filter;
 
 
+import com.group3.sp25hsf302group3se1889vj.exception.Http403;
 import com.group3.sp25hsf302group3se1889vj.security.service.CustomUserDetailsService;
 import com.group3.sp25hsf302group3se1889vj.security.token.JwtTokenProvider;
 import com.group3.sp25hsf302group3se1889vj.security.token.RefreshTokenProvider;
@@ -23,6 +24,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.security.auth.login.AccountLockedException;
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 @Component
 @AllArgsConstructor
@@ -45,9 +48,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
      * <p>Provides HttpServletRequest and HttpServletResponse arguments instead of the
      * default ServletRequest and ServletResponse ones.
      *
-     * @param request
-     * @param response
-     * @param filterChain
+     * @param request    the request to process
+     * @param response  the response associated with the request
+     * @param filterChain the chain of filters
      */
     @Override
     protected void doFilterInternal(@NotNull HttpServletRequest request,
@@ -63,6 +66,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 return;
             }
 
+            if (requestURI.startsWith(contextPath + "/logout")) {
+                SecurityContextHolder.clearContext();
+                filterChain.doFilter(request, response);
+                return;
+            }
+
             var jwt = getJwtFromRequest(request);
             var refreshToken = getRefreshTokenFromRequest(request);
 
@@ -73,9 +82,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 if (userDetails != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                     if (!userDetails.isAccountNonLocked()) {
                         log.info("user is locked");
-                        throw new AccountLockedException(messageService.getMessage("user.locked", ((CustomUserDetails) userDetails).getUser().getLockReason()));
+                        String lockReason = "Tài khoản của bạn đã bị khóa. Lý do: " +
+                                ((CustomUserDetails) userDetails).getUser().getLockReason();
+                        if (lockReason != null) {
+                            lockReason = URLEncoder.encode(lockReason, StandardCharsets.UTF_8);
+                        }
+                        response.sendRedirect("/error/403?message=" + lockReason);
                     }
-
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                             userDetails, null, userDetails.getAuthorities());
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
@@ -86,7 +99,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 var customUserDetails = customUserDetailsService.loadUserByRefreshToken(key);
                 if (customUserDetails != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                     if (!customUserDetails.isAccountNonLocked()) {
-                        throw new AccountLockedException(messageService.getMessage("user.locked", customUserDetails.getUser().getLockReason()));
+                        log.info("user is locked");
+                        String lockReason = "Tài khoản của bạn đã bị khóa. Lý do: " +
+                                customUserDetails.getUser().getLockReason();
+                        if (lockReason != null) {
+                            lockReason = URLEncoder.encode(lockReason, StandardCharsets.UTF_8);
+                        }
+                        response.sendRedirect("/error/403?message=" + lockReason);
                     }
 
                     var newJwtToken = jwtTokenProvider.generateToken(customUserDetails);

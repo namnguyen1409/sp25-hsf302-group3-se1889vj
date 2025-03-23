@@ -26,10 +26,10 @@
                 <div class="mb-3">
                     <div class="form-floating">
                         <select class="form-select" th:field="*{type}">
-                            <option value="PERCENTAGE" th:selected="${entity.type == 'PERCENTAGE'}">
+                            <option value="PERCENTAGE" th:selected="${entity.type!= null && entity.type.name() == 'PERCENTAGE'}">
                                 Phần trăm
                             </option>
-                            <option value="AMOUNT" th:selected="${entity.type == 'AMOUNT'}">
+                            <option value="AMOUNT" th:selected="${entity.type!= null && entity.type.name() == 'AMOUNT'}">
                                 Số tiền
                             </option>
                         </select>
@@ -40,15 +40,15 @@
                 </div>
 
                 <div class="mb-3">
-                    <div th:replace="fragments/input :: customInput ('value', 'number', 'bi-cash-coin', 'Giá trị', true)"></div>
+                    <div th:replace="fragments/input :: customInput ('value', 'text', 'bi-cash-coin', 'Giá trị', true)"></div>
                 </div>
 
                 <div class="mb-3">
-                    <div th:replace="fragments/input :: customInput ('minOrderValue', 'number', 'bi-cash-coin', 'Giá trị đơn hàng tối thiểu', true)"></div>
+                    <div th:replace="fragments/input :: customInput ('minOrderValue', 'text', 'bi-cash-coin', 'Giá trị đơn hàng tối thiểu', true)"></div>
                 </div>
 
-                <div class="mb-3">
-                    <div th:replace="fragments/input :: customInput ('maxDiscount', 'number', 'bi-cash-coin', 'Giảm tối đa', true)"></div>
+                <div class="mb-3" id="maxDiscountContainer">
+                    <div th:replace="fragments/input :: customInput ('maxDiscount', 'text', 'bi-cash-coin', 'Giảm tối đa', true)"></div>
                 </div>
 
                 <div class="mb-3">
@@ -76,6 +76,69 @@
             </form>
         </div>
     </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const typeSelect = document.getElementById("type");
+            const valueInput = document.getElementById("value");
+
+            const minOrderValueInput = document.getElementById("minOrderValue");
+            const maxDiscountContainer = document.getElementById("maxDiscountContainer");
+            const maxDiscountInput = document.getElementById("maxDiscount");
+
+            valueInput.value = valueInput.value.replace(/(\.\d*?)0+$/, "$1");
+            minOrderValueInput.value = minOrderValueInput.value.replace(/(\.\d*?)0+$/, "$1");
+            maxDiscountInput.value = maxDiscountInput.value.replace(/(\.\d*?)0+$/, "$1");
+
+            function formatCurrency(input) {
+                if (!input || !input.value) return;
+                let value = input.value.replace(/\D/g, "");
+                input.value = new Intl.NumberFormat('vi-VN').format(value);
+            }
+
+            function getRawNumber(value) {
+                return value.replace(/\D/g, "");
+            }
+
+            function toggleValueFormat() {
+                if (typeSelect.value === "AMOUNT") {
+                    formatCurrency(valueInput);
+                    maxDiscountContainer.style.display = "none";
+                } else {
+                    valueInput.value = getRawNumber(valueInput.value);
+                    maxDiscountContainer.style.display = "block";
+                }
+            }
+
+            function setupCurrencyInput(input) {
+                if (!input) return;
+                formatCurrency(input);
+                input.addEventListener("input", function () {
+                    formatCurrency(this);
+                });
+            }
+
+            if (typeSelect) {
+                typeSelect.addEventListener("change", toggleValueFormat);
+                toggleValueFormat();
+            }
+
+            setupCurrencyInput(valueInput);
+            setupCurrencyInput(minOrderValueInput);
+            setupCurrencyInput(maxDiscountInput);
+
+            document.querySelector("form").addEventListener("submit", function () {
+                valueInput.value = getRawNumber(valueInput.value);
+                minOrderValueInput.value = getRawNumber(minOrderValueInput.value);
+                if (typeSelect.value === "AMOUNT") {
+                    maxDiscountInput.value = valueInput.value;
+                } else {
+                    maxDiscountInput.value = getRawNumber(maxDiscountInput.value);
+                }
+            });
+        });
+    </script>
+
+
 </section>
 </body>
 </html>

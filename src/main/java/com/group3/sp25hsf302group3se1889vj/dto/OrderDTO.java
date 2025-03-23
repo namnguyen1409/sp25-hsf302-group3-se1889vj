@@ -20,7 +20,7 @@ public class OrderDTO extends BaseDTO {
 
     private CustomerAddressDTO customerAddress;
 
-    @FieldMetadata(title = "Trạng thái đơn hàng")
+    @FieldMetadata(title = "Trạng thái đơn hàng", cssClass = "order-status")
     private OrderStatus status;
 
     @FieldMetadata(title = "Tổng tiền", cssClass = "price")

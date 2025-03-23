@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
+import javax.security.auth.login.AccountLockedException;
+
 @Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -79,6 +81,18 @@ public class GlobalExceptionHandler {
         model.addAttribute("error",
                 new Error("403",
                         "Lỗi truy cập",
+                        exception.getMessage()));
+        return "common/error";
+    }
+
+    @ExceptionHandler({AccountLockedException.class})
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public String handleAccountLockedException(
+            AccountLockedException exception,
+            Model model) {
+        model.addAttribute("error",
+                new Error("403",
+                        "Tài khoản bị khóa",
                         exception.getMessage()));
         return "common/error";
     }

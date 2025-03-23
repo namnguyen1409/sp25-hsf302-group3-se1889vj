@@ -7,8 +7,7 @@ import com.group3.sp25hsf302group3se1889vj.enums.PermissionType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-public interface NotificationService {
-    Page<NotificationDTO> findAll(NotificationFilterDTO filterDTO, Pageable pageable);
+public interface NotificationService extends PagingService<NotificationDTO, NotificationFilterDTO> {
 
     void save(NotificationDTO notificationDTO);
 

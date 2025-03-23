@@ -56,4 +56,7 @@ public class ProductDTO extends BaseDTO {
 
     @FieldMetadata(title = "Tồn kho")
     private Integer quantity;
+
+    @FieldMetadata(title = "Đang hoạt động", cssClass = "boolean")
+    private boolean isActive;
 }

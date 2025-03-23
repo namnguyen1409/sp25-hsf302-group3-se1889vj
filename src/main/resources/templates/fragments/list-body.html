@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="vi">
-<th:block th:fragment="list-body(item, fields, fieldTitles, fieldClasses)">
+<th:block th:fragment="list-body(item, fields, fieldTitles, fieldClasses, index)">
+    <td th:text="${index + 1}"></td>
     <td th:each="field : ${fields}">
         <th:block th:switch="${fieldClasses[__${field}__]}">
             <th:block th:case="'image'">
-                <img th:src="@{'/' + ${item[field]}}" class="img-thumbnail tableImg" width="50" height="50" style="aspect-ratio: 1/1; object-fit: cover; cursor: pointer" alt="">
+                <img th:src="@{'/' + ${item[field]}}" class="img-thumbnail tableImg" width="50" height="50" style="aspect-ratio: 1/1; object-fit: cover; cursor: pointer" alt="" th:if="${item[field] != null and not item[field].isEmpty()}">
             </th:block>
             <th:block th:case="'html'">
                 <span th:classappend="${fieldClasses[__${field}__]}" th:utext="${item[field]}"></span>
@@ -14,6 +15,42 @@
             </th:block>
             <th:block th:case="'boolean'">
                 <span th:classappend="${fieldClasses[__${field}__]}" th:text="${item[field] ? 'Có' : 'Không'}"></span>
+            </th:block>
+            <th:block th:case="'couponType'">
+                <th:block th:switch="${item[field].name()}">
+                    <span th:case="PERCENTAGE" class="badge bg-primary text-white">Phần trăm</span>
+                    <span th:case="AMOUNT" class="badge bg-info text-white">Số tiền</span>
+                </th:block>
+            </th:block>
+            <th:block th:case="'order-status'">
+                <th:block th:switch="${item[field].name()}">
+                    <span th:case="PENDING_PAYMENT" class="badge bg-secondary text-white">Chờ thanh toán</span>
+                    <span th:case="PAYMENT_SUCCESS" class="badge bg-info text-white">Đã thanh toán</span>
+                    <span th:case="PENDING_CONFIRM" class="badge bg-warning text-dark">Chờ xác nhận</span>
+                    <span th:case="SHIPPING" class="badge bg-primary text-white">Đang giao</span>
+                    <span th:case="DELIVERED" class="badge bg-success text-white">Đã giao</span>
+                    <span th:case="CANCELLED" class="badge bg-danger text-white">Đã hủy</span>
+                </th:block>
+            </th:block>
+            <th:block th:case="'order-transaction-status'">
+                <th:block th:switch="${item[field].name()}">
+                    <span th:case="SUCCESS" class="badge bg-success text-white">Thành công</span>
+                    <span th:case="FAILED" class="badge bg-danger text-white">Thất bại</span>
+                </th:block>
+            </th:block>
+            <th:block th:case="'order-transaction-type'">
+                <th:block th:switch="${item[field].name()}">
+                    <span th:case="REFUND" class="badge bg-primary text-white">Hoàn tiền</span>
+                    <span th:case="PAYMENT" class="badge bg-info text-white">Thanh toán</span>
+                </th:block>
+            </th:block>
+            <th:block th:case="'notification-type'">
+                <th:block th:switch="${item[field].name()}">
+                    <span th:case="INFO" class="badge bg-info text-white">Thông báo</span>
+                    <span th:case="WARNING" class="badge bg-warning text-dark">Cảnh báo</span>
+                    <span th:case="ERROR" class="badge bg-danger text-white">Lỗi</span>
+                    <span th:case="SUCCESS" class="badge bg-success text-white">Thành công</span>
+                </th:block>
             </th:block>
             <th:block th:case="*">
                 <span th:classappend="${fieldClasses[__${field}__]}" th:text="${item[field]}"></span>

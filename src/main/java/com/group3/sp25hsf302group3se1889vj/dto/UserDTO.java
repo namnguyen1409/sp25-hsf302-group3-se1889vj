@@ -40,4 +40,8 @@ public class UserDTO extends BaseDTO {
     private String avatar;
     @FieldMetadata(title = "Vai trò")
     private RoleType role;
+    @FieldMetadata(title = "Quyền")
+    private Set<Permission> permissions = new HashSet<>();
+    private boolean isLocked = false;
+    private String lockReason;
 }

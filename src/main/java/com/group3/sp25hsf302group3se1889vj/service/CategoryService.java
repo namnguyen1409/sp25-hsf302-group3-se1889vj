@@ -10,11 +10,9 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
-public interface CategoryService {
+public interface CategoryService extends PagingService<CategoryDTO, CategoryFilterDTO> {
 
     List<CategoryDTO> getParentCategories();
-
-    Page<CategoryDTO> searchCategories(CategoryFilterDTO categoryFilterDTO, Pageable pageable);
 
     void save(CategoryDTO categoryDTO);
 
@@ -27,4 +25,6 @@ public interface CategoryService {
     void update(CategoryDTO categoryDTO);
 
     void delete(Long id);
+
+    boolean existsByParentId(Long id);
 }

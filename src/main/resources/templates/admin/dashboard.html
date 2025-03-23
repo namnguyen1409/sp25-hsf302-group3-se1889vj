@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      lang="en" layout:decorate="admin-template">
+<body>
+<section layout:fragment="content" class="m-auto h-100 ">
+    <div class="row">
+
+        <div class="col-12 mt-3">
+            <div class="card shadow">
+                <div class="card-header">
+                    <h4 class="card-title">Thống kê người dùng</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-6 col-md-3 ">
+                            <canvas id="genderChart" class="mt-4"></canvas>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <canvas id="userActiveChart" class="mt-4"></canvas>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <canvas id="userRegistrationChart" class="mt-4"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 mt-3">
+            <div class="card shadow">
+                <div class="card-header">
+                    <h4 class="card-title">Thống kê sản phẩm</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12 col-md-5">
+                            <canvas id="categoryChart"></canvas>
+                        </div>
+                        <div class="col-12 col-md-5">
+                            <canvas id="brandChart"></canvas>
+                        </div>
+                        <div class="col-12 col-md-2">
+                            <canvas id="statusChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 mt-3">
+            <div class="card shadow">
+                <div class="card-header">
+                    <h4 class="card-title">Thống kê đơn hàng</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12 col-md-2">
+                            <canvas id="countOrdersByStatus"></canvas>
+                        </div>
+                        <div class="col-12 col-md-5">
+                            <canvas id="totalRevenueByDay"></canvas>
+                        </div>
+                        <div class="col-12 col-md-5">
+                            <canvas id="countOrdersByMonth"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script th:inline="javascript">
+        // Biểu đồ giới tính
+        var genderData = {
+            labels: ["Nam", "Nữ"],
+            datasets: [{
+                data: [ [[${totalMales}]], [[${totalFemales}]] ],
+                backgroundColor: ["#36A2EB", "#FF6384"]
+            }]
+        };
+        var ctx1 = document.getElementById("genderChart").getContext("2d");
+        new Chart(ctx1, {
+            type: "pie",
+            data: genderData,
+            options: {
+                responsive: true,
+                plugins: {
+                    title : {
+                        display: true,
+                        text: "Biểu đồ giới tính"
+                    }
+                }
+            }
+        });
+
+        var userActiveData = {
+            labels: ["Đang hoạt động", "Không hoạt động"],
+            datasets: [{
+                data: [ [[${totalActiveUsers}]], [[${totalInactiveUsers}]] ],
+                backgroundColor: ["#4CAF50", "#FF6384"]
+            }]
+        };
+        var ctx2 = document.getElementById("userActiveChart").getContext("2d");
+        new Chart(ctx2, {
+            type: "pie",
+            data: userActiveData,
+            options: {
+                responsive: true,
+                plugins: {
+                    title : {
+                        display: true,
+                        text: "Biểu đồ người dùng hoạt động"
+                    }
+                }
+            }
+        });
+
+        // Biểu đồ số lượng đăng ký theo tháng
+        var userStats = [[${countByMonth}]];
+        var labels = userStats.map(item => item.year + "-" + (item.month < 10 ? "0" + item.month : item.month));
+        var counts = userStats.map(item => item.count);
+
+        var ctx3 = document.getElementById("userRegistrationChart").getContext("2d");
+        new Chart(ctx3, {
+            type: "bar",
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: "Số lượng đăng ký",
+                    data: counts,
+                    backgroundColor: "#4CAF50"
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true }
+                },
+                plugins: {
+                    title : {
+                        display: true,
+                        text: "Biểu đồ số lượng đăng ký theo tháng"
+                    }
+                }
+            }
+        });
+
+        var countProductsByCategory = [[${countProductsByCategory}]];
+        var categoryLabels = Object.keys(countProductsByCategory);
+        var categoryCounts = Object.values(countProductsByCategory);
+        var ctx4 = document.getElementById("categoryChart").getContext("2d");
+        new Chart(ctx4, {
+            type: "bar",
+            data: {
+                labels: categoryLabels,
+                datasets: [{
+                    label: "Số lượng sản phẩm",
+                    data: categoryCounts,
+                    backgroundColor: "#4CAF50"
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true }
+                },
+                plugins: {
+                    title : {
+                        display: true,
+                        text: "Biểu đồ số lượng sản phẩm theo danh mục"
+                    }
+                }
+            }
+        });
+
+        var countProductsByBrand = [[${countProductsByBrand}]];
+        var brandLabels = Object.keys(countProductsByBrand);
+        var brandCounts = Object.values(countProductsByBrand);
+        var ctx5 = document.getElementById("brandChart").getContext("2d");
+        new Chart(ctx5, {
+            type: "bar",
+            data: {
+                labels: brandLabels,
+                datasets: [{
+                    label: "Số lượng sản phẩm",
+                    data: brandCounts,
+                    backgroundColor: "#4CAF50"
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true }
+                },
+                plugins: {
+                    title : {
+                        display: true,
+                        text: "Biểu đồ số lượng sản phẩm theo thương hiệu"
+                    }
+                }
+            }
+        });
+
+        var countProductsByStatus = [[${countProductsByStatus}]];
+        var statusLabels = Object.keys(countProductsByStatus);
+        var statusCounts = Object.values(countProductsByStatus);
+        var ctx6 = document.getElementById("statusChart").getContext("2d");
+        new Chart(ctx6, {
+            type: "doughnut",
+            data: {
+                labels: statusLabels,
+                datasets: [{
+                    label: "Số lượng sản phẩm",
+                    data: statusCounts,
+                    backgroundColor: ["#4CAF50", "#F44336"]
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true }
+                },
+                plugins: {
+                    title : {
+                        display: true,
+                        text: "Biểu đồ số lượng sản phẩm theo trạng thái"
+                    }
+                }
+            }
+        });
+
+        var countOrdersByStatus = [[${countOrdersByStatus}]];
+        var orderStatusLabels = Object.keys(countOrdersByStatus);
+        var orderStatusCounts = Object.values(countOrdersByStatus);
+        var ctx7 = document.getElementById("countOrdersByStatus").getContext("2d");
+        new Chart(ctx7, {
+            type: "doughnut",
+            data: {
+                labels: orderStatusLabels,
+                datasets: [{
+                    label: "Số lượng đơn hàng",
+                    data: orderStatusCounts,
+                    backgroundColor: ["#4CAF50", "#F44336", "#FFC107", "#FF6384", "#36A2EB", "#9966FF",  "#FF99CC"]
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true }
+                },
+                plugins: {
+                    title : {
+                        display: true,
+                        text: "Biểu đồ số lượng đơn hàng theo trạng thái"
+                    }
+                }
+            }
+        });
+
+        var totalRevenueByDay = [[${totalRevenueByDay}]];
+        var revenueLabels = totalRevenueByDay.map(item => item.year + "-" + (item.month < 10 ? "0" + item.month : item.month) + "-" + (item.day < 10 ? "0" + item.day : item.day));
+        var revenueCounts = totalRevenueByDay.map(item => item.total);
+        var ctx8 = document.getElementById("totalRevenueByDay").getContext("2d");
+        new Chart(ctx8, {
+            type: "line",
+            data: {
+                labels: revenueLabels,
+                datasets: [{
+                    label: "Doanh thu",
+                    data: revenueCounts,
+                    backgroundColor: "#4CAF50"
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true }
+                },
+                plugins: {
+                    title : {
+                        display: true,
+                        text: "Biểu đồ doanh thu theo tháng"
+                    }
+                }
+            }
+        });
+
+        var countOrdersByMonth = [[${countOrdersByMonth}]];
+        var orderMonthLabels = countOrdersByMonth.map(item => item.year + "-" + (item.month < 10 ? "0" + item.month : item.month));
+        var orderMonthCounts = countOrdersByMonth.map(item => item.count);
+        var ctx9 = document.getElementById("countOrdersByMonth").getContext("2d");
+        new Chart( ctx9, {
+            type: "bar",
+            data: {
+                labels: orderMonthLabels,
+                datasets: [{
+                    label: "Số lượng đơn hàng",
+                    data: orderMonthCounts,
+                    backgroundColor: "#4CAF50"
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true }
+                },
+                plugins: {
+                    title : {
+                        display: true,
+                        text: "Biểu đồ số lượng đơn hàng theo tháng"
+                    }
+                }
+            }
+        }
+        )
+
+
+
+
+
+    </script>
+
+
+
+</section>
+</body>
+</html>

@@ -21,5 +21,5 @@ public class ProductFilterDTO extends BaseFilterDTO {
     private String priceOriginTo;
     private String priceSaleFrom;
     private String priceSaleTo;
-
+    private Boolean isActive;
 }

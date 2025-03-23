@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:custom="http://www.w3.org/1999/xhtml"
       lang="en" layout:decorate="admin-template"
 >
 <body>
@@ -94,6 +94,9 @@
       <table id="mainTable" class="table table-striped table-bordered" style="width:100%">
         <thead class="table-primary">
         <tr>
+          <th>
+            STT
+          </th>
           <th th:each="field: ${fields}"
               th:data="${field}"
               style="cursor: pointer; width: fit-content;"
@@ -109,30 +112,15 @@
         <tbody>
         <tr th:object="${filterDTO}">
           <td>
-            <input type="text" class="form-control form-control-sm" th:value="*{name}" id="nameField" placeholder="Tên danh mục">
+
           </td>
           <td>
-            <input type="text" class="form-control form-control-sm" th:value="*{description}" id="descriptionField" placeholder="Mô tả">
+            <input type="text" class="form-control form-control-sm" custom:auto-id="*{name}" placeholder="Tên danh mục">
           </td>
             <td>
             </td>
           <td>
-            <div class="d-flex gap-2" style="max-width: 200px">
-              <input type="datetime-local" class="form-control form-control-sm" th:value="*{createdAtFrom}" id="createdAtFromField" style="max-width: 100px">
-              <input type="datetime-local" class="form-control form-control-sm" th:value="*{createdAtTo}" id="createdAtToField" style="max-width: 100px">
-            </div>
-          </td>
-          <td>
-            <input type="text" class="form-control form-control-sm" th:value="*{createdBy}" id="createdByField" placeholder="Người tạo">
-          </td>
-          <td>
-            <div class="d-flex gap-2" style="max-width: 200px">
-              <input type="datetime-local" class="form-control form-control-sm" th:value="*{updatedAtFrom}" id="updatedAtFromField" style="max-width: 100px">
-              <input type="datetime-local" class="form-control form-control-sm" th:value="*{updatedAtTo}" id="updatedAtToField" style="max-width: 100px">
-            </div>
-          </td>
-          <td>
-            <input type="text" class="form-control form-control-sm" th:value="*{updatedBy}" id="updatedByField" placeholder="Người cập nhật">
+            <input type="text" class="form-control form-control-sm" custom:auto-id="*{createdBy}" placeholder="Người tạo">
           </td>
           <td class="text-center sticky-column">
             <button type="submit" class="btn btn-primary btn-sm" id="btnSubmit">
@@ -144,9 +132,8 @@
           </td>
         </tr>
 
-    <!--        show list-->
-        <tr th:if="${pages.totalPages > 0}" th:each="item : ${pages}">
-          <th:block th:replace="fragments/list-body :: list-body(${item}, ${fields}, ${fieldTitles}, ${fieldClasses})"></th:block>
+        <tr th:if="${pages.totalPages > 0}" th:each="item, step : ${pages}">
+          <th:block th:replace="fragments/list-body :: list-body(${item}, ${fields}, ${fieldTitles}, ${fieldClasses}, ${pages.number * pages.size + step.index})"></th:block>
           <td class="text-center sticky-column">
             <a th:href="@{'/admin/brand/edit/' + ${item.id}}"
                class="btn btn-sm btn-warning">
@@ -156,10 +143,20 @@
                class="btn btn-sm btn-success">
               <i class="bi bi-eye-fill"></i>
             </a>
+            <a class="btn btn-sm btn-danger"
+               th:attr="data-id=${item.id}, data-title=${item.name}"
+               onclick="confirmDelete(this)">
+              <i class="bi bi-trash"></i>
+            </a>
           </td>
         </tr>
         </tbody>
       </table>
+      <div class="row mt-2">
+        <div class="col text-start">
+          <span th:text="'Hiển thị từ bản ghi ' + ${n1} + ' đến ' + ${n2} + ' trong tổng số ' + ${total} + ' bản ghi'"></span>
+        </div>
+      </div>
     </div>
     <th:block th:if="${pages.totalPages == 0}">
       <div class="alert alert-warning text-center mt-5">
@@ -171,77 +168,29 @@
     </th:block>
   </div>
 
+  <script th:src="@{/js/filter.js}"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
   <script>
-    function goToPage(page) {
-      document.getElementById('page').value = page;
-      document.getElementById('filterForm').submit();
-    }
-
-    document.querySelectorAll('th').forEach(th => {
-      if (!th.getAttribute('data')) return;
-      th.addEventListener('click', () => {
-        updateOrder(th.getAttribute('data'));
-      });
-    })
-
-    function updateOrder(field) {
-      let form = document.getElementById('filterForm');
-      let orderBy = form.elements['orderBy'].value;
-      let direction = form.elements['direction'].value;
-      if (orderBy === field) {
-        form.elements['direction'].value = direction === 'ASC' ? 'DESC' : 'ASC';
-      } else {
-        form.elements['orderBy'].value = field;
-        form.elements['direction'].value = 'ASC';
-      }
-      updateFilter();
-    }
-
-    document.getElementById('btnSubmit').addEventListener('click', () => {
-      updateFilter();
-    });
-
-    function resetField() {
-      let form = document.getElementById('filterForm');
-      form.elements['name'].value = '';
-      form.elements['description'].value = '';
-      form.elements['createdAtFrom'].value = '';
-      form.elements['createdAtTo'].value = '';
-      form.elements['createdBy'].value = '';
-      form.elements['updatedAtFrom'].value = '';
-      form.elements['updatedAtTo'].value = '';
-      form.elements['updatedBy'].value = '';
-      form.elements['page'].value = 1;
-      form.elements['orderBy'].value = 'createdAt';
-      form.elements['direction'].value = 'ASC';
-      form.elements['size'].value = 5;
-      form.submit();
-    }
-
-    function updateFilter() {
-      let form = document.getElementById('filterForm');
-      form.elements['name'].value = document.getElementById('nameField').value;
-      form.elements['description'].value = document.getElementById('descriptionField').value;
-      form.elements['createdAtFrom'].value = document.getElementById('createdAtFromField').value;
-      form.elements['createdAtTo'].value = document.getElementById('createdAtToField').value;
-      form.elements['createdBy'].value = document.getElementById('createdByField').value;
-      form.elements['updatedAtFrom'].value = document.getElementById('updatedAtFromField').value;
-      form.elements['updatedAtTo'].value = document.getElementById('updatedAtToField').value;
-      form.elements['updatedBy'].value = document.getElementById('updatedByField').value;
-      form.elements['size'].value = document.getElementById('sizeField').value;
-      form.submit();
-    }
-
-
-    document.querySelectorAll('input[id$=Field]').forEach(input => {
-      input.addEventListener('keyup', function(event) {
-        if (event.key === 'Enter') {
-          updateFilter();
+    function confirmDelete(button) {
+      let id = button.getAttribute('data-id');
+      let title = button.getAttribute('data-title');
+      Swal.fire({
+        title: 'Xác nhận xóa',
+        text: `Bạn có chắc chắn muốn xóa nhãn hàng "${title}" không?`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Xóa',
+        cancelButtonText: 'Hủy'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.location.href = `/admin/brand/delete/${id}`;
         }
       });
-    });
-
-
+    }
   </script>
 
 

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      lang="vi" layout:decorate="admin-template">
+
+<body>
+<section layout:fragment="content" class="container mt-4">
+    <div class="row justify-content-center h-100">
+        <div class="col-lg-8 d-flex flex-column nowrap justify-content-center">
+            <form th:action="@{/admin/staff/permission}" th:object="${userDTO}" method="post"
+                  class="p-md-4 border rounded shadow-sm">
+                <h4 class="text-center mb-5">Cấp quyền cho nhân viên @<span th:text="*{username}"></span></h4>
+                <input type="hidden" th:field="*{id}"/>
+                <div th:each="perm : ${permissions}">
+                    <input type="checkbox" th:id="${'perm-' + perm.name}" th:name="permissions"
+                           th:value="${perm.id}"/>
+                    <label th:for="${'perm-' + perm.name}">
+                        <th:block th:switch="${perm.name.name()}">
+                            <span th:case="'MANAGE_ORDERS'">Quản lý đơn hàng</span>
+                            <span th:case="'MANAGE_PRODUCTS'">Quản lý sản phẩm</span>
+                            <span th:case="'MANAGE_CUSTOMERS'">Quản lý khách hàng</span>
+                            <span th:case="'MANAGE_CATEGORY'">Quản lý danh mục</span>
+                            <span th:case="'MANAGE_STATIC_PAGE'">Quản lý trang tĩnh</span>
+                            <span th:case="'MANAGE_BANNERS'">Quản lý banner</span>
+                            <span th:case="'MANAGE_BRAND'">Quản lý thương hiệu</span>
+                            <span th:case="*">[[${perm.name.name()}]]</span> <!-- Mặc định giữ nguyên -->
+                        </th:block>
+                    </label>
+
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-person-plus-fill"></i>
+                        Cập nhật
+                    </button>
+                    <a th:href="@{/admin/staff/list}" class="btn btn-secondary">Quay lại</a>
+                </div>
+                <input type="hidden" id="permissionList"
+                       th:value="${userDTO.permissions != null ? userDTO.permissions.![id] : ''}"/>
+
+            </form>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            let permissionList = $('#permissionList').val();
+            if (permissionList) {
+                let permissionIds = permissionList.replace(/[\[\] ]/g, '').split(',');
+                $('input[name="permissions"]').each(function () {
+                    if (permissionIds.includes($(this).val())) {
+                        $(this).prop('checked', true);
+                    }
+                });
+            }
+        });
+
+
+
+    </script>
+</section>
+</body>
+</html>

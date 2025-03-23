@@ -3,9 +3,14 @@ package com.group3.sp25hsf302group3se1889vj.controller.admin;
 import com.group3.sp25hsf302group3se1889vj.dto.UserDTO;
 import com.group3.sp25hsf302group3se1889vj.dto.filter.UserFilterDTO;
 import com.group3.sp25hsf302group3se1889vj.enums.RoleType;
+import com.group3.sp25hsf302group3se1889vj.service.PermissionService;
+import com.group3.sp25hsf302group3se1889vj.service.TokenService;
 import com.group3.sp25hsf302group3se1889vj.service.UserService;
+import com.group3.sp25hsf302group3se1889vj.util.FlashMessageUtil;
 import com.group3.sp25hsf302group3se1889vj.util.MetadataExtractor;
+import com.group3.sp25hsf302group3se1889vj.util.PaginationUtil;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,11 +23,15 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Arrays;
 import java.util.List;
+
+@Slf4j
 @PreAuthorize("hasRole('OWNER') or hasAnyAuthority('MANAGE_STAFF')")
 @Controller
 @RequestMapping("/admin/staff")
 @AllArgsConstructor
 public class StaffController {
+    private final TokenService tokenService;
+    private final PermissionService permissionService;
     private UserService userService;
     private MetadataExtractor metadataExtractor;
 
@@ -34,21 +43,16 @@ public class StaffController {
         if(filterDTO == null) {
             filterDTO = new UserFilterDTO();
         }
-        Sort sortDirection = "asc".equalsIgnoreCase(filterDTO.getDirection())
-                ? Sort.by(filterDTO.getOrderBy()).ascending()
-                : Sort.by(filterDTO.getOrderBy()).descending();
-
-        List<String> fields = Arrays.asList("username", "firstName", "lastName", "email", "phone", "address", "avatar", "role");
-        model.addAttribute("fields", fields);
-        model.addAttribute("fieldTitles", metadataExtractor.getFieldTitles(UserDTO.class, fields));
-        model.addAttribute("fieldClasses", metadataExtractor.getFieldClasses(UserDTO.class, fields));
-
-        Pageable pageable = PageRequest.of(filterDTO.getPage() - 1, filterDTO.getSize(), sortDirection);
-
         filterDTO.setRole(RoleType.STAFF);
-        Page<UserDTO> pages = userService.searchUsers(filterDTO, pageable);
-        model.addAttribute("pages", pages);
-        model.addAttribute("filterDTO", filterDTO);
+        PaginationUtil.setupPagination(
+                model,
+                filterDTO,
+                userService,
+                metadataExtractor,
+                UserFilterDTO::new,
+                UserDTO.class,
+                Arrays.asList("username", "firstName", "lastName", "email", "phone", "address", "avatar")
+        );
         return "admin/staff/list";
     }
 
@@ -68,9 +72,87 @@ public class StaffController {
         return "admin/staff/detail";
     }
 
+    @GetMapping("/permission/{id}")
+    public String permission(Model model, @PathVariable Long id) {
+        UserDTO userDTO = userService.getUserById(id);
+        var permissions = permissionService.findAll();
+        model.addAttribute("permissions", permissions);
+        model.addAttribute("userDTO", userDTO);
+        return "admin/staff/permission";
+    }
+
+    @PostMapping("/permission")
+    public String permission(
+            @RequestParam("id") Long id,
+            @RequestParam("permissions") List<Long> permissionIds
+    ) {
+        log.info("id: {}, permissionIds: {}", id, permissionIds);
+        userService.changePermissions(id, permissionIds);
+        return "redirect:/admin/staff";
+    }
+
     @GetMapping("/add")
     public String add(Model model) {
-        model.addAttribute("userDTO", new UserDTO());
         return "admin/staff/add";
     }
+
+    @PostMapping("/add")
+    public String add(
+            @RequestParam("email") String email,
+            RedirectAttributes redirectAttributes
+    ) {
+        if (userService.existsByEmail(email)) {
+            FlashMessageUtil.addFlashMessage(redirectAttributes, "Địa chỉ email đã tồn tại trước đó", "error");
+            return "redirect:/admin/staff/add";
+        }
+        try{
+            userService.inviteStaff(email);
+            FlashMessageUtil.addFlashMessage(redirectAttributes, "Gửi lời mời thành công", "success");
+        }
+        catch (Exception e){
+            FlashMessageUtil.addFlashMessage(redirectAttributes, "Có lỗi xảy ra khi gửi lời mời hoặc lời mời chưa hết hạn", "error");
+        }
+        return "redirect:/admin/staff";
+    }
+
+    @GetMapping("/lock/{id}")
+    public String lock(@PathVariable Long id,
+                       @RequestParam("reason") String reason,
+                          RedirectAttributes redirectAttributes
+                       ) {
+        var user = userService.getUserById(id);
+        if (user.getRole() != RoleType.STAFF) {
+            FlashMessageUtil.addFlashMessage(redirectAttributes, "Không thể khóa tài khoản này", "error");
+            return "redirect:/admin/staff";
+        }
+        try {
+            userService.lockUser(id, reason);
+            FlashMessageUtil.addFlashMessage(redirectAttributes, "Khóa tài khoản thành công", "success");
+        }
+        catch (Exception e) {
+            FlashMessageUtil.addFlashMessage(redirectAttributes, e.getMessage(), "error");
+        }
+        return "redirect:/admin/staff";
+    }
+
+    @GetMapping("/unlock/{id}")
+    public String unlock(@PathVariable Long id,
+                          RedirectAttributes redirectAttributes
+    ) {
+        var user = userService.getUserById(id);
+        if (user.getRole() != RoleType.STAFF) {
+            FlashMessageUtil.addFlashMessage(redirectAttributes, "Không thể mở khóa tài khoản này", "error");
+            return "redirect:/admin/staff";
+        }
+        try {
+            userService.unlockUser(id);
+            FlashMessageUtil.addFlashMessage(redirectAttributes, "Mở khóa tài khoản thành công", "success");
+        }
+        catch (Exception e) {
+            FlashMessageUtil.addFlashMessage(redirectAttributes, e.getMessage(), "error");
+        }
+        return "redirect:/admin/staff";
+    }
+
+
 }

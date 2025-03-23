@@ -15,4 +15,14 @@ public interface CustomerAddressService {
     CustomerAddressDTO findById(Long id);
 
     List<CustomerAddressDTO> findAllByCreatedBy(String currentUsername);
+
+    boolean isExistAddress(CustomerAddressDTO address);
+
+    void update(CustomerAddressDTO address);
+
+    boolean isExistAddressAndIdNot(CustomerAddressDTO address, Long id);
+
+    void delete(Long id);
+
+    void setDefaultAddress(Long id, String currentUsername);
 }

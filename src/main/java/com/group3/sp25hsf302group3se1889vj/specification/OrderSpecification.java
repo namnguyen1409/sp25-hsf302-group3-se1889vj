@@ -13,6 +13,28 @@ public class OrderSpecification {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
+            if (filterDTO.getStatus() != null) {
+                predicates.add(criteriaBuilder.equal(root.get("status"), filterDTO.getStatus()));
+            }
+            if (filterDTO.getTotalPriceFrom() != null) {
+                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("totalPrice"), filterDTO.getTotalPriceFrom()));
+            }
+            if (filterDTO.getTotalPriceTo() != null) {
+                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("totalPrice"), filterDTO.getTotalPriceTo()));
+            }
+            if (filterDTO.getDiscountAmountFrom() != null) {
+                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("discountAmount"), filterDTO.getDiscountAmountFrom()));
+            }
+            if (filterDTO.getDiscountAmountTo() != null) {
+                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("discountAmount"), filterDTO.getDiscountAmountTo()));
+            }
+            if (filterDTO.getFinalPriceFrom() != null) {
+                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("finalPrice"), filterDTO.getFinalPriceFrom()));
+            }
+            if (filterDTO.getFinalPriceTo() != null) {
+                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("finalPrice"), filterDTO.getFinalPriceTo()));
+            }
+
             // base predicates
             if(filterDTO.getCreatedAtFrom() != null) {
                 predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("createdAt"), filterDTO.getCreatedAtFrom()));

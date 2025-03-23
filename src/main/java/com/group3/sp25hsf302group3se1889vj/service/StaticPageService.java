@@ -2,14 +2,15 @@ package com.group3.sp25hsf302group3se1889vj.service;
 
 import com.group3.sp25hsf302group3se1889vj.dto.StaticPageDTO;
 import com.group3.sp25hsf302group3se1889vj.dto.filter.StaticPageFilterDTO;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
-public interface StaticPageService {
-
-    Page<StaticPageDTO> findAll(StaticPageFilterDTO filterDTO, Pageable pageable);
+public interface StaticPageService extends PagingService<StaticPageDTO, StaticPageFilterDTO> {
 
     void save(StaticPageDTO staticPageDTO);
 
@@ -26,4 +27,8 @@ public interface StaticPageService {
     StaticPageDTO findBySlug(String slug);
 
     List<StaticPageDTO> getStaticPage();
+
+    boolean existsBySlugAndIdNot(String slug, Long id);
+
+    boolean existsByTitleAndIdNot(String title, Long id);
 }

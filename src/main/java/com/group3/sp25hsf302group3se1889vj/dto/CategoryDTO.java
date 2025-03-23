@@ -20,7 +20,7 @@ public class CategoryDTO extends BaseDTO {
     @FieldMetadata(title = "Tên danh mục")
     private String name;
 
-    @FieldMetadata(title = "Ảnh")
+    @FieldMetadata(title = "Ảnh", cssClass = "image")
     private String image;
 
     @Size(max = 1000, message = "Mô tả không được vượt quá 1000 ký tự")

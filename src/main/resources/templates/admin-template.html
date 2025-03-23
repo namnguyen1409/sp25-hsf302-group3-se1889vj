@@ -55,7 +55,7 @@
 
 <div class="flex-grow-1 d-flex">
     <aside th:replace="~{fragments/sidebar-admin :: sidebar}"></aside>
-    <main class="col-12 col-lg-10 bg-body-tertiary align-self-auto d-flex flex-column" id="main">
+    <main class="col-12 col-xxl-10 bg-body-tertiary align-self-auto d-flex flex-column" id="main">
         <nav th:replace="~{fragments/navbar-admin :: navbar}"></nav>
         <div class="container-fluid flex-grow-1">
             <section layout:fragment="content"></section>
@@ -94,10 +94,10 @@
 <script th:src="@{/js/main.js}"></script>
 <script>
     function changeclass() {
-        $("#main").toggleClass('col-lg-10 col-lg-12');
-        $("#sidebar").toggleClass('d-lg-block');
+        $("#main").toggleClass('col-xxl-10 col-xxl-12');
+        $("#sidebar").toggleClass('d-xxl-block');
 
-        if ($("#sidebar").hasClass('d-lg-block')) {
+        if ($("#sidebar").hasClass('d-xxl-block')) {
             localStorage.setItem('sidebarState', 'expanded');
         } else {
             localStorage.setItem('sidebarState', 'collapsed');
@@ -105,8 +105,8 @@
     }
     document.addEventListener('DOMContentLoaded', function () {
         if (localStorage.getItem('sidebarState') === 'collapsed') {
-            $("#sidebar").toggleClass('d-lg-block');
-            $("#main").toggleClass('col-lg-10 col-lg-12');
+            $("#sidebar").toggleClass('d-xxl-block');
+            $("#main").toggleClass('col-xxl-10 col-xxl-12');
         }
     });
 </script>

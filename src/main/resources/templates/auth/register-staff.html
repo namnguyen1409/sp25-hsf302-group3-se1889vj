@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      lang="en" layout:decorate="customer-template">
+<body>
+<section layout:fragment="content" class="section-home-slider">
+    <div class="layout-account">
+        <div class="container">
+            <div class="wrapbox-content-account">
+                <div id="customer-login" class="customers_accountForm customer_login">
+                    <div class="tab-form-account d-flex align-items-center justify-content-center">
+                        <h4>
+                            <a th:href="@{/login}">Đăng nhập</a>
+                        </h4>
+                        <h4 class="active">
+                            <a th:href="@{/register}">Đăng ký</a>
+                        </h4>
+                    </div>
+                    <div id="login">
+                        <form method="post" th:object="${registerStaffDTO}" th:action="@{/register-staff}" class="customer_login">
+                            <input type="hidden" th:field="*{token}">
+                            <div class="input-group mb-3">
+                                <div th:replace="fragments/input :: customInput('username', 'text', 'bi-person', 'Tên đăng nhập', true)"></div>
+                            </div>
+                            <div class="input-group mb-3">
+                                <div th:replace="fragments/input :: customInput('password', 'password', 'bi-key', 'Mật khẩu', true)"></div>
+                            </div>
+                            <div class="input-group mb-3">
+                                <div th:replace="fragments/input :: customInput('confirmPassword', 'password', 'bi-key', 'Nhập lại mật khẩu', true)"></div>
+                            </div>
+
+                            <div class="row" style="margin-bottom: 20px;">
+                                <div class="col-6">
+                                    <div th:replace="fragments/input :: customInput('firstName', 'text', 'bi-person', 'Họ', true)"></div>
+                                </div>
+                                <div class="col-6">
+                                    <div th:replace="fragments/input :: customInput('lastName', 'text', 'bi-person', 'Tên', true)"></div>
+                                </div>
+                            </div>
+                            <div class="input-group mb-3">
+                                <div th:replace="fragments/input :: customInput('phone', 'text', 'bi-telephone', 'Số điện thoại', true)"></div>
+                            </div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-text p-3">
+                                    <i class="bi bi-person"></i>
+                                </div>
+                                <div class="form-floating">
+                                    <select th:field="*{gender}" class="form-select" required placeholder="">
+                                        <option value="true">Nam</option>
+                                        <option value="false">Nữ</option>
+                                    </select>
+                                    <label th:for="*{gender}" class="form-label ">Giới tính</label>
+                                </div>
+                            </div>
+
+                            <div class="input-group mb-3">
+                                <div th:replace="fragments/input :: customInput('birthday', 'date', 'bi-calendar', 'Ngày sinh', true)"></div>
+                            </div>
+
+                            <div class="input-group mb-3">
+                                <div th:replace="fragments/input :: customInput('address', 'text', 'bi-geo-alt', 'Địa chỉ', true)"></div>
+                            </div>
+                            <div th:replace="fragments/recapcha :: recapcha"></div>
+                            <span class="text-danger" th:if="${#fields.hasErrors('recaptchaResponse')}" th:errors="*{recaptchaResponse}"></span>
+                            <div class="clearfix custommer_account_action">
+                                <div class="action_bottom button">
+                                    <input class="button btn-signin" type="submit" value="Đăng ký">
+                                </div>
+                                <div class="req_pass">
+                                    <p>Bạn đã có tài khoản?<a th:href="@{/login}" title="Đăng ký"> Đăng nhập</a></p>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

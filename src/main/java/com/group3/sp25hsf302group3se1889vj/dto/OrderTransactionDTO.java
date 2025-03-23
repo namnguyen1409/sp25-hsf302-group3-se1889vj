@@ -14,22 +14,22 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderTransactionDTO extends BaseDTO {
-    // TODO: Add fields here
-    @FieldMetadata(title = "Mã đơn hàng")
-    private Long id;
+    @FieldMetadata(title = "Mã đơn hàng", cssClass = "order-id")
+    private Long orderId;
 
     @FieldMetadata(title = "Mã giao dịch")
     private String transactionId;
 
-    @FieldMetadata(title = "Tổng tiền")
+    @FieldMetadata(title = "Tổng tiền", cssClass = "price")
     private BigDecimal amount;
 
-    @FieldMetadata(title = "Trạng thái")
+    @FieldMetadata(title = "Trạng thái", cssClass = "order-transaction-status")
     private OrderTransactionStatus status;
 
+    @FieldMetadata(title = "Mã giao dịch VNPay")
     private String vnPayResponseCode;
 
-    @FieldMetadata(title = "Loại giao dịch")
+    @FieldMetadata(title = "Loại giao dịch", cssClass = "order-transaction-type")
     private OrderTransactionType type;
 
 }

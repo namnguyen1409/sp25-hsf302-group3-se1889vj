@@ -7,62 +7,62 @@
 <ul th:fragment="featureList(class, id)"
     th:id="${id}"
     th:class="${class}">
-    <li class="mb-1">
+    <li class="mb-1 feature-item" sec:authorize="hasAuthority('MANAGE_PRODUCTS') or hasRole('OWNER')">
         <a class="btn d-inline-flex align-items-center rounded border-0 fw-bold" th:href="@{/admin/product/list}">
             <i class="bi bi-box-seam-fill me-2"></i> Quản lý sản phẩm
         </a>
     </li>
 
-    <li class="mb-1">
+    <li class="mb-1 feature-item" sec:authorize="hasAuthority('MANAGE_CATEGORY') or hasRole('OWNER')">
         <a class="btn d-inline-flex align-items-center rounded border-0 fw-bold" th:href="@{/admin/category/list}">
             <i class="bi bi-tags me-2"></i> Quản lý danh mục
         </a>
     </li>
 
-    <li class="mb-1">
+    <li class="mb-1 feature-item" sec:authorize="hasAuthority('MANAGE_BANNERS') or hasRole('OWNER')">
         <a class="btn d-inline-flex align-items-center rounded border-0 fw-bold" th:href="@{/admin/banner/list}">
             <i class="bi bi-image me-2"></i> Quản lý banner
         </a>
     </li>
 
 
-    <li class="mb-1">
+    <li class="mb-1 feature-item" sec:authorize="hasAuthority('MANAGE_BRAND') or hasRole('OWNER')">
         <a class="btn d-inline-flex align-items-center rounded border-0 fw-bold" th:href="@{/admin/brand/list}">
             <i class="bi bi-bag-dash me-2"></i> Quản lý nhãn hàng
         </a>
     </li>
 
-    <li class="mb-1">
+    <li class="mb-1 feature-item" sec:authorize="hasAuthority('MANAGE_ORDERS') or hasRole('OWNER')">
         <a class="btn d-inline-flex align-items-center rounded border-0 fw-bold" th:href="@{/admin/order/list}">
             <i class="bi bi-cart-check me-2"></i> Quản lý đơn hàng
         </a>
     </li>
 
-    <li class="mb-1">
+    <li class="mb-1 feature-item" sec:authorize="hasRole('OWNER')">
         <a class="btn d-inline-flex align-items-center rounded border-0 fw-bold" th:href="@{/admin/coupon/list}">
             <i class="bi bi-gift me-2"></i> Mã giảm giá
         </a>
     </li>
 
-    <li class="mb-1">
+    <li class="mb-1 feature-item" sec:authorize="hasAuthority('MANAGE_TRANSACTION') or hasRole('OWNER')">
         <a class="btn d-inline-flex align-items-center rounded border-0 fw-bold" th:href="@{/admin/transaction/list}">
             <i class="bi bi-cash me-2"></i> Quản lý giao dịch
         </a>
     </li>
 
-    <li class="mb-1">
+    <li class="mb-1 feature-item" sec:authorize="hasAnyAuthority('MANAGE_STATIC_PAGE') or hasRole('OWNER')">
         <a class="btn d-inline-flex align-items-center rounded border-0 fw-bold" th:href="@{/admin/static-page/list}">
             <i class="bi bi-file-earmark-text me-2"></i> Quản lý trang tĩnh
         </a>
     </li>
 
-    <li class="mb-1">
+    <li class="mb-1 feature-item" sec:authorize="hasAnyAuthority('MANAGE_CUSTOMERS') or hasRole('OWNER')">
         <a class="btn d-inline-flex align-items-center rounded border-0 fw-bold" th:href="@{/admin/customer/list}">
             <i class="bi bi-people me-2"></i> Quản lý khách hàng
         </a>
     </li>
 
-    <li class="mb-1">
+    <li class="mb-1 feature-item" sec:authorize="hasRole('OWNER')">
         <a class="btn d-inline-flex align-items-center rounded border-0 fw-bold" th:href="@{/admin/staff/list}">
             <i class="bi bi-person-gear me-2"></i> Quản lý nhân viên
         </a>
@@ -99,6 +99,21 @@
             </ul>
         </div>
     </li>
+
+    <script>
+        $(document).ready(function () {
+            let currentPath = window.location.pathname;
+            $(".feature-item a").each(function () {
+                let linkPath = $(this).attr("href");
+                let cleanedLinkPath = linkPath.replace(/\/list$/, '');
+                if (currentPath.startsWith(cleanedLinkPath)) {
+                    $(this).addClass("active");
+                }
+            });
+        });
+    </script>
+
+
 </ul>
 </body>
 </html>

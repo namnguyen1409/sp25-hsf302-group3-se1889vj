@@ -6,6 +6,17 @@
 
     <h1 th:text="${message}"></h1>
 
+    <script>
+        setTimeout(function () {
+            window.location.href = "/orders";
+        }, 3000);
+
+        if (window.history.replaceState) {
+            window.history.replaceState(null, null, window.location.href);
+        }
+    </script>
+
+
 </section>
 </body>
 </html>

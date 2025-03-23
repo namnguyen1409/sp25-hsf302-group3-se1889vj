@@ -7,9 +7,7 @@ import jakarta.validation.constraints.Size;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-public interface CouponService {
-
-    Page<CouponDTO> findAll(CouponFilterDTO filterDTO, Pageable pageable);
+public interface CouponService extends PagingService<CouponDTO, CouponFilterDTO> {
 
     void save(CouponDTO coupon);
 

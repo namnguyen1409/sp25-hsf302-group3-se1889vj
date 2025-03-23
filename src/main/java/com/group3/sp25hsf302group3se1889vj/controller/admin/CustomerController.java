@@ -1,10 +1,14 @@
 package com.group3.sp25hsf302group3se1889vj.controller.admin;
 
+import com.group3.sp25hsf302group3se1889vj.dto.CouponDTO;
 import com.group3.sp25hsf302group3se1889vj.dto.UserDTO;
+import com.group3.sp25hsf302group3se1889vj.dto.filter.CouponFilterDTO;
 import com.group3.sp25hsf302group3se1889vj.dto.filter.UserFilterDTO;
 import com.group3.sp25hsf302group3se1889vj.enums.RoleType;
 import com.group3.sp25hsf302group3se1889vj.service.UserService;
+import com.group3.sp25hsf302group3se1889vj.util.FlashMessageUtil;
 import com.group3.sp25hsf302group3se1889vj.util.MetadataExtractor;
+import com.group3.sp25hsf302group3se1889vj.util.PaginationUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -33,22 +37,18 @@ public class CustomerController {
         if(filterDTO == null) {
             filterDTO = new UserFilterDTO();
         }
-        Sort sortDirection = "asc".equalsIgnoreCase(filterDTO.getDirection())
-                ? Sort.by(filterDTO.getOrderBy()).ascending()
-                : Sort.by(filterDTO.getOrderBy()).descending();
-
-        List<String> fields = Arrays.asList("username", "firstName", "lastName", "email", "phone", "address", "avatar", "role");
-        model.addAttribute("fields", fields);
-        model.addAttribute("fieldTitles", metadataExtractor.getFieldTitles(UserDTO.class, fields));
-        model.addAttribute("fieldClasses", metadataExtractor.getFieldClasses(UserDTO.class, fields));
-
-        Pageable pageable = PageRequest.of(filterDTO.getPage() - 1, filterDTO.getSize(), sortDirection);
-
         filterDTO.setRole(RoleType.CUSTOMER);
-        Page<UserDTO> pages = userService.searchUsers(filterDTO, pageable);
-        model.addAttribute("pages", pages);
-        model.addAttribute("filterDTO", filterDTO);
-        return "admin/user/customer/list";
+        PaginationUtil.setupPagination(
+                model,
+                filterDTO,
+                userService,
+                metadataExtractor,
+                UserFilterDTO::new,
+                UserDTO.class,
+                Arrays.asList("username", "firstName", "lastName", "email", "phone", "address", "avatar", "role")
+        );
+
+        return "admin/customer/list";
     }
 
     @PostMapping({"/list", "", "/"})
@@ -64,6 +64,48 @@ public class CustomerController {
     public String detail(Model model, @PathVariable Long id) {
         UserDTO userDTO = userService.getUserById(id);
         model.addAttribute("userDTO", userDTO);
-        return "admin/user/customer/detail";
+        return "admin/customer/detail";
     }
+
+
+    @GetMapping("/lock/{id}")
+    public String lock(@PathVariable Long id,
+                       @RequestParam("reason") String reason,
+                       RedirectAttributes redirectAttributes
+    ) {
+        var user = userService.getUserById(id);
+        if (user.getRole() != RoleType.CUSTOMER) {
+            FlashMessageUtil.addFlashMessage(redirectAttributes, "Không thể khóa tài khoản này", "error");
+            return "redirect:/admin/customer";
+        }
+        try {
+            userService.lockUser(id, reason);
+            FlashMessageUtil.addFlashMessage(redirectAttributes, "Khóa tài khoản thành công", "success");
+        }
+        catch (Exception e) {
+            FlashMessageUtil.addFlashMessage(redirectAttributes, e.getMessage(), "error");
+        }
+        return "redirect:/admin/customer";
+    }
+
+    @GetMapping("/unlock/{id}")
+    public String unlock(@PathVariable Long id,
+                         RedirectAttributes redirectAttributes
+    ) {
+        var user = userService.getUserById(id);
+        if (user.getRole() != RoleType.CUSTOMER) {
+            FlashMessageUtil.addFlashMessage(redirectAttributes, "Không thể mở khóa tài khoản này", "error");
+            return "redirect:/admin/customer";
+        }
+        try {
+            userService.unlockUser(id);
+            FlashMessageUtil.addFlashMessage(redirectAttributes, "Mở khóa tài khoản thành công", "success");
+        }
+        catch (Exception e) {
+            FlashMessageUtil.addFlashMessage(redirectAttributes, e.getMessage(), "error");
+        }
+        return "redirect:/admin/customer";
+    }
+
+
 }

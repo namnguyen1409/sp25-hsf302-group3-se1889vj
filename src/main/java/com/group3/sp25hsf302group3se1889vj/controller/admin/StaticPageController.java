@@ -8,6 +8,7 @@ import com.group3.sp25hsf302group3se1889vj.service.StaticPageService;
 import com.group3.sp25hsf302group3se1889vj.service.StorageService;
 import com.group3.sp25hsf302group3se1889vj.util.FlashMessageUtil;
 import com.group3.sp25hsf302group3se1889vj.util.MetadataExtractor;
+import com.group3.sp25hsf302group3se1889vj.util.PaginationUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,7 +25,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.Arrays;
 import java.util.List;
 
-@PreAuthorize("hasRole('OWNER')")
+@PreAuthorize("hasRole('OWNER') or hasAnyAuthority('MANAGE_STATIC_PAGE')")
 @Controller
 @RequestMapping("/admin/static-page")
 @RequiredArgsConstructor
@@ -35,23 +36,15 @@ public class StaticPageController {
     @GetMapping({"/list", "", "/"})
     public String list(Model model,
                        @ModelAttribute(value = "filterDTO", binding = false)StaticPageFilterDTO filterDTO){
-        if(filterDTO == null) {
-            filterDTO = new StaticPageFilterDTO();
-        }
-        Sort sortDirection = "asc".equalsIgnoreCase(filterDTO.getDirection())
-                ? Sort.by(filterDTO.getOrderBy()).ascending()
-                : Sort.by(filterDTO.getOrderBy()).descending();
-
-        List<String> fields = Arrays.asList("title", "slug", "content", "createdAt", "createdBy","updatedAt", "updatedBy");
-        model.addAttribute("fields", fields);
-        model.addAttribute("fieldTitles", metadataExtractor.getFieldTitles(StaticPageDTO.class, fields));
-        model.addAttribute("fieldClasses", metadataExtractor.getFieldClasses(StaticPageDTO.class, fields));
-
-        Pageable pageable = PageRequest.of(filterDTO.getPage() - 1, filterDTO.getSize(), sortDirection);
-
-        Page<StaticPageDTO> pages = staticPageService.findAll(filterDTO, pageable);
-        model.addAttribute("pages", pages);
-        model.addAttribute("filterDTO", filterDTO);
+        PaginationUtil.setupPagination(
+                model,
+                filterDTO,
+                staticPageService,
+                metadataExtractor,
+                StaticPageFilterDTO::new,
+                StaticPageDTO.class,
+                Arrays.asList("title", "slug", "createdBy")
+        );
         return "admin/static-page/list";
     }
 
@@ -104,11 +97,11 @@ public class StaticPageController {
             BindingResult bindingResult,
             RedirectAttributes redirectAttributes
     ) {
-        if(staticPageService.existsBySlug(staticPageDTO.getSlug())){
-            bindingResult.rejectValue("slug", "slug.duplicate");
+        if(staticPageService.existsBySlugAndIdNot(staticPageDTO.getSlug(), staticPageDTO.getId())){
+            bindingResult.rejectValue("slug", "slug.duplicate", "Slug đã tồn tại");
         }
-        if(staticPageService.existsByTitle(staticPageDTO.getTitle())){
-            bindingResult.rejectValue("title", "title.duplicate");
+        if(staticPageService.existsByTitleAndIdNot(staticPageDTO.getTitle(), staticPageDTO.getId())){
+            bindingResult.rejectValue("title", "title.duplicate", "Tiêu đề đã tồn tại");
         }
         if(bindingResult.hasErrors()) {
             return "admin/static-page/edit";
@@ -123,4 +116,12 @@ public class StaticPageController {
         staticPageService.delete(id);
         return "redirect:/admin/static-page/";
     }
+
+    @GetMapping("/view/{id}")
+    public String detail(Model model, @PathVariable("id") Long id) {
+        StaticPageDTO staticPageDTO = staticPageService.findById(id);
+        model.addAttribute("entity", staticPageDTO);
+        return "admin/static-page/view";
+    }
+
 }

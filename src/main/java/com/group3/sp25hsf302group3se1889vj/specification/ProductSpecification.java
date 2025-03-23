@@ -59,6 +59,10 @@ public class ProductSpecification {
                 } catch (NumberFormatException ignored) {}
             }
 
+            if(filterDTO.getIsActive() != null) {
+                predicates.add(criteriaBuilder.equal(root.get("isActive"), filterDTO.getIsActive()));
+            }
+
 
             if(filterDTO.getPriceSaleFrom() != null && !filterDTO.getPriceSaleFrom().isEmpty()) {
                 try {

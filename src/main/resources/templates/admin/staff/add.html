@@ -11,7 +11,16 @@
                   class="p-md-4 border rounded shadow-sm">
                 <h4 class="text-center mb-5">Thêm mới nhân viên</h4>
                 <div class="mb-3">
-                    <div th:replace="fragments/input :: customInput ('email', 'text', 'bi-tag', 'Địa chỉ email', true)"></div>
+                    <div class=" input-group mb-4" data-bs-toggle="tooltip" data-bs-placement="top"
+                         title="Một email với đường dẫn xác nhận sẽ được gửi đến địa chỉ email này.">
+                        <div class="input-group-text p-3">
+                            <i class="bi bi-envelope-at-fill"></i>
+                        </div>
+                        <div class="form-floating">
+                            <input type="email" class="form-control" id="email" name="email" placeholder="Email" required>
+                            <label for="email">Email</label>
+                        </div>
+                    </div>
                 </div>
 
                 <button type="submit" class="btn btn-primary">

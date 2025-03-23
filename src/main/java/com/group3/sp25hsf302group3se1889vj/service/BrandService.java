@@ -9,9 +9,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
-public interface BrandService {
-
-    Page<BrandDTO> findAll(BrandFilterDTO filterDTO, Pageable pageable);
+public interface BrandService extends PagingService<BrandDTO, BrandFilterDTO> {
 
     void save(BrandDTO brand);
 
@@ -24,4 +22,6 @@ public interface BrandService {
     boolean existsByNameAndIdNot(String name, Long id);
 
     List<BrandDTO> getBrands();
+
+    void delete(Long id);
 }

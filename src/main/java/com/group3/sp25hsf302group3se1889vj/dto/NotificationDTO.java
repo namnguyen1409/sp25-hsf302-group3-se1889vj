@@ -18,6 +18,6 @@ public class NotificationDTO extends BaseDTO {
     private String title;
     @FieldMetadata(title = "Nội dung", cssClass = "description")
     private String content;
-    @FieldMetadata(title = "Đã đọc")
+    @FieldMetadata(title = "Đã đọc", cssClass = "boolean")
     private boolean isRead = false;
 }

@@ -2,20 +2,15 @@ package com.group3.sp25hsf302group3se1889vj.controller.admin;
 
 import com.group3.sp25hsf302group3se1889vj.dto.ProductDTO;
 import com.group3.sp25hsf302group3se1889vj.dto.ProductVariantDTO;
-import com.group3.sp25hsf302group3se1889vj.dto.filter.ProductFilterDTO;
 import com.group3.sp25hsf302group3se1889vj.dto.filter.ProductVariantFilterDTO;
 import com.group3.sp25hsf302group3se1889vj.service.ProductImageService;
 import com.group3.sp25hsf302group3se1889vj.service.ProductService;
 import com.group3.sp25hsf302group3se1889vj.service.ProductVariantService;
-import com.group3.sp25hsf302group3se1889vj.service.StorageService;
 import com.group3.sp25hsf302group3se1889vj.util.MetadataExtractor;
 import com.group3.sp25hsf302group3se1889vj.util.PaginationUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,9 +19,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Arrays;
-import java.util.List;
 
 @Slf4j
+@PreAuthorize("hasRole('OWNER') or hasAnyAuthority('MANAGE_PRODUCTS')")
 @Controller
 @RequestMapping("/admin/product/{productId}/variants")
 @RequiredArgsConstructor

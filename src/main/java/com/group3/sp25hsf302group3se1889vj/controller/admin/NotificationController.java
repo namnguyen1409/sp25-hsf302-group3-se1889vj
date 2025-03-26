@@ -1,25 +1,18 @@
 package com.group3.sp25hsf302group3se1889vj.controller.admin;
 
 import com.group3.sp25hsf302group3se1889vj.dto.NotificationDTO;
-import com.group3.sp25hsf302group3se1889vj.dto.OrderDTO;
 import com.group3.sp25hsf302group3se1889vj.dto.filter.NotificationFilterDTO;
-import com.group3.sp25hsf302group3se1889vj.dto.filter.OrderFilterDTO;
 import com.group3.sp25hsf302group3se1889vj.service.NotificationService;
 import com.group3.sp25hsf302group3se1889vj.util.MetadataExtractor;
 import com.group3.sp25hsf302group3se1889vj.util.PaginationUtil;
 import com.group3.sp25hsf302group3se1889vj.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
-import java.util.List;
 
 @Controller
 @RequestMapping("/admin/notification")

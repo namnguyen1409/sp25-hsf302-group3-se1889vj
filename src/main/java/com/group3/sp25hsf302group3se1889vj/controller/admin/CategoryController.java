@@ -1,8 +1,6 @@
 package com.group3.sp25hsf302group3se1889vj.controller.admin;
 
-import com.group3.sp25hsf302group3se1889vj.dto.BrandDTO;
 import com.group3.sp25hsf302group3se1889vj.dto.CategoryDTO;
-import com.group3.sp25hsf302group3se1889vj.dto.filter.BrandFilterDTO;
 import com.group3.sp25hsf302group3se1889vj.dto.filter.CategoryFilterDTO;
 import com.group3.sp25hsf302group3se1889vj.service.CategoryService;
 import com.group3.sp25hsf302group3se1889vj.service.ProductService;
@@ -12,10 +10,6 @@ import com.group3.sp25hsf302group3se1889vj.util.MetadataExtractor;
 import com.group3.sp25hsf302group3se1889vj.util.PaginationUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 
 @PreAuthorize("hasRole('OWNER') or hasAnyAuthority('MANAGE_CATEGORY')")

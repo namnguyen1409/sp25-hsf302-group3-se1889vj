@@ -1,19 +1,11 @@
 package com.group3.sp25hsf302group3se1889vj.controller.admin;
 
-import com.group3.sp25hsf302group3se1889vj.dto.BannerDTO;
 import com.group3.sp25hsf302group3se1889vj.dto.StaticPageDTO;
-import com.group3.sp25hsf302group3se1889vj.dto.filter.BannerFilterDTO;
 import com.group3.sp25hsf302group3se1889vj.dto.filter.StaticPageFilterDTO;
 import com.group3.sp25hsf302group3se1889vj.service.StaticPageService;
-import com.group3.sp25hsf302group3se1889vj.service.StorageService;
-import com.group3.sp25hsf302group3se1889vj.util.FlashMessageUtil;
 import com.group3.sp25hsf302group3se1889vj.util.MetadataExtractor;
 import com.group3.sp25hsf302group3se1889vj.util.PaginationUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

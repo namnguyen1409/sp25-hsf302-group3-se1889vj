@@ -1,8 +1,6 @@
 package com.group3.sp25hsf302group3se1889vj.controller.admin;
 
-import com.group3.sp25hsf302group3se1889vj.dto.CategoryDTO;
 import com.group3.sp25hsf302group3se1889vj.dto.CouponDTO;
-import com.group3.sp25hsf302group3se1889vj.dto.filter.CategoryFilterDTO;
 import com.group3.sp25hsf302group3se1889vj.dto.filter.CouponFilterDTO;
 import com.group3.sp25hsf302group3se1889vj.enums.CouponType;
 import com.group3.sp25hsf302group3se1889vj.service.CouponService;
@@ -10,10 +8,6 @@ import com.group3.sp25hsf302group3se1889vj.util.MetadataExtractor;
 import com.group3.sp25hsf302group3se1889vj.util.PaginationUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,10 +18,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
-import java.util.List;
 
 @Slf4j
-@PreAuthorize("hasRole('OWNER')")
+@PreAuthorize("hasRole('OWNER') or hasAnyAuthority('MANAGE_COUPONS')")
 @Controller
 @RequestMapping("/admin/coupon")
 @RequiredArgsConstructor

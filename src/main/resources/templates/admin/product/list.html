@@ -102,7 +102,7 @@
         <div class="d-flex align-items-center gap-2">
             <div class="input-group">
                 <label class="input-group-text" for="sizeField">Hiển thị</label>
-                <select class="form-select" id="sizeField" th:value="${filterDTO.size}">
+                <select class="form-select" id="sizeField" th:value="${filterDTO.size}" onchange="updateFilter()">
                     <option value="5" th:selected="${filterDTO.size == 5}">5 kết quả/trang</option>
                     <option value="10" th:selected="${filterDTO.size == 10}">10 kết quả/trang</option>
                     <option value="20" th:selected="${filterDTO.size == 20}">20 kết quả/trang</option>
@@ -230,6 +230,11 @@
                 </tr>
                 </tbody>
             </table>
+            <div class="row mt-2">
+                <div class="col text-start">
+                    <span th:text="'Hiển thị từ bản ghi ' + ${n1} + ' đến ' + ${n2} + ' trong tổng số ' + ${total} + ' bản ghi'"></span>
+                </div>
+            </div>
         </div>
         <th:block th:if="${pages.totalPages == 0}">
             <div class="alert alert-warning text-center mt-5">

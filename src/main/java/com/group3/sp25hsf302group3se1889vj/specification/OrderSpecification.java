@@ -35,7 +35,6 @@ public class OrderSpecification {
                 predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("finalPrice"), filterDTO.getFinalPriceTo()));
             }
 
-            // base predicates
             if(filterDTO.getCreatedAtFrom() != null) {
                 predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("createdAt"), filterDTO.getCreatedAtFrom()));
             }
@@ -49,7 +48,7 @@ public class OrderSpecification {
                 predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("updatedAt"), filterDTO.getUpdatedAtTo()));
             }
             if(filterDTO.getCreatedBy() != null && !filterDTO.getCreatedBy().isEmpty()) {
-                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("createdBy")), "%" + filterDTO.getCreatedBy().toLowerCase() + "%"));
+                predicates.add(criteriaBuilder.equal(root.get("createdBy"),  filterDTO.getCreatedBy()));
             }
             if(filterDTO.getUpdatedBy() != null && !filterDTO.getUpdatedBy().isEmpty()) {
                 predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("updatedBy")), "%" + filterDTO.getUpdatedBy().toLowerCase() + "%"));

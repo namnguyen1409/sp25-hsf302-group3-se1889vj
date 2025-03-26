@@ -29,7 +29,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.*;
 
 @Slf4j
-@PreAuthorize("hasRole('OWNER')")
+@PreAuthorize("hasRole('OWNER') or hasAnyAuthority('MANAGE_PRODUCTS')")
 @Controller
 @RequestMapping("/admin/product")
 @RequiredArgsConstructor

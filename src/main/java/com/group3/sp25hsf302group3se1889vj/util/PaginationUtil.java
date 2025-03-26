@@ -20,7 +20,6 @@ public class PaginationUtil {
                                                                     Supplier<F> filterSupplier,
                                                                     Class<T> dtoClass,
                                                                     List<String> fields
-
     ) {
         if (filterDTO == null) {
             filterDTO = filterSupplier.get();
